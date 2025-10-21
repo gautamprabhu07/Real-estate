@@ -1,0 +1,246 @@
+@use "sass:color";
+
+$background: #ffffff;
+$primary: #2e5aac;
+$accent: #4a90e2;
+$text-dark: #222;
+$text-light: #666;
+$border-light: #e5e8ec;
+$hover-bg: color.adjust($accent, $lightness: 25%);
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background-color: $background;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+
+  &--hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &--visible {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .navbar__inner {
+    max-width: 1280px;
+    margin: auto;
+    height: 72px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Poppins", "Segoe UI", sans-serif;
+    width: 100%;
+  }
+
+  .navbar__logo {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    text-decoration: none;
+    color: $primary;
+    font-size: 1.6rem;
+    font-weight: 700;
+
+    img {
+      height: 42px;
+      width: 42px;
+    }
+
+    span {
+      letter-spacing: 0.6px;
+    }
+  }
+
+  .navbar__links {
+    display: flex;
+    align-items: center;
+    gap: 44px;
+
+    a {
+      text-decoration: none;
+      color: $text-dark;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      font-size: 1.15rem;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $accent;
+      }
+    }
+
+    &.active {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      top: 72px;
+      right: 0;
+      left: 0;
+      background-color: $background;
+      border-bottom: 1px solid $border-light;
+      padding: 1rem 0;
+      gap: 1rem;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.3s ease-in-out;
+
+      a {
+        text-align: center;
+      }
+    }
+  }
+
+  .navbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+
+    .navbar__auth {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+
+      .login {
+        text-decoration: none;
+        color: $text-dark;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: $accent;
+        }
+      }
+
+      .register {
+        text-decoration: none;
+        background-color: $accent;
+        color: white;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: 700;
+        font-size: 1rem;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: color.adjust($accent, $lightness: -10%);
+        }
+      }
+    }
+
+    .navbar__user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      img {
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      span {
+        font-weight: 700;
+        color: $text-dark;
+        font-size: 1rem;
+      }
+
+      .profile-link {
+        background-color: $accent;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: color.adjust($accent, $lightness: -10%);
+        }
+      }
+    }
+  }
+
+  .navbar__toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: none; // hidden for desktop
+
+    svg {
+      height: 30px;  // larger icon for mobile
+      width: 30px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .navbar__links {
+      display: none;
+    }
+
+    .navbar__toggle {
+      display: block; // show burger on mobile
+    }
+
+    .navbar__actions {
+      .navbar__auth,
+      .navbar__user {
+        display: none;
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+
+/* Mobile avatar — same size as hamburger icon */
+.navbar__mobile-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a90e2; // subtle border to match theme
+}
+
+/* Visually align with the hamburger icon */
+@media (max-width: 900px) {
+  .navbar__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img.navbar__mobile-avatar {
+      width: 30px;
+      height: 30px;
+    }
+
+    svg {
+      width: 30px;
+      height: 30px;
+    }
+  }
+}

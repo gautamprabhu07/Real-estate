@@ -1,0 +1,198 @@
+@use "sass:color";
+
+$primary-color: #4a90e2;
+$background-light: #f9fafb;
+$text-dark: #222;
+$text-muted: #666;
+$border-color: #e5e8ec;
+$accent-color: #fece51;
+$card-shadow: 0 6px 18px rgba(74, 144, 226, 0.15);
+
+.profilePage {
+  display: flex;
+  min-height: 100vh;
+  background-color: $background-light;
+  color: $text-dark;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  .profileSection {
+    flex: 3;
+    padding: 3rem 4rem;
+    overflow-y: auto;
+
+    @media (max-width: 900px) {
+      padding: 2rem;
+    }
+
+    .profileCard {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem 2.5rem;
+      box-shadow: $card-shadow;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+
+      @media (max-width: 768px) {
+        padding: 2rem;
+      }
+
+      .profileHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 1.5rem;
+        gap: 1rem;
+
+        .profileUser {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+
+          .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid $primary-color;
+          }
+
+          h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: $primary-color;
+          }
+
+          p {
+            font-size: 1rem;
+            color: $text-muted;
+          }
+        }
+
+        .profileActions {
+          display: flex;
+          gap: 1rem;
+
+          .updateBtn,
+          .logoutBtn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+          }
+
+          .updateBtn {
+            background-color: $primary-color;
+            color: white;
+
+            &:hover {
+              background-color: color.adjust($primary-color, $lightness: -8%);
+            }
+          }
+
+          .logoutBtn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+
+            &:hover {
+              background-color: color.adjust(#e74c3c, $lightness: -10%);
+            }
+          }
+        }
+      }
+
+      .profileStats {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        margin-top: 1rem;
+        gap: 1rem;
+
+        @media (max-width: 768px) {
+          flex-direction: column;
+        }
+
+        .statCard {
+          flex: 1;
+          background: #f5f8fb;
+          border-radius: 10px;
+          padding: 1.5rem 1rem;
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+
+          h3 {
+            font-size: 2rem;
+            color: $primary-color;
+            margin-bottom: 0.3rem;
+            font-weight: 700;
+          }
+
+          p {
+            font-size: 1rem;
+            color: $text-muted;
+          }
+        }
+      }
+
+      .profileLists {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        .sectionHeader {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid $border-color;
+          padding-bottom: 0.8rem;
+
+          h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: $primary-color;
+          }
+
+          .primaryBtn {
+            background-color: $accent-color;
+            color: $text-dark;
+            font-weight: 700;
+            border-radius: 10px;
+            padding: 10px 18px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+
+            &:hover {
+              background-color: color.adjust($accent-color, $lightness: -8%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .chatSection {
+    flex: 2;
+    background-color: #f3f6fa;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    padding: 2rem;
+
+    @media (max-width: 900px) {
+      display: none;
+    }
+
+    .chatWrapper {
+      background: white;
+      border-radius: 12px;
+      width: 100%;
+      box-shadow: $card-shadow;
+      overflow: hidden;
+      padding: 1rem 1.5rem;
+    }
+  }
+}

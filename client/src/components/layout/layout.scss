@@ -1,0 +1,16 @@
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f9fafb; // or your page bg color, lighter to blend with navbar
+
+  &__main {
+    flex: 1;
+    padding-top: 72px; // height exactly navbar height
+    min-height: calc(100vh - 72px);
+
+    @media (max-width: 767px) {
+      padding-top: 70px;
+    }
+  }
+}

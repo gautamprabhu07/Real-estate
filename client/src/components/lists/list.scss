@@ -1,0 +1,53 @@
+@use "sass:color";
+
+$primary-color: #4a90e2;
+$background-light: #f9fafb;
+$border-color: #e5e8ec;
+$text-dark: #222;
+$text-muted: #777;
+$card-bg: #ffffff;
+$card-shadow: 0 6px 16px rgba(74, 144, 226, 0.12);
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  background-color: $background-light;
+  border-radius: 12px;
+  box-shadow: $card-shadow;
+  transition: 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .card {
+    background-color: $card-bg;
+    border: 1px solid $border-color;
+    border-radius: 12px;
+    box-shadow: $card-shadow;
+    padding: 1.5rem;
+    color: $text-dark;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 24px rgba(74, 144, 226, 0.25);
+    }
+  }
+
+  .list__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: $text-muted;
+    border: 2px dashed $border-color;
+    border-radius: 12px;
+    background: color.adjust($background-light, $lightness: 2%);
+  }
+}

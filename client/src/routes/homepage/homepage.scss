@@ -1,0 +1,119 @@
+@use "sass:color";
+
+$primary-color: #4a90e2;
+$background-light: #f9fafb;
+$text-color: #222;
+$subtitle-color: color.adjust($primary-color, $lightness: -45%);
+$stat-number-color: $primary-color;
+$stat-text-color: #555;
+
+.homepage {
+  display: flex;
+  min-height: 100vh;
+  background-color: $background-light;
+  color: $text-color;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  // Add a class to target text content for mobile center alignment
+  &__content {
+    flex: 3;
+    display: flex;
+    align-items: center;
+    padding: 4rem 5rem;
+
+    @media(max-width: 768px) {
+      text-align: center; /* Overriding text alignment for mobile */
+      justify-content: center; /* Optional, center horizontally if flex */
+    }
+  }
+
+  &__wrapper {
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+
+    @media(max-width: 768px) {
+      width: 100%;
+      align-items: center; // Center children horizontally
+      text-align: center; // Ensure all nested text is centered
+    }
+  }
+
+  &__title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: $primary-color;
+
+    @media(max-width: 768px) {
+      text-align: center;
+    }
+  }
+
+  &__subtitle {
+    color: $subtitle-color;
+    font-size: 1.2rem;
+    line-height: 1.5;
+
+    @media(max-width: 768px) {
+      text-align: center;
+    }
+  }
+
+  &__stats {
+    display: flex;
+    gap: 4.5rem;
+    margin-top: 1.5rem;
+
+    @media(max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+  }
+
+  &__statBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center all stats items for mobile */
+    gap: 0.25rem;
+
+    h2 {
+      font-size: 3rem;
+      font-weight: 700;
+      color: $stat-number-color;
+      margin: 0;
+    }
+
+    p {
+      font-size: 1rem;
+      font-weight: 500;
+      color: $stat-text-color;
+      margin: 0;
+    }
+  }
+
+  &__imageContainer {
+    flex: 2;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+
+    img {
+      width: 110%;
+      max-width: 700px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 15px 40px rgba(74, 144, 226, 0.3);
+      user-select: none;
+    }
+
+    @media(max-width: 768px) {
+      display: none; // existing
+    }
+  }
+}

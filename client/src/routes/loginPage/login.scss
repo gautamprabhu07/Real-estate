@@ -1,0 +1,145 @@
+@use "sass:color";
+
+$primary-color: #4a90e2;
+$background-light: #f9fafb;
+$text-color: #333;
+$error-color: #e74c3c;
+
+.loginWrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: $text-color;
+
+  .loginLeft {
+    flex: 1;
+    background-color: $background-light;
+    padding: 4rem 5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h2 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: $primary-color;
+    }
+
+    p {
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      color: color.adjust($primary-color, $lightness: -50%);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      max-width: 400px;
+
+      label {
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      input {
+        padding: 14px 18px;
+        border: 2px solid color.adjust($primary-color, $lightness: 50%);
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+        }
+      }
+
+      button {
+        background-color: $primary-color;
+        color: white;
+        font-weight: 700;
+        padding: 16px 0;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+
+        &:hover:not(:disabled) {
+          background-color: color.adjust($primary-color, $lightness: -10%);
+        }
+
+        &:disabled {
+          background-color: color.adjust($primary-color, $lightness: 70%);
+          cursor: not-allowed;
+        }
+      }
+
+      .errorMsg {
+        color: $error-color;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: -8px;
+      }
+    }
+
+    .registerLink {
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+
+      a {
+        color: $primary-color;
+        font-weight: 600;
+        text-decoration: underline;
+
+        &:hover {
+          color: color.adjust($primary-color, $lightness: -10%);
+        }
+      }
+    }
+  }
+
+  .loginRight {
+    flex: 1;
+    background: linear-gradient(135deg, #4a90e2 0%, #145f92 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      width: 90%;
+      max-width: 600px;
+      border-radius: 24px;
+      object-fit: cover;
+      user-select: none;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 900px) {
+  .loginWrapper {
+    flex-direction: column;
+
+    .loginLeft,
+    .loginRight {
+      flex: unset;
+      width: 100%;
+      padding: 2rem 2.5rem;
+    }
+
+    .loginRight {
+      order: -1;
+      padding-bottom: 0;
+
+      img {
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  }
+}

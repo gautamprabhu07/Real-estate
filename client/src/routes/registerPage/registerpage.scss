@@ -1,0 +1,152 @@
+@use "sass:color"; // Required for new color adjustment functions
+
+$primary-color: #4a90e2;
+$secondary-color: #f5f7fa;
+$error-color: #e74c3c;
+$text-color: #333;
+
+.registerWrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: $text-color;
+
+  .leftPane {
+    flex: 1;
+    background-color: $secondary-color;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 3rem 4rem;
+
+    h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: $primary-color;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      color: color.adjust($primary-color, $lightness: -25%); // replaced darken()
+      line-height: 1.5;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+
+      label {
+        font-weight: 600;
+        margin-bottom: 5px;
+      }
+
+      input {
+        padding: 12px 15px;
+        border: 2px solid color.adjust($primary-color, $lightness: 40%); // replaced lighten()
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: $primary-color;
+          box-shadow: 0 0 8px rgba($primary-color, 0.3);
+        }
+      }
+
+      button {
+        background-color: $primary-color;
+        color: white;
+        font-weight: 700;
+        padding: 14px 0;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+
+        &:hover:not(:disabled) {
+          background-color: color.adjust($primary-color, $lightness: -10%); // replaced darken()
+        }
+
+        &:disabled {
+          background-color: color.adjust($primary-color, $lightness: 20%); // replaced lighten()
+          cursor: not-allowed;
+        }
+      }
+
+      .errorMsg {
+        color: $error-color;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: -10px;
+      }
+    }
+
+    .loginLink {
+      margin-top: 1.5rem;
+      font-size: 0.95rem;
+
+      a {
+        color: $primary-color;
+        font-weight: 600;
+        text-decoration: underline;
+
+        &:hover {
+          color: color.adjust($primary-color, $lightness: -10%); // replaced darken()
+        }
+      }
+    }
+  }
+
+  .rightPane {
+    flex: 1;
+    background: linear-gradient(135deg, #4a90e2 0%, #145f92 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+      margin-right: 2rem;
+    margin-left: 2rem;
+      width: 100%;
+      max-width: none; // allow full width scaling
+      border: none;
+      border-radius: 0;
+      object-fit: cover;
+      box-shadow: none;
+      user-select: none;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 900px) {
+  .registerWrapper {
+    flex-direction: column;
+
+    .leftPane,
+    .rightPane {
+      flex: unset;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    .rightPane {
+      order: -1;
+      padding-top: 1rem;
+      padding-bottom: 0;
+      background: none;
+
+      img {
+        max-width: 100%;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  }
+}

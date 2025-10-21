@@ -1,0 +1,226 @@
+@use "sass:color";
+
+$primary-color: #4a90e2;
+$accent-color: #fece51;
+$background-light: #f9fafb;
+$text-dark: #222;
+$text-muted: #777;
+$card-bg: #ffffff;
+$border-color: #e5e8ec;
+$shadow: 0 6px 16px rgba(74, 144, 226, 0.12);
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $background-light;
+  border-radius: 12px;
+  box-shadow: $shadow;
+  overflow: hidden;
+
+  .chat__list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: $card-bg;
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: $primary-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .chat__item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: white;
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      border: 1px solid $border-color;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: color.adjust($primary-color, $lightness: 40%);
+      }
+
+      &.active {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+      }
+
+      img {
+        height: 48px;
+        width: 48px;
+        border-radius: 50%;
+        border: 2px solid $primary-color;
+        object-fit: cover;
+      }
+
+      .chat__details {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        .chat__username {
+          font-weight: 700;
+          color: $primary-color;
+          font-size: 1rem;
+        }
+
+        .chat__preview {
+          color: $text-muted;
+          font-size: 0.95rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+
+  .chat__window {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    background: $card-bg;
+    border-left: 1px solid $border-color;
+
+    .chat__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.2rem;
+      background: color.adjust($primary-color, $lightness: 35%);
+      border-bottom: 1px solid $border-color;
+
+      .header__user {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+
+        img {
+          height: 36px;
+          width: 36px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid white;
+        }
+
+        span {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: white;
+        }
+      }
+
+      .chat__close {
+        border: none;
+        background: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: white;
+        font-weight: 700;
+        transition: 0.3s;
+
+        &:hover {
+          color: #f9fafb;
+        }
+      }
+    }
+
+    .chat__body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      background-color: #f5f8fa;
+
+      .chat__message {
+        max-width: 65%;
+        padding: 0.8rem 1rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        box-shadow: $shadow;
+
+        &.sent {
+          align-self: flex-end;
+          background-color: $primary-color;
+          color: white;
+
+          span {
+            color: rgba(255, 255, 255, 0.7);
+          }
+        }
+
+        &.received {
+          align-self: flex-start;
+          background-color: white;
+          color: $text-dark;
+          border: 1px solid $border-color;
+
+          span {
+            color: $text-muted;
+          }
+        }
+
+        span {
+          font-size: 0.75rem;
+          align-self: flex-end;
+        }
+      }
+    }
+
+    .chat__input {
+      display: flex;
+      align-items: center;
+      border-top: 1px solid $border-color;
+      background: white;
+      padding: 0.5rem 0.8rem;
+      gap: 0.8rem;
+
+      textarea {
+        flex: 1;
+        resize: none;
+        border: none;
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-family: inherit;
+        background-color: #f3f6fa;
+        transition: box-shadow 0.3s ease;
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.3);
+        }
+      }
+
+      button {
+        background-color: $primary-color;
+        color: #fff;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: color.adjust($primary-color, $lightness: -8%);
+        }
+      }
+    }
+  }
+}
