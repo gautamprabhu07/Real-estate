@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Layout from "./components/layout/Layout";
+import {Layout} from "./components/layout/Layout";
 import HomePage from "./routes/homepage/HomePage";
 // Import other pages as needed
 // import PropertiesPage from "./routes/properties/PropertiesPage";
@@ -9,6 +9,9 @@ import HomePage from "./routes/homepage/HomePage";
 import ProfilePage from "./routes/profilePage/ProfilePage";
 import LoginPage from "./routes/loginPage/LoginPage";
 import RegisterPage from "./routes/registerPage/RegisterPage";
+import { profilePageLoader } from "./lib/loaders";
+import ProfileUpdatePage from "./routes/profileupdate/ProfileUpdatePage";
+import { RequireAuth } from "./components/layout/Layout";
 
 function App() {
   const router = createBrowserRouter([
@@ -45,10 +48,24 @@ function App() {
           path: "/register",
           element: <RegisterPage />,
         },
+      ],
+    }, {
+      path: "/",
+      element: <RequireAuth />,
+      children: [
         {
           path: "/profile",
-          element: <ProfilePage/>,
+          element: <ProfilePage />,
+          loader: profilePageLoader
         },
+        {
+          path: "/profile/update",
+          element: <ProfileUpdatePage />,
+        },
+        // {
+        //   path: "/add",
+        //   element: <NewPostPage />,
+        // },
       ],
     },
   ]);

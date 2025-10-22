@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useContext, useMemo } from "react";
 import "./navbar.scss";
 import { TiThMenu } from "react-icons/ti";
-import { Link, useNavigate } from "react-router-dom";
+import { IoClose } from "react-icons/io5";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useNotificationStore } from "../../lib/notificationStore";
 import apiRequest from "../../lib/apiRequest";
@@ -13,9 +14,11 @@ import { bottts } from "@dicebear/collection";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const lastScroll = useRef(window.scrollY);
   const menuRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { currentUser, updateUser } = useContext(AuthContext);
   const fetchNotifications = useNotificationStore((state) => state.fetch);
@@ -41,12 +44,14 @@ function Navbar() {
     if (currentUser) fetchNotifications();
   }, [currentUser, fetchNotifications]);
 
-  // Scroll animation
+  // Scroll animation with background change
   useEffect(() => {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
       if (currentScroll < 0) return;
-      setShowNavbar(currentScroll < lastScroll.current);
+      
+      setIsScrolled(currentScroll > 50);
+      setShowNavbar(currentScroll < lastScroll.current || currentScroll < 100);
       lastScroll.current = currentScroll;
     };
 
@@ -65,7 +70,10 @@ function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
-  
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
 
   // Generate random DiceBear avatar if no custom avatar exists
   const generatedAvatar = useMemo(() => {
@@ -81,69 +89,128 @@ function Navbar() {
   // Determine avatar source
   const userAvatarSrc = currentUser?.avatar || generatedAvatar;
 
+  // Check if link is active
+  const isActiveLink = (path) => location.pathname === path;
+
   return (
-    <nav className={`navbar ${showNavbar ? "navbar--visible" : "navbar--hidden"}`}>
-      <div className="navbar__inner" ref={menuRef}>
-        {/* Brand Section */}
-        <div className="navbar__brand">
-          <Link to="/" className="navbar__logo">
-            <img src="/logo.png" alt="UrbanLuxe Logo" />
-            <span>BUILDING CO.</span>
-          </Link>
-        </div>
-
-        {/* Navigation Links */}
-        <nav className={`navbar__links ${menuOpen ? "active" : ""}`}>
-          <Link to="/">Home</Link>
-          <Link to="/listings">Listings</Link>
-          <Link to="/agents">Agents</Link>
-          <Link to="/about">About</Link>
-          <Link to="/contact">Contact</Link>
-        </nav>
-
-        {/* Auth or User Info (Desktop) */}
-        <div className="navbar__actions">
-          {currentUser ? (
-            <div className="navbar__user">
-              <img src={userAvatarSrc} alt="User Avatar" />
-              <span>{currentUser.username}</span>
-              <div className="navbar__profile">
-                <Link to="/profile" className="profile-link">
-                  Profile
-                </Link>
-                {notificationNumber > 0 && (
-                  <div className="navbar__notification">{notificationNumber}</div>
-                )}
-                
+    <nav className={`navbar ${showNavbar ? "navbar--visible" : "navbar--hidden"} ${isScrolled ? "navbar--scrolled" : ""}`}>
+      <div className="navbar__container">
+        <div className="navbar__inner" ref={menuRef}>
+          {/* Brand Section */}
+          <div className="navbar__brand">
+            <Link to="/" className="navbar__logo">
+              <div className="navbar__logo-icon">
+                <img src="/logo.png" alt="UrbanLuxe Logo" />
               </div>
-            </div>
-          ) : (
-            <div className="navbar__auth">
-              <Link to="/login" className="login">Sign In</Link>
-              <Link to="/register" className="register">Join</Link>
-            </div>
-          )}
-        </div>
+              <div className="navbar__logo-text">
+                <span className="navbar__logo-title">UrbanLuxe</span>
+                <span className="navbar__logo-subtitle">BUILDING CO.</span>
+              </div>
+            </Link>
+          </div>
 
-        {/* Mobile Toggle — Avatar if logged in, menu if not */}
-        <button
-          className="navbar__toggle"
-          onClick={() => {
-            if (!currentUser) setMenuOpen((prev) => !prev);
-            else navigate("/profile");
-          }}
-          aria-label="Toggle Menu"
-        >
-          {!currentUser ? (
-            <TiThMenu />
-          ) : (
-            <img
-              src={userAvatarSrc}
-              alt="Mobile User Avatar"
-              className="navbar__mobile-avatar"
-            />
-          )}
-        </button>
+          {/* Navigation Links */}
+          <nav className={`navbar__links ${menuOpen ? "navbar__links--active" : ""}`}>
+            <Link 
+              to="/" 
+              className={isActiveLink("/") ? "navbar__link navbar__link--active" : "navbar__link"}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/listings" 
+              className={isActiveLink("/listings") ? "navbar__link navbar__link--active" : "navbar__link"}
+            >
+              Listings
+            </Link>
+            <Link 
+              to="/agents" 
+              className={isActiveLink("/agents") ? "navbar__link navbar__link--active" : "navbar__link"}
+            >
+              Agents
+            </Link>
+            <Link 
+              to="/about" 
+              className={isActiveLink("/about") ? "navbar__link navbar__link--active" : "navbar__link"}
+            >
+              About
+            </Link>
+            <Link 
+              to="/contact" 
+              className={isActiveLink("/contact") ? "navbar__link navbar__link--active" : "navbar__link"}
+            >
+              Contact
+            </Link>
+
+            {/* Mobile-only auth links */}
+            {!currentUser && (
+              <div className="navbar__mobile-auth">
+                <Link to="/login" className="navbar__mobile-login">
+                  Sign In
+                </Link>
+                <Link to="/register" className="navbar__mobile-register">
+                  Create Account
+                </Link>
+              </div>
+            )}
+          </nav>
+
+          {/* Auth or User Info (Desktop) */}
+          <div className="navbar__actions">
+            {currentUser ? (
+              <div className="navbar__user">
+                <Link to="/profile" className="navbar__user-profile">
+                  <div className="navbar__user-avatar">
+                    <img src={userAvatarSrc} alt="User Avatar" />
+                    {notificationNumber > 0 && (
+                      <div className="navbar__notification-badge">
+                        {notificationNumber > 9 ? "9+" : notificationNumber}
+                      </div>
+                    )}
+                  </div>
+                  <div className="navbar__user-info">
+                    <span className="navbar__user-name">{currentUser.username}</span>
+                    <span className="navbar__user-label">My Profile</span>
+                  </div>
+                </Link>
+              </div>
+            ) : (
+              <div className="navbar__auth">
+                <Link to="/login" className="navbar__auth-login">
+                  Sign In
+                </Link>
+                <Link to="/register" className="navbar__auth-register">
+                  Get Started
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Toggle */}
+          <button
+            className="navbar__toggle"
+            onClick={() => {
+              if (!currentUser) setMenuOpen((prev) => !prev);
+              else navigate("/profile");
+            }}
+            aria-label="Toggle Menu"
+          >
+            {!currentUser ? (
+              menuOpen ? <IoClose /> : <TiThMenu />
+            ) : (
+              <div className="navbar__mobile-avatar-wrapper">
+                <img
+                  src={userAvatarSrc}
+                  alt="Mobile User Avatar"
+                  className="navbar__mobile-avatar"
+                />
+                {notificationNumber > 0 && (
+                  <div className="navbar__notification-dot"></div>
+                )}
+              </div>
+            )}
+          </button>
+        </div>
       </div>
     </nav>
   );
