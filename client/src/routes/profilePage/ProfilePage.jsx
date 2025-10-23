@@ -204,11 +204,15 @@ function ProfilePage() {
                   <h2>My Property Listings</h2>
                   <p>Manage and track your active property listings</p>
                 </div>
-                <Link to="/add" className="profilePage__add-btn">
-                  <HiPlus />
-                  <span>Add New Property</span>
-                  <div className="profilePage__btn-shine"></div>
-                </Link>
+                <Link
+  to="/add"
+  className="profilePage__add-btn"
+  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+>
+  <HiPlus />
+  <span>Add New Property</span>
+  <div className="profilePage__btn-shine"></div>
+</Link>
               </div>
 
               <Suspense fallback={
