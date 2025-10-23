@@ -1,0 +1,602 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #1e40af;
+$accent-color: #f59e0b;
+$text-dark: #1f2937;
+$text-light: #6b7280;
+$bg-white: #ffffff;
+$bg-gray: #f9fafb;
+$border-color: #e5e7eb;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+.mapWrapper {
+  width: 100%;
+  max-width: 100%;
+  background: $bg-white;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: $shadow-xl;
+  border: 1px solid $border-color;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  
+  &.loaded {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Map Header
+  .mapHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: slideDown 0.5s ease-out 0.2s both;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    .mapHeaderContent {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mapIcon {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: iconFloat 3s ease-in-out infinite;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        color: white;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      }
+    }
+
+    .mapTitle {
+      h3 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      p {
+        margin: 4px 0 0 0;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+      }
+    }
+
+    .mapBadge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: $primary-color;
+      box-shadow: $shadow-md;
+      position: relative;
+      z-index: 1;
+      animation: badgePulse 2s ease-in-out infinite;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      span {
+        line-height: 1;
+      }
+    }
+  }
+
+  // Map Container
+  .mapContainer {
+    height: 450px;
+    position: relative;
+    background: $bg-gray;
+    animation: fadeIn 0.8s ease-out 0.4s both;
+
+    .map {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      
+      .leaflet-container {
+        font-family: inherit;
+      }
+
+      .leaflet-control-attribution {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-radius: 8px;
+        padding: 4px 8px;
+        font-size: 11px;
+        margin: 8px;
+      }
+    }
+
+    // Map Controls
+    .mapControls {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+      animation: slideInRight 0.6s ease-out 0.6s both;
+
+      .mapControlBtn {
+        width: 44px;
+        height: 44px;
+        background: white;
+        border: 1px solid $border-color;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: $shadow-md;
+
+        svg {
+          width: 20px;
+          height: 20px;
+          color: $text-dark;
+          transition: all 0.3s ease;
+        }
+
+        &:hover {
+          background: $primary-color;
+          border-color: $primary-color;
+          transform: translateY(-2px);
+          box-shadow: $shadow-lg;
+
+          svg {
+            color: white;
+          }
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    // Corner Decorations
+    .mapDecoration {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(37, 99, 235, 0.2);
+      z-index: 2;
+      pointer-events: none;
+
+      &.topLeft {
+        top: 0;
+        left: 0;
+        border-right: none;
+        border-bottom: none;
+        border-top-left-radius: 8px;
+        animation: decorationTopLeft 2s ease-in-out infinite;
+      }
+
+      &.topRight {
+        top: 0;
+        right: 0;
+        border-left: none;
+        border-bottom: none;
+        border-top-right-radius: 8px;
+        animation: decorationTopRight 2s ease-in-out infinite;
+      }
+
+      &.bottomLeft {
+        bottom: 0;
+        left: 0;
+        border-right: none;
+        border-top: none;
+        border-bottom-left-radius: 8px;
+        animation: decorationBottomLeft 2s ease-in-out infinite;
+      }
+
+      &.bottomRight {
+        bottom: 0;
+        right: 0;
+        border-left: none;
+        border-top: none;
+        border-bottom-right-radius: 8px;
+        animation: decorationBottomRight 2s ease-in-out infinite;
+      }
+    }
+  }
+
+  // Map Footer
+  .mapFooter {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 16px 24px;
+    background: $bg-gray;
+    border-top: 1px solid $border-color;
+    animation: slideUp 0.5s ease-out 0.8s both;
+
+    .mapStat {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: $text-light;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        color: $primary-color;
+        transition: all 0.3s ease;
+      }
+
+      &:hover {
+        color: $text-dark;
+        transform: translateY(-2px);
+
+        svg {
+          color: $accent-color;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(37, 99, 235, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 0 0 8px rgba(37, 99, 235, 0);
+  }
+}
+
+@keyframes decorationTopLeft {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-4px, -4px);
+  }
+}
+
+@keyframes decorationTopRight {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(4px, -4px);
+  }
+}
+
+@keyframes decorationBottomLeft {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-4px, 4px);
+  }
+}
+
+@keyframes decorationBottomRight {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(4px, 4px);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .mapWrapper {
+    border-radius: 20px;
+
+    .mapHeader {
+      padding: 16px 20px;
+      flex-wrap: wrap;
+
+      .mapHeaderContent {
+        gap: 12px;
+      }
+
+      .mapIcon {
+        width: 42px;
+        height: 42px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .mapTitle {
+        h3 {
+          font-size: 18px;
+        }
+
+        p {
+          font-size: 12px;
+        }
+      }
+
+      .mapBadge {
+        padding: 6px 14px;
+        font-size: 12px;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+
+    .mapContainer {
+      height: 300px;
+
+      .mapControls {
+        top: 12px;
+        right: 12px;
+        gap: 6px;
+
+        .mapControlBtn {
+          width: 38px;
+          height: 38px;
+
+          svg {
+            width: 18px;
+            height: 18px;
+          }
+        }
+      }
+
+      .mapDecoration {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .mapFooter {
+      padding: 12px 16px;
+      gap: 12px;
+
+      .mapStat {
+        font-size: 12px;
+        gap: 8px;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .mapWrapper {
+    border-radius: 16px;
+
+    .mapHeader {
+      padding: 14px 16px;
+
+      .mapIcon {
+        width: 38px;
+        height: 38px;
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .mapTitle {
+        h3 {
+          font-size: 16px;
+        }
+
+        p {
+          font-size: 11px;
+        }
+      }
+
+      .mapBadge {
+        padding: 5px 12px;
+        font-size: 11px;
+        
+        svg {
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+
+    .mapContainer {
+      height: 250px;
+
+      .mapControls {
+        top: 10px;
+        right: 10px;
+
+        .mapControlBtn {
+          width: 36px;
+          height: 36px;
+
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+
+      .mapDecoration {
+        width: 25px;
+        height: 25px;
+      }
+    }
+
+    .mapFooter {
+      padding: 10px 16px;
+
+      .mapStat {
+        gap: 6px;
+
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+  .mapWrapper {
+    background: #1f2937;
+    border-color: #374151;
+
+    .mapContainer {
+      background: #111827;
+    }
+
+    .mapFooter {
+      background: #111827;
+      border-color: #374151;
+
+      .mapStat {
+        color: #9ca3af;
+
+        &:hover {
+          color: #f3f4f6;
+        }
+      }
+    }
+
+    .mapControls {
+      .mapControlBtn {
+        background: #374151;
+        border-color: #4b5563;
+
+        svg {
+          color: #f3f4f6;
+        }
+
+        &:hover {
+          background: $primary-color;
+          border-color: $primary-color;
+        }
+      }
+    }
+  }
+}

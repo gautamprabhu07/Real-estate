@@ -1,0 +1,1459 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #1e40af;
+$accent-color: #f59e0b;
+$success-color: #10b981;
+$danger-color: #ef4444;
+$text-dark: #1f2937;
+$text-light: #6b7280;
+$text-lighter: #9ca3af;
+$bg-white: #ffffff;
+$bg-gray: #f9fafb;
+$bg-light: #fcf5f3;
+$border-color: #e5e7eb;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+.singlePage {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: $bg-light;
+  padding: 30px 60px;
+  gap: 30px;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+
+  &.loaded {
+    opacity: 1;
+  }
+
+  // Breadcrumb
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: $shadow-sm;
+    border: 1px solid $border-color;
+    animation: slideDown 0.6s ease;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      color: $text-lighter;
+    }
+
+    .breadcrumbItem {
+      font-size: 14px;
+      font-weight: 500;
+      color: $text-light;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      svg {
+        width: 18px;
+        height: 18px;
+        color: $primary-color;
+      }
+
+      &:hover {
+        color: $primary-color;
+      }
+
+      &.active {
+        color: $text-dark;
+        font-weight: 600;
+        cursor: default;
+      }
+    }
+  }
+
+  // Main Layout
+  .details {
+    flex: 1;
+    animation: fadeInUp 0.6s ease 0.1s backwards;
+
+    .wrapper {
+      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+
+      // Property Header
+      .propertyHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+        padding: 32px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: $shadow-md;
+        border: 1px solid $border-color;
+        animation: slideInLeft 0.6s ease 0.2s backwards;
+
+        .headerLeft {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          .propertyBadge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            width: fit-content;
+            box-shadow: $shadow-md;
+
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+          }
+
+          h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 800;
+            color: $text-dark;
+            letter-spacing: -1px;
+            line-height: 1.2;
+          }
+
+          .address {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: $text-light;
+            font-size: 16px;
+            font-weight: 500;
+
+            svg {
+              width: 20px;
+              height: 20px;
+              color: $primary-color;
+            }
+          }
+        }
+
+        .headerRight {
+          .priceCard {
+            padding: 24px 32px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(30, 64, 175, 0.05) 100%);
+            border: 2px solid $primary-color;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            min-width: 200px;
+
+            .priceLabel {
+              font-size: 12px;
+              font-weight: 600;
+              color: $text-light;
+              text-transform: uppercase;
+              letter-spacing: 1px;
+            }
+
+            .price {
+              font-size: 32px;
+              font-weight: 900;
+              color: $primary-color;
+              letter-spacing: -1px;
+            }
+
+            .priceNote {
+              font-size: 11px;
+              font-weight: 500;
+              color: $success-color;
+              padding: 4px 12px;
+              background: rgba(16, 185, 129, 0.1);
+              border-radius: 6px;
+            }
+          }
+        }
+      }
+
+      // Slider Section
+      .sliderSection {
+        animation: fadeInUp 0.6s ease 0.3s backwards;
+      }
+
+      // Quick Stats
+      .quickStats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        animation: fadeInUp 0.6s ease 0.4s backwards;
+
+        .statCard {
+          background: white;
+          padding: 24px;
+          border-radius: 16px;
+          box-shadow: $shadow-md;
+          border: 1px solid $border-color;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-4px);
+            box-shadow: $shadow-lg;
+            border-color: $primary-color;
+
+            .statIcon {
+              background: $primary-color;
+              transform: scale(1.1);
+
+              svg {
+                color: white;
+              }
+            }
+          }
+
+          .statIcon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(30, 64, 175, 0.05) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+
+            svg {
+              width: 24px;
+              height: 24px;
+              color: $primary-color;
+              transition: color 0.3s ease;
+            }
+          }
+
+          .statInfo {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .statValue {
+              font-size: 24px;
+              font-weight: 800;
+              color: $text-dark;
+              line-height: 1;
+            }
+
+            .statLabel {
+              font-size: 13px;
+              font-weight: 500;
+              color: $text-light;
+            }
+          }
+        }
+      }
+
+      // Description Section
+      .descriptionSection {
+        background: white;
+        padding: 32px;
+        border-radius: 20px;
+        box-shadow: $shadow-md;
+        border: 1px solid $border-color;
+        animation: fadeInUp 0.6s ease 0.5s backwards;
+
+        h2 {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 20px 0;
+          font-size: 24px;
+          font-weight: 700;
+          color: $text-dark;
+
+          svg {
+            width: 26px;
+            height: 26px;
+            color: $primary-color;
+          }
+        }
+
+        .description {
+          color: $text-light;
+          line-height: 1.8;
+          font-size: 16px;
+
+          p {
+            margin: 0 0 16px 0;
+          }
+
+          h1, h2, h3, h4, h5, h6 {
+            color: $text-dark;
+            margin: 20px 0 12px 0;
+          }
+
+          ul, ol {
+            margin: 12px 0;
+            padding-left: 24px;
+          }
+
+          li {
+            margin: 8px 0;
+          }
+        }
+      }
+
+      // Agent Card
+      .agentCard {
+        background: linear-gradient(135deg, white 0%, $bg-gray 100%);
+        padding: 32px;
+        border-radius: 20px;
+        box-shadow: $shadow-lg;
+        border: 1px solid $border-color;
+        animation: fadeInUp 0.6s ease 0.6s backwards;
+
+        .agentHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 24px;
+          padding-bottom: 20px;
+          border-bottom: 2px solid $border-color;
+
+          h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: $text-dark;
+          }
+
+          .verifiedBadge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, $success-color 0%, #059669 100%);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            box-shadow: $shadow-sm;
+
+            svg {
+              width: 14px;
+              height: 14px;
+            }
+          }
+        }
+
+        .agentContent {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 24px;
+
+          .agentInfo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+
+            .agentAvatar {
+              position: relative;
+              width: 80px;
+              height: 80px;
+              flex-shrink: 0;
+
+              img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                border: 4px solid white;
+                box-shadow: $shadow-md;
+              }
+
+              .onlineIndicator {
+                position: absolute;
+                bottom: 4px;
+                right: 4px;
+                width: 16px;
+                height: 16px;
+                background: $success-color;
+                border: 3px solid white;
+                border-radius: 50%;
+                animation: pulse 2s ease-in-out infinite;
+              }
+            }
+
+            .agentDetails {
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+
+              h4 {
+                margin: 0;
+                font-size: 20px;
+                font-weight: 700;
+                color: $text-dark;
+              }
+
+              p {
+                margin: 0;
+                font-size: 14px;
+                font-weight: 500;
+                color: $text-light;
+              }
+
+              .agentRating {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                margin-top: 4px;
+
+                svg {
+                  width: 16px;
+                  height: 16px;
+                  color: $accent-color;
+                }
+
+                span {
+                  font-size: 13px;
+                  font-weight: 600;
+                  color: $text-dark;
+                }
+              }
+            }
+          }
+
+          .agentStats {
+            display: flex;
+            gap: 24px;
+
+            .agentStat {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 4px;
+              padding: 16px 24px;
+              background: white;
+              border-radius: 12px;
+              box-shadow: $shadow-sm;
+              border: 1px solid $border-color;
+
+              .statNumber {
+                font-size: 20px;
+                font-weight: 800;
+                color: $primary-color;
+                line-height: 1;
+              }
+
+              .statText {
+                font-size: 12px;
+                font-weight: 500;
+                color: $text-light;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Features Sidebar
+  .features {
+    flex: 0 0 450px;
+    animation: slideInRight 0.6s ease 0.2s backwards;
+
+    .wrapper {
+      position: sticky;
+      top: 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      max-height: calc(100vh - 60px);
+      overflow-y: auto;
+      padding-right: 8px;
+
+      // Custom scrollbar
+      &::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 3px;
+
+        &:hover {
+          background: #9ca3af;
+        }
+      }
+
+      // Section
+      .section {
+        background: white;
+        padding: 28px;
+        border-radius: 20px;
+        box-shadow: $shadow-md;
+        border: 1px solid $border-color;
+
+        .sectionTitle {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 0 0 20px 0;
+          font-size: 20px;
+          font-weight: 700;
+          color: $text-dark;
+          padding-bottom: 16px;
+          border-bottom: 2px solid $border-color;
+
+          svg {
+            width: 24px;
+            height: 24px;
+            color: $primary-color;
+          }
+        }
+
+        // Feature Grid
+        .featureGrid {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+
+          .featureItem {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: $bg-gray;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(30, 64, 175, 0.02) 100%);
+              transform: translateX(4px);
+            }
+
+            .featureIcon {
+              width: 44px;
+              height: 44px;
+              background: white;
+              border-radius: 10px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+              box-shadow: $shadow-sm;
+
+              svg {
+                width: 22px;
+                height: 22px;
+                color: $primary-color;
+              }
+            }
+
+            .featureContent {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+
+              .featureLabel {
+                font-size: 13px;
+                font-weight: 600;
+                color: $text-light;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+              }
+
+              .featureValue {
+                margin: 0;
+                font-size: 15px;
+                font-weight: 700;
+                color: $text-dark;
+              }
+            }
+          }
+        }
+
+        // Nearby Places
+        .nearbyPlaces {
+          display: flex;
+          flex-direction: column;
+          gap: 14px;
+
+          .placeItem {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: $bg-gray;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              transform: translateX(4px);
+              box-shadow: $shadow-sm;
+            }
+
+            .placeIcon {
+              width: 48px;
+              height: 48px;
+              border-radius: 12px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              flex-shrink: 0;
+
+              &.school {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+              }
+
+              &.bus {
+                background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.05) 100%);
+              }
+
+              &.restaurant {
+                background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.05) 100%);
+              }
+
+              svg {
+                width: 24px;
+                height: 24px;
+                color: $primary-color;
+              }
+
+              &.bus svg {
+                color: $accent-color;
+              }
+
+              &.restaurant svg {
+                color: $danger-color;
+              }
+            }
+
+            .placeInfo {
+              display: flex;
+              flex-direction: column;
+              gap: 4px;
+              flex: 1;
+
+              .placeName {
+                font-size: 15px;
+                font-weight: 700;
+                color: $text-dark;
+              }
+
+              .placeDistance {
+                font-size: 13px;
+                font-weight: 500;
+                color: $text-light;
+              }
+            }
+          }
+        }
+      }
+
+      // Map Container
+      .mapContainer {
+        width: 100%;
+        height: 320px;
+        border-radius: 16px;
+        overflow: hidden;
+        margin-top: 4px;
+      }
+
+      // Action Buttons
+      .actionButtons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
+
+        .actionBtn {
+          width: 100%;
+          padding: 16px 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          border: none;
+          border-radius: 14px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: $shadow-md;
+
+          svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+          }
+
+          &.primary {
+            background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+            color: white;
+            border: 2px solid transparent;
+
+            &:hover {
+              transform: translateY(-3px);
+              box-shadow: $shadow-xl;
+
+              svg {
+                transform: scale(1.2);
+              }
+            }
+
+            &:active {
+              transform: translateY(-1px);
+            }
+          }
+
+          &.secondary {
+            background: white;
+            color: $text-dark;
+            border: 2px solid $border-color;
+
+            &:hover {
+              background: $bg-gray;
+              border-color: $primary-color;
+              transform: translateY(-2px);
+
+              svg {
+                transform: scale(1.1);
+              }
+            }
+
+            &:active {
+              transform: translateY(0);
+            }
+          }
+
+          &.saved {
+            background: linear-gradient(135deg, $success-color 0%, #059669 100%);
+            color: white;
+            border: 2px solid transparent;
+
+            &:hover {
+              transform: translateY(-3px);
+              box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+            }
+          }
+        }
+
+        // Share Menu
+        .shareMenu {
+          position: absolute;
+          bottom: 100%;
+          right: 0;
+          margin-bottom: 8px;
+          background: white;
+          border-radius: 12px;
+          box-shadow: $shadow-xl;
+          border: 1px solid $border-color;
+          padding: 8px;
+          min-width: 180px;
+          z-index: 100;
+          animation: slideUp 0.3s ease;
+
+          button {
+            width: 100%;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: $text-dark;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            svg {
+              width: 18px;
+              height: 18px;
+              color: $primary-color;
+            }
+
+            &:hover {
+              background: $bg-gray;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1400px) {
+  .singlePage {
+    padding: 24px 40px;
+
+    .features {
+      flex: 0 0 400px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .singlePage {
+    padding: 20px 30px;
+
+    .details {
+      .wrapper {
+        .propertyHeader {
+          padding: 28px;
+
+          .headerLeft {
+            h1 {
+              font-size: 30px;
+            }
+          }
+
+          .headerRight {
+            .priceCard {
+              padding: 20px 28px;
+
+              .price {
+                font-size: 28px;
+              }
+            }
+          }
+        }
+
+        .quickStats {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    }
+
+    .features {
+      flex: 0 0 380px;
+    }
+  }
+}
+
+@media (max-width: 991px) {
+  .singlePage {
+    flex-direction: column;
+    padding: 20px 24px;
+
+    .breadcrumb {
+      padding: 14px 20px;
+      gap: 10px;
+      overflow-x: auto;
+
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .breadcrumbItem {
+        font-size: 13px;
+        white-space: nowrap;
+      }
+    }
+
+    .details {
+      .wrapper {
+        .propertyHeader {
+          flex-direction: column;
+          padding: 24px;
+
+          .headerLeft {
+            h1 {
+              font-size: 26px;
+            }
+          }
+
+          .headerRight {
+            width: 100%;
+
+            .priceCard {
+              width: 100%;
+            }
+          }
+        }
+
+        .quickStats {
+          gap: 16px;
+        }
+
+        .descriptionSection,
+        .agentCard {
+          padding: 24px;
+
+          h2, h3 {
+            font-size: 20px;
+          }
+        }
+
+        .agentCard {
+          .agentContent {
+            flex-direction: column;
+            align-items: flex-start;
+
+            .agentStats {
+              width: 100%;
+              justify-content: space-around;
+            }
+          }
+        }
+      }
+    }
+
+    .features {
+      flex: none;
+
+      .wrapper {
+        position: static;
+        max-height: none;
+
+        .section {
+          padding: 24px;
+
+          .sectionTitle {
+            font-size: 18px;
+          }
+        }
+
+        .mapContainer {
+          height: 280px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .singlePage {
+    padding: 16px 16px;
+    gap: 24px;
+
+    .breadcrumb {
+      padding: 12px 16px;
+
+      .breadcrumbItem {
+        font-size: 12px;
+
+        &:not(.active):not(:first-child) {
+          display: none;
+        }
+      }
+    }
+
+    .details {
+      .wrapper {
+        gap: 24px;
+
+        .propertyHeader {
+          padding: 20px;
+
+          .headerLeft {
+            gap: 12px;
+
+            .propertyBadge {
+              padding: 8px 14px;
+              font-size: 12px;
+
+              svg {
+                width: 14px;
+                height: 14px;
+              }
+            }
+
+            h1 {
+              font-size: 22px;
+            }
+
+            .address {
+              font-size: 14px;
+
+              svg {
+                width: 18px;
+                height: 18px;
+              }
+            }
+          }
+
+          .headerRight {
+            .priceCard {
+              padding: 18px 24px;
+
+              .price {
+                font-size: 26px;
+              }
+            }
+          }
+        }
+
+        .quickStats {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+
+          .statCard {
+            padding: 18px;
+
+            .statIcon {
+              width: 44px;
+              height: 44px;
+
+              svg {
+                width: 20px;
+                height: 20px;
+              }
+            }
+
+            .statInfo {
+              .statValue {
+                font-size: 20px;
+              }
+
+              .statLabel {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+
+        .descriptionSection,
+        .agentCard {
+          padding: 20px;
+
+          h2, h3 {
+            font-size: 18px;
+            gap: 10px;
+
+            svg {
+              width: 22px;
+              height: 22px;
+            }
+          }
+        }
+
+        .descriptionSection {
+          .description {
+            font-size: 15px;
+            line-height: 1.7;
+          }
+        }
+
+        .agentCard {
+          .agentContent {
+            .agentInfo {
+              gap: 16px;
+
+              .agentAvatar {
+                width: 70px;
+                height: 70px;
+
+                .onlineIndicator {
+                  width: 14px;
+                  height: 14px;
+                  border-width: 2.5px;
+                }
+              }
+
+              .agentDetails {
+                h4 {
+                  font-size: 18px;
+                }
+
+                p {
+                  font-size: 13px;
+                }
+
+                .agentRating {
+                  svg {
+                    width: 15px;
+                    height: 15px;
+                  }
+
+                  span {
+                    font-size: 12px;
+                  }
+                }
+              }
+            }
+
+            .agentStats {
+              gap: 16px;
+              width: 100%;
+
+              .agentStat {
+                flex: 1;
+                padding: 14px 20px;
+
+                .statNumber {
+                  font-size: 18px;
+                }
+
+                .statText {
+                  font-size: 11px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .features {
+      .wrapper {
+        gap: 20px;
+
+        .section {
+          padding: 20px;
+
+          .sectionTitle {
+            font-size: 17px;
+            gap: 10px;
+
+            svg {
+              width: 22px;
+              height: 22px;
+            }
+          }
+
+          .featureGrid {
+            gap: 12px;
+
+            .featureItem {
+              padding: 14px;
+
+              .featureIcon {
+                width: 40px;
+                height: 40px;
+
+                svg {
+                  width: 20px;
+                  height: 20px;
+                }
+              }
+
+              .featureContent {
+                .featureLabel {
+                  font-size: 12px;
+                }
+
+                .featureValue {
+                  font-size: 14px;
+                }
+              }
+            }
+          }
+
+          .nearbyPlaces {
+            gap: 12px;
+
+            .placeItem {
+              padding: 14px;
+
+              .placeIcon {
+                width: 44px;
+                height: 44px;
+
+                svg {
+                  width: 22px;
+                  height: 22px;
+                }
+              }
+
+              .placeInfo {
+                .placeName {
+                  font-size: 14px;
+                }
+
+                .placeDistance {
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+
+        .mapContainer {
+          height: 250px;
+        }
+
+        .actionButtons {
+          gap: 10px;
+
+          .actionBtn {
+            padding: 14px 20px;
+            font-size: 14px;
+
+            svg {
+              width: 18px;
+              height: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .singlePage {
+    padding: 12px 12px;
+    gap: 20px;
+
+    .details {
+      .wrapper {
+        gap: 20px;
+
+        .propertyHeader {
+          padding: 16px;
+
+          .headerLeft {
+            h1 {
+              font-size: 20px;
+            }
+
+            .address {
+              font-size: 13px;
+            }
+          }
+
+          .headerRight {
+            .priceCard {
+              padding: 16px 20px;
+
+              .price {
+                font-size: 24px;
+              }
+            }
+          }
+        }
+
+        .quickStats {
+          grid-template-columns: 1fr;
+          gap: 10px;
+
+          .statCard {
+            padding: 16px;
+          }
+        }
+
+        .descriptionSection,
+        .agentCard {
+          padding: 16px;
+
+          h2, h3 {
+            font-size: 17px;
+          }
+        }
+
+        .agentCard {
+          .agentHeader {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+          }
+
+          .agentContent {
+            .agentInfo {
+              .agentAvatar {
+                width: 60px;
+                height: 60px;
+              }
+            }
+
+            .agentStats {
+              gap: 12px;
+
+              .agentStat {
+                padding: 12px 16px;
+
+                .statNumber {
+                  font-size: 16px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .features {
+      .wrapper {
+        gap: 16px;
+
+        .section {
+          padding: 16px;
+        }
+
+        .mapContainer {
+          height: 220px;
+        }
+
+        .actionButtons {
+          .actionBtn {
+            padding: 13px 18px;
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+  .singlePage {
+    background: #111827;
+
+    .breadcrumb,
+    .details .wrapper .propertyHeader,
+    .details .wrapper .quickStats .statCard,
+    .details .wrapper .descriptionSection,
+    .details .wrapper .agentCard,
+    .features .wrapper .section,
+    .features .wrapper .actionButtons .actionBtn.secondary,
+    .features .wrapper .actionButtons .shareMenu {
+      background: #1f2937;
+      border-color: #374151;
+    }
+
+    .breadcrumb .breadcrumbItem,
+    .details .wrapper .propertyHeader .headerLeft h1,
+    .details .wrapper .propertyHeader .headerLeft .address,
+    .details .wrapper .quickStats .statCard .statInfo .statValue,
+    .details .wrapper .descriptionSection h2,
+    .details .wrapper .descriptionSection .description,
+    .details .wrapper .agentCard .agentHeader h3,
+    .details .wrapper .agentCard .agentContent .agentInfo .agentDetails h4,
+    .features .wrapper .section .sectionTitle,
+    .features .wrapper .section .featureGrid .featureItem .featureContent .featureValue,
+    .features .wrapper .section .nearbyPlaces .placeItem .placeInfo .placeName {
+      color: #f3f4f6;
+    }
+
+    .details .wrapper .propertyHeader .headerLeft .address,
+    .details .wrapper .quickStats .statCard .statInfo .statLabel,
+    .details .wrapper .descriptionSection .description,
+    .details .wrapper .agentCard .agentContent .agentInfo .agentDetails p,
+    .features .wrapper .section .featureGrid .featureItem .featureContent .featureLabel,
+    .features .wrapper .section .nearbyPlaces .placeItem .placeInfo .placeDistance {
+      color: #9ca3af;
+    }
+
+    .details .wrapper .quickStats .statCard,
+    .features .wrapper .section .featureGrid .featureItem,
+    .features .wrapper .section .nearbyPlaces .placeItem {
+      background: #111827;
+
+      &:hover {
+        background: #1f2937;
+      }
+    }
+
+    .details .wrapper .agentCard {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+    }
+
+    .details .wrapper .agentCard .agentContent .agentStats .agentStat,
+    .features .wrapper .section .featureGrid .featureItem .featureIcon {
+      background: #111827;
+      border-color: #374151;
+    }
+
+    .features .wrapper .actionButtons .actionBtn.secondary {
+      color: #f3f4f6;
+
+      &:hover {
+        background: #111827;
+      }
+    }
+  }
+}

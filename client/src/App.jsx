@@ -6,10 +6,13 @@ import HomePage from "./routes/homepage/HomePage";
 // import AboutPage from "./routes/about/AboutPage";
 // import ContactPage from "./routes/contact/ContactPage";
 // import AgentsPage from "./routes/agents/AgentsPage";
+import SinglePage from "./routes/singlepage/Singlepage";
+import NewPostPage from "./routes/newpostpage/Newpostpage";
 import ProfilePage from "./routes/profilePage/ProfilePage";
 import LoginPage from "./routes/loginPage/LoginPage";
 import RegisterPage from "./routes/registerPage/RegisterPage";
-import { profilePageLoader } from "./lib/loaders";
+import ListPage from "./routes/listpage/Listpage";
+import { profilePageLoader, singlePageLoader, listPageLoader } from "./lib/loaders";
 import ProfileUpdatePage from "./routes/profileupdate/ProfileUpdatePage";
 import { RequireAuth } from "./components/layout/Layout";
 
@@ -22,6 +25,16 @@ function App() {
         {
           path: "/",
           element: <HomePage />,
+        },
+        {
+          path: "/list",
+          element: <ListPage />,
+          loader: listPageLoader,
+        },
+        {
+          path: "/:id",
+          element: <SinglePage />,
+          loader: singlePageLoader,
         },
         // Add these routes as you create the components
         // {
@@ -62,10 +75,10 @@ function App() {
           path: "/profile/update",
           element: <ProfileUpdatePage />,
         },
-        // {
-        //   path: "/add",
-        //   element: <NewPostPage />,
-        // },
+        {
+          path: "/add",
+          element: <NewPostPage />,
+        },
       ],
     },
   ]);

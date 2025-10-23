@@ -1,0 +1,1003 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #1e40af;
+$accent-color: #f59e0b;
+$text-dark: #1f2937;
+$text-light: #6b7280;
+$bg-white: #ffffff;
+$bg-gray: #f9fafb;
+$border-color: #e5e7eb;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+.slider {
+  width: 100%;
+  height: 400px;
+  display: flex;
+  gap: 16px;
+  position: relative;
+
+  &.emptySlider {
+    .emptyState {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: $bg-gray;
+      border-radius: 16px;
+      gap: 16px;
+
+      svg {
+        width: 64px;
+        height: 64px;
+        color: #d1d5db;
+      }
+
+      p {
+        font-size: 16px;
+        color: $text-light;
+        font-weight: 500;
+      }
+    }
+  }
+
+  // Full Screen Slider
+  .fullSlider {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.97);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+    padding: 20px;
+
+    .fullSliderContent {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+    }
+
+    .arrow {
+      width: 60px;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex-shrink: 0;
+      z-index: 10;
+
+      svg {
+        width: 28px;
+        height: 28px;
+        color: white;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: scale(1.1);
+
+        svg {
+          transform: scale(1.2);
+        }
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &.left {
+        animation: slideInLeft 0.4s ease;
+      }
+
+      &.right {
+        animation: slideInRight 0.4s ease;
+      }
+    }
+
+    .imgContainer {
+      flex: 1;
+      height: 90vh;
+      max-height: 900px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      animation: zoomIn 0.4s ease;
+
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 12px;
+        box-shadow: $shadow-xl;
+        user-select: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      // Image Counter
+      .imageCounter {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        box-shadow: $shadow-lg;
+        animation: slideUp 0.4s ease;
+
+        .currentImage {
+          font-size: 20px;
+          color: $primary-color;
+        }
+
+        .separator {
+          color: rgba(255, 255, 255, 0.5);
+        }
+
+        .totalImages {
+          color: rgba(255, 255, 255, 0.8);
+        }
+      }
+
+      // Navigation Dots
+      .navigationDots {
+        position: absolute;
+        bottom: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        padding: 12px 20px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        max-width: 90%;
+        overflow-x: auto;
+        animation: slideUp 0.4s ease 0.1s backwards;
+
+        &::-webkit-scrollbar {
+          height: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.3);
+          border-radius: 2px;
+        }
+
+        .dot {
+          width: 8px;
+          height: 8px;
+          background: rgba(255, 255, 255, 0.4);
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(1.3);
+          }
+
+          &.active {
+            background: white;
+            width: 24px;
+            border-radius: 4px;
+          }
+        }
+      }
+    }
+
+    // Close Button
+    .close {
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 11;
+      animation: fadeIn 0.4s ease;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        color: white;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: rgba(239, 68, 68, 0.9);
+        border-color: rgba(239, 68, 68, 1);
+        transform: rotate(90deg) scale(1.1);
+
+        svg {
+          transform: rotate(-90deg);
+        }
+      }
+
+      &:active {
+        transform: rotate(90deg) scale(0.95);
+      }
+    }
+
+    // Download Button
+    .downloadBtn {
+      position: absolute;
+      top: 30px;
+      right: 100px;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 11;
+      text-decoration: none;
+      animation: fadeIn 0.4s ease 0.1s backwards;
+
+      svg {
+        width: 22px;
+        height: 22px;
+        color: white;
+        transition: transform 0.3s ease;
+      }
+
+      &:hover {
+        background: rgba(37, 99, 235, 0.9);
+        border-color: rgba(37, 99, 235, 1);
+        transform: translateY(-3px);
+        box-shadow: $shadow-lg;
+
+        svg {
+          transform: translateY(2px);
+        }
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+
+  // Main/Big Image
+  .bigImage {
+    flex: 3;
+    height: 100%;
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+
+    .imageWrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: $bg-gray;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+
+      &.loaded {
+        opacity: 1;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        cursor: pointer;
+        user-select: none;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+
+      // Gallery Badge
+      .galleryBadge {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        color: $text-dark;
+        cursor: pointer;
+        box-shadow: $shadow-lg;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        animation: slideInLeft 0.6s ease;
+
+        svg {
+          width: 18px;
+          height: 18px;
+          color: $primary-color;
+          transition: transform 0.3s ease;
+        }
+
+        &:hover {
+          background: $primary-color;
+          color: white;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+
+          svg {
+            color: white;
+            transform: scale(1.1);
+          }
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+
+      // Image Count Badge
+      .imageCountBadge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        color: white;
+        box-shadow: $shadow-md;
+        animation: slideInRight 0.6s ease;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  // Small/Thumbnail Images
+  .smallImages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 16px;
+    height: 100%;
+
+    .thumbnailWrapper {
+      flex: 1;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: $bg-gray;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.4s ease;
+
+      &.loaded {
+        opacity: 1;
+      }
+
+      &:nth-child(1) {
+        animation: fadeInUp 0.6s ease 0.1s backwards;
+      }
+
+      &:nth-child(2) {
+        animation: fadeInUp 0.6s ease 0.2s backwards;
+      }
+
+      &:nth-child(3) {
+        animation: fadeInUp 0.6s ease 0.3s backwards;
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        user-select: none;
+        transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &:hover {
+        img {
+          transform: scale(1.1);
+        }
+
+        .moreImagesOverlay {
+          background: rgba(37, 99, 235, 0.95);
+        }
+      }
+
+      // More Images Overlay
+      .moreImagesOverlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+
+        svg {
+          width: 32px;
+          height: 32px;
+          color: white;
+        }
+
+        span {
+          font-size: 24px;
+          font-weight: 800;
+          color: white;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+      }
+    }
+  }
+
+  // Image Skeleton
+  .imageSkeleton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    overflow: hidden;
+
+    .skeletonShimmer {
+      width: 100%;
+      height: 100%;
+      animation: shimmer 1.5s infinite;
+    }
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .slider {
+    height: 350px;
+
+    .fullSlider {
+      .arrow {
+        width: 50px;
+        height: 50px;
+
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+
+      .imgContainer {
+        height: 85vh;
+
+        .imageCounter {
+          bottom: 25px;
+          padding: 10px 20px;
+          font-size: 14px;
+
+          .currentImage {
+            font-size: 18px;
+          }
+        }
+
+        .navigationDots {
+          bottom: 75px;
+          padding: 10px 16px;
+          gap: 8px;
+
+          .dot {
+            width: 7px;
+            height: 7px;
+
+            &.active {
+              width: 20px;
+            }
+          }
+        }
+      }
+
+      .close,
+      .downloadBtn {
+        top: 20px;
+        width: 45px;
+        height: 45px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .downloadBtn {
+        right: 85px;
+      }
+    }
+
+    .bigImage {
+      .imageWrapper {
+        .galleryBadge {
+          bottom: 16px;
+          left: 16px;
+          padding: 10px 16px;
+          font-size: 13px;
+
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        .imageCountBadge {
+          top: 16px;
+          right: 16px;
+          padding: 8px 14px;
+          font-size: 12px;
+
+          svg {
+            width: 15px;
+            height: 15px;
+          }
+        }
+      }
+    }
+
+    .smallImages {
+      gap: 14px;
+
+      .thumbnailWrapper {
+        .moreImagesOverlay {
+          svg {
+            width: 28px;
+            height: 28px;
+          }
+
+          span {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .slider {
+    height: 300px;
+    flex-direction: column;
+
+    .fullSlider {
+      padding: 15px;
+
+      .fullSliderContent {
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 45px;
+        height: 45px;
+        z-index: 12;
+
+        &.left {
+          left: 15px;
+        }
+
+        &.right {
+          right: 15px;
+        }
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+      }
+
+      .imgContainer {
+        height: 70vh;
+        max-height: 600px;
+        width: 100%;
+
+        .imageCounter {
+          bottom: 20px;
+          padding: 8px 16px;
+          font-size: 13px;
+
+          .currentImage {
+            font-size: 16px;
+          }
+        }
+
+        .navigationDots {
+          bottom: 65px;
+          padding: 8px 14px;
+          gap: 6px;
+
+          .dot {
+            width: 6px;
+            height: 6px;
+
+            &.active {
+              width: 18px;
+            }
+          }
+        }
+      }
+
+      .close,
+      .downloadBtn {
+        top: 15px;
+        width: 42px;
+        height: 42px;
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .close {
+        right: 15px;
+      }
+
+      .downloadBtn {
+        right: 70px;
+      }
+    }
+
+    .bigImage {
+      flex: 2;
+      border-radius: 14px;
+
+      .imageWrapper {
+        .galleryBadge {
+          bottom: 12px;
+          left: 12px;
+          padding: 8px 14px;
+          font-size: 12px;
+
+          svg {
+            width: 15px;
+            height: 15px;
+          }
+        }
+
+        .imageCountBadge {
+          top: 12px;
+          right: 12px;
+          padding: 7px 12px;
+          font-size: 11px;
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+      }
+    }
+
+    .smallImages {
+      flex: 1;
+      flex-direction: row;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 4px;
+
+      &::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: $bg-gray;
+        border-radius: 2px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 2px;
+
+        &:hover {
+          background: #9ca3af;
+        }
+      }
+
+      .thumbnailWrapper {
+        flex: 0 0 calc(33.333% - 8px);
+        min-width: 120px;
+        border-radius: 10px;
+
+        .moreImagesOverlay {
+          svg {
+            width: 24px;
+            height: 24px;
+          }
+
+          span {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .slider {
+    height: 280px;
+
+    .fullSlider {
+      padding: 10px;
+
+      .arrow {
+        width: 40px;
+        height: 40px;
+
+        &.left {
+          left: 10px;
+        }
+
+        &.right {
+          right: 10px;
+        }
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
+      }
+
+      .imgContainer {
+        height: 65vh;
+
+        .imageCounter {
+          bottom: 15px;
+          padding: 7px 14px;
+          font-size: 12px;
+
+          .currentImage {
+            font-size: 15px;
+          }
+        }
+
+        .navigationDots {
+          display: none; // Hide dots on very small screens
+        }
+      }
+
+      .close,
+      .downloadBtn {
+        top: 10px;
+        width: 38px;
+        height: 38px;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .close {
+        right: 10px;
+      }
+
+      .downloadBtn {
+        right: 60px;
+      }
+    }
+
+    .bigImage {
+      border-radius: 12px;
+
+      .imageWrapper {
+        .galleryBadge {
+          bottom: 10px;
+          left: 10px;
+          padding: 7px 12px;
+          font-size: 11px;
+          gap: 6px;
+
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+
+        .imageCountBadge {
+          top: 10px;
+          right: 10px;
+          padding: 6px 10px;
+          font-size: 10px;
+
+          svg {
+            width: 13px;
+            height: 13px;
+          }
+        }
+      }
+    }
+
+    .smallImages {
+      gap: 10px;
+
+      .thumbnailWrapper {
+        flex: 0 0 calc(33.333% - 7px);
+        min-width: 100px;
+
+        .moreImagesOverlay {
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+
+          span {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark mode support (optional)
+@media (prefers-color-scheme: dark) {
+  .slider {
+    .bigImage,
+    .smallImages .thumbnailWrapper {
+      .imageSkeleton {
+        background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+        background-size: 200% 100%;
+      }
+    }
+
+    .bigImage {
+      .imageWrapper {
+        .galleryBadge {
+          background: rgba(31, 41, 55, 0.95);
+          color: #f3f4f6;
+          border-color: rgba(55, 65, 81, 0.5);
+        }
+      }
+    }
+  }
+}

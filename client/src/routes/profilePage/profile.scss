@@ -1,432 +1,1116 @@
+// profile.scss
 @use "sass:color";
 
-$primary-color: #4a90e2;
-$primary-dark: #2e5f8f;
-$background-light: #f5f7fa;
-$text-dark: #1a1a1a;
-$text-muted: #6b7280;
-$border-color: #e5e7eb;
-$accent-color: #fbbf24;
-$success-color: #10b981;
-$card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 10px 25px rgba(0, 0, 0, 0.08);
-$card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.07), 0 15px 35px rgba(0, 0, 0, 0.1);
+// Premium Real Estate Color Palette
+$primary: #0f172a;
+$primary-light: #1e293b;
+$accent: #2563eb;
+$accent-hover: #1d4ed8;
+$accent-light: #3b82f6;
+$success: #10b981;
+$success-light: #34d399;
+$warning: #f59e0b;
+$warning-light: #fbbf24;
+$info: #06b6d4;
+$info-light: #22d3ee;
+$danger: #ef4444;
+$text-dark: #0f172a;
+$text-medium: #475569;
+$text-light: #64748b;
+$background: #ffffff;
+$background-light: #f8fafc;
+$background-dark: #f1f5f9;
+$border: #e2e8f0;
+$shadow-soft: rgba(15, 23, 42, 0.04);
+$shadow-medium: rgba(15, 23, 42, 0.08);
+$shadow-heavy: rgba(15, 23, 42, 0.15);
+$shadow-xl: rgba(15, 23, 42, 0.25);
 
 .profilePage {
-  margin-top: 45px;
-  display: flex;
   min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8eff7 100%);
-  color: $text-dark;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: linear-gradient(135deg, $background-light 0%, $background-dark 100%);
+  padding-top: 85px;
+  animation: fadeIn 0.6s ease;
 
-  @media (max-width: 900px) {
-    flex-direction: column;
-  }
+  // Hero Header Section
+  &__hero {
+    position: relative;
+    background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
+    padding: 3rem 0 8rem;
+    overflow: hidden;
 
-  .profileSection {
-    flex: 3;
-    padding: 2.5rem 3rem;
-    overflow-y: auto;
-
-    @media (max-width: 900px) {
-      padding: 1.5rem;
-      width: 100%;
+    &-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba($accent, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba($accent-light, 0.08) 0%, transparent 50%);
+      animation: patternMove 20s ease-in-out infinite;
     }
 
-    .profileCard {
-      background: white;
-      border-radius: 16px;
-      padding: 0;
-      box-shadow: $card-shadow;
-      overflow: hidden;
-      transition: box-shadow 0.3s ease;
+    &-content {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
 
-      &:hover {
-        box-shadow: $card-shadow-hover;
-      }
-
-      .profileHeader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        padding: 2rem 2.5rem;
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        border-bottom: 1px solid $border-color;
-        gap: 1.5rem;
-
-        @media (max-width: 768px) {
-          padding: 1.5rem;
-        }
-
-        .profileUser {
-          display: flex;
-          align-items: center;
-          gap: 1.5rem;
-
-          .avatarWrapper {
-            position: relative;
-
-            .avatar {
-              width: 90px;
-              height: 90px;
-              border-radius: 50%;
-              object-fit: cover;
-              border: 4px solid white;
-              box-shadow: 0 4px 14px rgba(74, 144, 226, 0.25);
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            }
-
-            .statusIndicator {
-              position: absolute;
-              bottom: 4px;
-              right: 4px;
-              width: 18px;
-              height: 18px;
-              background-color: $success-color;
-              border: 3px solid white;
-              border-radius: 50%;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
-          }
-
-          .userInfo {
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-
-            h2 {
-              font-size: 1.75rem;
-              font-weight: 700;
-              color: $text-dark;
-              margin: 0;
-              letter-spacing: -0.02em;
-            }
-
-            .userEmail {
-              font-size: 0.95rem;
-              color: $text-muted;
-              margin: 0;
-            }
-
-            .userBadge {
-              display: inline-flex;
-              align-items: center;
-              padding: 0.25rem 0.75rem;
-              background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-              color: white;
-              font-size: 0.75rem;
-              font-weight: 600;
-              border-radius: 12px;
-              width: fit-content;
-              text-transform: uppercase;
-              letter-spacing: 0.05em;
-              box-shadow: 0 2px 8px rgba(251, 191, 36, 0.3);
-            }
-          }
-        }
-
-        .profileActions {
-          display: flex;
-          gap: 0.75rem;
-
-          .updateBtn,
-          .logoutBtn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s ease;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-
-            svg {
-              width: 16px;
-              height: 16px;
-            }
-
-            &:active {
-              transform: translateY(1px);
-            }
-          }
-
-          .updateBtn {
-            background: linear-gradient(135deg, $primary-color 0%, $primary-dark 100%);
-            color: white;
-
-            &:hover {
-              box-shadow: 0 4px 12px rgba(74, 144, 226, 0.35);
-              transform: translateY(-1px);
-            }
-          }
-
-          .logoutBtn {
-            background: white;
-            color: #dc2626;
-            border: 1.5px solid #fecaca;
-
-            &:hover {
-              background: #fef2f2;
-              border-color: #dc2626;
-              box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
-              transform: translateY(-1px);
-            }
-          }
-        }
-      }
-
-      .statsBar {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        padding: 1.75rem 2.5rem;
-        background: white;
-        border-bottom: 1px solid $border-color;
-        gap: 1.5rem;
-
-        @media (max-width: 768px) {
-          flex-direction: column;
-          padding: 1.5rem;
-          gap: 1rem;
-        }
-
-        .statItem {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          flex: 1;
-
-          @media (max-width: 768px) {
-            width: 100%;
-          }
-
-          .statIcon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            transition: transform 0.2s ease;
-
-            &:hover {
-              transform: scale(1.05);
-            }
-          }
-
-          .statContent {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-
-            .statValue {
-              font-size: 1.4rem;
-              font-weight: 700;
-              color: $text-dark;
-              line-height: 1;
-            }
-
-            .statLabel {
-              font-size: 0.8rem;
-              color: $text-muted;
-              font-weight: 500;
-            }
-          }
-        }
-
-        .statDivider {
-          width: 1px;
-          height: 40px;
-          background: $border-color;
-
-          @media (max-width: 768px) {
-            display: none;
-          }
-        }
-      }
-
-      .profileLists {
-        display: flex;
-        flex-direction: column;
-        padding: 2rem 2.5rem;
-        gap: 2.5rem;
-
-        @media (max-width: 768px) {
-          padding: 1.5rem;
-        }
-
-        .listSection {
-          display: flex;
-          flex-direction: column;
-          gap: 1.25rem;
-
-          .sectionHeader {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-
-            .headerLeft {
-              display: flex;
-              align-items: center;
-              gap: 0.75rem;
-
-              h3 {
-                font-size: 1.35rem;
-                font-weight: 700;
-                color: $text-dark;
-                margin: 0;
-                letter-spacing: -0.01em;
-              }
-
-              .badge {
-                display: inline-flex;
-                align-items: center;
-                padding: 0.35rem 0.85rem;
-                background-color: #dbeafe;
-                color: #1e40af;
-                font-size: 0.75rem;
-                font-weight: 600;
-                border-radius: 20px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-
-                &.secondary {
-                  background-color: #fce7f3;
-                  color: #be185d;
-                }
-              }
-            }
-
-            .primaryBtn {
-              display: inline-flex;
-              align-items: center;
-              gap: 0.5rem;
-              background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-              color: $text-dark;
-              font-weight: 700;
-              font-size: 0.9rem;
-              border-radius: 10px;
-              padding: 0.75rem 1.5rem;
-              text-decoration: none;
-              transition: all 0.2s ease;
-              box-shadow: 0 2px 8px rgba(251, 191, 36, 0.25);
-
-              svg {
-                width: 16px;
-                height: 16px;
-              }
-
-              &:hover {
-                box-shadow: 0 4px 14px rgba(251, 191, 36, 0.4);
-                transform: translateY(-2px);
-              }
-
-              &:active {
-                transform: translateY(0);
-              }
-            }
-          }
-
-          .loadingState {
-            padding: 2rem;
-            text-align: center;
-            color: $text-muted;
-            font-size: 0.95rem;
-          }
-
-          .errorState {
-            padding: 1.5rem;
-            background: #fef2f2;
-            color: #dc2626;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 0.95rem;
-          }
-        }
+      @media (max-width: 768px) {
+        padding: 0 1.5rem;
       }
     }
   }
 
-  .chatSection {
-    flex: 2;
-    background-color: transparent;
+  &__user-card {
     display: flex;
-    align-items: stretch;
-    justify-content: center;
-    padding: 2.5rem 3rem 2.5rem 0;
+    align-items: flex-start;
+    gap: 2.5rem;
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+      0 10px 40px $shadow-xl,
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 
     @media (max-width: 900px) {
-      height: 400px;
-      padding: 0 1.5rem 1.5rem 1.5rem;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 2rem;
+      padding: 2rem 1.5rem;
+    }
+  }
+
+  // Avatar Section
+  &__avatar-section {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  &__avatar-wrapper {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    padding: 6px;
+    background: linear-gradient(135deg, $accent 0%, $accent-light 100%);
+    animation: rotateGradient 3s linear infinite;
+
+    @media (max-width: 768px) {
+      width: 120px;
+      height: 120px;
+    }
+  }
+
+  &__avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 8px 24px $shadow-medium;
+  }
+
+  &__status-indicator {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, $success 0%, $success-light 100%);
+    border: 4px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.125rem;
+    box-shadow: 0 4px 12px rgba($success, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  &__avatar-border {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, transparent, rgba($accent, 0.2), transparent);
+    animation: rotate 4s linear infinite;
+    pointer-events: none;
+  }
+
+  &__avatar-edit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, $accent 0%, $accent-light 100%);
+    border: 4px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.125rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba($accent, 0.3);
+
+    &:hover {
+      transform: scale(1.1) rotate(15deg);
+      box-shadow: 0 6px 20px rgba($accent, 0.5);
+    }
+  }
+
+  // User Info
+  &__user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+
+    @media (max-width: 900px) {
+      align-items: center;
+    }
+  }
+
+  &__user-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 900px) {
+      justify-content: center;
+    }
+  }
+
+  &__username {
+    font-size: 2rem;
+    font-weight: 800;
+    color: $primary;
+    margin: 0;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+
+  &__verified-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: linear-gradient(135deg, rgba($accent, 0.12) 0%, rgba($accent-light, 0.08) 100%);
+    border-radius: 20px;
+    color: $accent;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border: 1px solid rgba($accent, 0.2);
+
+    svg {
+      font-size: 1.125rem;
+    }
+  }
+
+  &__email {
+    font-size: 1rem;
+    color: $text-medium;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  &__user-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+
+    @media (max-width: 900px) {
+      justify-content: center;
+    }
+  }
+
+  &__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9375rem;
+    color: $text-medium;
+    font-weight: 500;
+
+    svg {
+      font-size: 1.125rem;
+      color: $accent;
+    }
+  }
+
+  // Actions
+  &__actions {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+
+    @media (max-width: 900px) {
+      width: 100%;
+      flex-direction: column;
+    }
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    border: none;
+    white-space: nowrap;
+
+    svg {
+      font-size: 1.125rem;
+      transition: transform 0.3s ease;
     }
 
-    .chatWrapper {
-      background: white;
-      border-radius: 16px;
-      width: 100%;
-      box-shadow: $card-shadow;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: box-shadow 0.3s ease;
+    &:hover svg {
+      transform: scale(1.1);
+    }
+
+    &--primary {
+      background: linear-gradient(135deg, $accent 0%, $accent-light 100%);
+      color: white;
+      box-shadow: 0 4px 16px rgba($accent, 0.3);
 
       &:hover {
-        box-shadow: $card-shadow-hover;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba($accent, 0.4);
+      }
+    }
+
+    &--secondary {
+      background: white;
+      color: $danger;
+      border: 2px solid rgba($danger, 0.2);
+      box-shadow: 0 2px 8px $shadow-soft;
+
+      &:hover {
+        background: rgba($danger, 0.05);
+        border-color: rgba($danger, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($danger, 0.15);
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  // Container
+  &__container {
+    max-width: 1400px;
+    margin: -5rem auto 0;
+    padding: 0 2.5rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+      margin-top: -4rem;
+    }
+
+    @media (max-width: 768px) {
+      padding: 0 1.5rem 2rem;
+    }
+  }
+
+  // Main Content
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    min-width: 0;
+  }
+
+  // Stats Cards
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  &__stat-card {
+    position: relative;
+    padding: 1.75rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid $border;
+    box-shadow: 
+      0 1px 3px $shadow-soft,
+      0 4px 12px $shadow-medium;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 
+        0 4px 16px $shadow-medium,
+        0 12px 40px $shadow-heavy;
+      border-color: transparent;
+    }
+
+    &--primary::before {
+      background: linear-gradient(90deg, $accent 0%, $accent-light 100%);
+    }
+
+    &--success::before {
+      background: linear-gradient(90deg, $success 0%, $success-light 100%);
+    }
+
+    &--info::before {
+      background: linear-gradient(90deg, $info 0%, $info-light 100%);
+    }
+
+    &--warning::before {
+      background: linear-gradient(90deg, $warning 0%, $warning-light 100%);
+    }
+  }
+
+  &__stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    font-size: 1.5rem;
+    margin-bottom: 1.25rem;
+    transition: transform 0.3s ease;
+
+    .profilePage__stat-card:hover & {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .profilePage__stat-card--primary & {
+      background: linear-gradient(135deg, rgba($accent, 0.12) 0%, rgba($accent-light, 0.08) 100%);
+      color: $accent;
+    }
+
+    .profilePage__stat-card--success & {
+      background: linear-gradient(135deg, rgba($success, 0.12) 0%, rgba($success-light, 0.08) 100%);
+      color: $success;
+    }
+
+    .profilePage__stat-card--info & {
+      background: linear-gradient(135deg, rgba($info, 0.12) 0%, rgba($info-light, 0.08) 100%);
+      color: $info;
+    }
+
+    .profilePage__stat-card--warning & {
+      background: linear-gradient(135deg, rgba($warning, 0.12) 0%, rgba($warning-light, 0.08) 100%);
+      color: $warning;
+    }
+  }
+
+  &__stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 1rem;
+  }
+
+  &__stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: $primary;
+    letter-spacing: -0.5px;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    font-size: 0.875rem;
+    color: $text-medium;
+    font-weight: 600;
+  }
+
+  &__stat-trend {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: $background-light;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    color: $text-medium;
+    font-weight: 600;
+    width: fit-content;
+
+    svg {
+      font-size: 1rem;
+    }
+
+    &--up {
+      background: rgba($success, 0.1);
+      color: $success;
+    }
+  }
+
+  // Tabs
+  &__tabs {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid $border;
+    box-shadow: 
+      0 1px 3px $shadow-soft,
+      0 4px 12px $shadow-medium;
+    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+
+  &__tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: $text-medium;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+
+    svg {
+      font-size: 1.25rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      background: $background-light;
+      color: $accent;
+
+      svg {
+        transform: scale(1.1);
+      }
+    }
+
+    &--active {
+      background: linear-gradient(135deg, rgba($accent, 0.12) 0%, rgba($accent-light, 0.08) 100%);
+      border-color: rgba($accent, 0.3);
+      color: $accent;
+
+      svg {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  &__tab-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: $accent;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba($accent, 0.3);
+
+    .profilePage__tab:not(.profilePage__tab--active) & {
+      background: $text-light;
+    }
+  }
+
+  // Section
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+  }
+
+  &__section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  &__section-title {
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: $primary;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.5px;
+
+      @media (max-width: 768px) {
+        font-size: 1.5rem;
+      }
+    }
+
+    p {
+      font-size: 0.9375rem;
+      color: $text-medium;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  &__add-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, $warning 0%, $warning-light 100%);
+    color: white;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba($warning, 0.3);
+    position: relative;
+    overflow: hidden;
+
+    svg {
+      font-size: 1.125rem;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba($warning, 0.4);
+
+      svg {
+        transform: rotate(90deg) scale(1.1);
       }
 
-      .chatHeader {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1.5rem 1.75rem;
-        background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-        border-bottom: 1px solid $border-color;
+      .profilePage__btn-shine {
+        transform: translateX(100%) translateY(100%);
+      }
+    }
 
-        h3 {
-          font-size: 1.25rem;
-          font-weight: 700;
-          color: $text-dark;
-          margin: 0;
-          letter-spacing: -0.01em;
-        }
+    &:active {
+      transform: translateY(0);
+    }
 
-        .notificationBadge {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 24px;
-          height: 24px;
-          padding: 0 0.5rem;
-          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-          color: white;
-          font-size: 0.75rem;
-          font-weight: 700;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-        }
+    @media (max-width: 768px) {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  &__btn-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      45deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 70%
+    );
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    transition: transform 0.6s ease;
+  }
+
+  // Loading & Error States
+  &__loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed $border;
+    text-align: center;
+
+    &-spinner {
+      width: 56px;
+      height: 56px;
+      border: 4px solid $border;
+      border-top-color: $accent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    p {
+      font-size: 1rem;
+      color: $text-medium;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    &--compact {
+      padding: 2rem 1.5rem;
+
+      .profilePage__loading-spinner {
+        width: 40px;
+        height: 40px;
       }
 
-      .loadingState {
-        padding: 2rem;
-        text-align: center;
-        color: $text-muted;
-        font-size: 0.95rem;
+      p {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  &__error {
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba($danger, 0.08) 0%, rgba($danger, 0.04) 100%);
+    border: 2px solid rgba($danger, 0.2);
+    border-radius: 16px;
+    text-align: center;
+    color: $danger;
+    font-weight: 600;
+
+    p {
+      margin: 0;
+    }
+
+    &--compact {
+      padding: 1.5rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  // Sidebar
+  &__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
+
+    @media (max-width: 1024px) {
+      grid-column: 1;
+    }
+  }
+
+  &__chat-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid $border;
+    box-shadow: 
+      0 1px 3px $shadow-soft,
+      0 4px 12px $shadow-medium;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: 
+        0 4px 16px $shadow-medium,
+        0 12px 40px $shadow-heavy;
+      border-color: rgba($accent, 0.2);
+    }
+
+    @media (max-width: 1024px) {
+      max-height: 500px;
+    }
+  }
+
+  &__chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 1.75rem;
+    background: linear-gradient(135deg, $background 0%, $background-light 100%);
+    border-bottom: 1px solid $border;
+  }
+
+  &__chat-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    svg {
+      font-size: 1.5rem;
+      color: $accent;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: $primary;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+  }
+
+  &__chat-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 10px;
+    background: linear-gradient(135deg, $danger 0%, color.adjust($danger, $lightness: -10%) 100%);
+    color: white;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba($danger, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotateGradient {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes patternMove {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(30px, 30px);
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .profilePage {
+    &__hero {
+      padding: 2.5rem 0 6rem;
+    }
+
+    &__container {
+      gap: 2rem;
+    }
+
+    &__stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .profilePage {
+    padding-top: 72px;
+
+    &__hero {
+      padding: 2rem 0 5rem;
+    }
+
+    &__user-card {
+      padding: 2rem 1.5rem;
+    }
+
+    &__avatar-wrapper {
+      width: 110px;
+      height: 110px;
+    }
+
+    &__username {
+      font-size: 1.5rem;
+    }
+
+    &__verified-badge {
+      padding: 6px 12px;
+      font-size: 0.75rem;
+
+      svg {
+        font-size: 1rem;
+      }
+    }
+
+    &__actions {
+      gap: 0.75rem;
+    }
+
+    &__btn {
+      padding: 12px 24px;
+      font-size: 0.875rem;
+
+      svg {
+        font-size: 1rem;
+      }
+    }
+
+    &__container {
+      margin-top: -4rem;
+      padding: 0 1.5rem 2rem;
+      gap: 1.5rem;
+    }
+
+    &__stats {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    &__stat-card {
+      padding: 1.5rem;
+    }
+
+    &__stat-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    &__stat-value {
+      font-size: 1.75rem;
+    }
+
+    &__section-title h2 {
+      font-size: 1.375rem;
+    }
+
+    &__tabs {
+      padding: 0.75rem;
+    }
+
+    &__tab {
+      padding: 12px 20px;
+      font-size: 0.875rem;
+
+      svg {
+        font-size: 1.125rem;
+      }
+    }
+
+    &__chat-card {
+      max-height: 450px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .profilePage {
+    &__hero {
+      padding: 1.5rem 0 4rem;
+    }
+
+    &__user-card {
+      padding: 1.5rem 1.25rem;
+      gap: 1.5rem;
+    }
+
+    &__avatar-wrapper {
+      width: 100px;
+      height: 100px;
+    }
+
+    &__status-indicator {
+      width: 30px;
+      height: 30px;
+      font-size: 1rem;
+    }
+
+    &__username {
+      font-size: 1.375rem;
+    }
+
+    &__email {
+      font-size: 0.875rem;
+    }
+
+    &__user-meta {
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    &__meta-item {
+      font-size: 0.875rem;
+    }
+
+    &__btn {
+      padding: 11px 20px;
+    }
+
+    &__container {
+      margin-top: -3rem;
+      padding: 0 1rem 1.5rem;
+    }
+
+    &__stat-card {
+      padding: 1.25rem;
+    }
+
+    &__stat-value {
+      font-size: 1.5rem;
+    }
+
+    &__stat-label {
+      font-size: 0.8125rem;
+    }
+
+    &__section-header {
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    &__section-title h2 {
+      font-size: 1.25rem;
+    }
+
+    &__section-title p {
+      font-size: 0.875rem;
+    }
+
+    &__tab {
+      padding: 11px 18px;
+
+      span {
+        display: none;
       }
 
-      .errorState {
-        padding: 1.5rem;
-        margin: 1rem;
-        background: #fef2f2;
-        color: #dc2626;
-        border-radius: 8px;
-        text-align: center;
-        font-size: 0.95rem;
+      svg {
+        font-size: 1.375rem;
+      }
+    }
+
+    &__tab-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      font-size: 0.6875rem;
+    }
+
+    &__loading {
+      padding: 3rem 1.5rem;
+
+      &-spinner {
+        width: 48px;
+        height: 48px;
+      }
+
+      p {
+        font-size: 0.875rem;
+      }
+    }
+
+    &__chat-card {
+      max-height: 400px;
+    }
+
+    &__chat-header {
+      padding: 1.25rem 1.5rem;
+    }
+
+    &__chat-title {
+      gap: 10px;
+
+      svg {
+        font-size: 1.25rem;
+      }
+
+      h3 {
+        font-size: 1.125rem;
       }
     }
   }

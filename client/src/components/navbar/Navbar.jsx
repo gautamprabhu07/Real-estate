@@ -2,6 +2,15 @@ import { useState, useEffect, useRef, useContext, useMemo } from "react";
 import "./navbar.scss";
 import { TiThMenu } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
+import { 
+  HiHome, 
+  HiViewGrid, 
+  HiUserGroup, 
+  HiInformationCircle, 
+  HiMail,
+  HiBell,
+  HiChevronDown
+} from "react-icons/hi";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useNotificationStore } from "../../lib/notificationStore";
@@ -92,127 +101,138 @@ function Navbar() {
   // Check if link is active
   const isActiveLink = (path) => location.pathname === path;
 
+  // Navigation items with icons
+  const navItems = [
+    { path: "/", label: "Home", icon: HiHome },
+    { path: "/listings", label: "Properties", icon: HiViewGrid },
+    { path: "/agents", label: "Agents", icon: HiUserGroup },
+    { path: "/about", label: "About", icon: HiInformationCircle },
+    { path: "/contact", label: "Contact", icon: HiMail }
+  ];
+
   return (
-    <nav className={`navbar ${showNavbar ? "navbar--visible" : "navbar--hidden"} ${isScrolled ? "navbar--scrolled" : ""}`}>
-      <div className="navbar__container">
-        <div className="navbar__inner" ref={menuRef}>
-          {/* Brand Section */}
-          <div className="navbar__brand">
-            <Link to="/" className="navbar__logo">
-              <div className="navbar__logo-icon">
-                <img src="/logo.png" alt="UrbanLuxe Logo" />
-              </div>
-              <div className="navbar__logo-text">
-                <span className="navbar__logo-title">UrbanLuxe</span>
-                <span className="navbar__logo-subtitle">BUILDING CO.</span>
-              </div>
-            </Link>
-          </div>
+    <>
+      <nav className={`navbar ${showNavbar ? "navbar--visible" : "navbar--hidden"} ${isScrolled ? "navbar--scrolled" : ""}`}>
+        <div className="navbar__container">
+          <div className="navbar__inner" ref={menuRef}>
+            {/* Brand Section */}
+            <div className="navbar__brand">
+              <Link to="/" className="navbar__logo">
+                <div className="navbar__logo-icon">
+                  <img src="/logo.png" alt="UrbanLuxe Logo" />
+                  <div className="navbar__logo-glow"></div>
+                </div>
+                <div className="navbar__logo-text">
+                  <span className="navbar__logo-title">UrbanLuxe</span>
+                  <span className="navbar__logo-subtitle">BUILDING CO.</span>
+                </div>
+              </Link>
+            </div>
 
-          {/* Navigation Links */}
-          <nav className={`navbar__links ${menuOpen ? "navbar__links--active" : ""}`}>
-            <Link 
-              to="/" 
-              className={isActiveLink("/") ? "navbar__link navbar__link--active" : "navbar__link"}
-            >
-              Home
-            </Link>
-            <Link 
-              to="/listings" 
-              className={isActiveLink("/listings") ? "navbar__link navbar__link--active" : "navbar__link"}
-            >
-              Listings
-            </Link>
-            <Link 
-              to="/agents" 
-              className={isActiveLink("/agents") ? "navbar__link navbar__link--active" : "navbar__link"}
-            >
-              Agents
-            </Link>
-            <Link 
-              to="/about" 
-              className={isActiveLink("/about") ? "navbar__link navbar__link--active" : "navbar__link"}
-            >
-              About
-            </Link>
-            <Link 
-              to="/contact" 
-              className={isActiveLink("/contact") ? "navbar__link navbar__link--active" : "navbar__link"}
-            >
-              Contact
-            </Link>
+            {/* Navigation Links */}
+            <nav className={`navbar__links ${menuOpen ? "navbar__links--active" : ""}`}>
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = isActiveLink(item.path);
+                
+                return (
+                  <Link 
+                    key={item.path}
+                    to={item.path} 
+                    className={`navbar__link ${isActive ? "navbar__link--active" : ""}`}
+                  >
+                    <Icon className="navbar__link-icon" />
+                    <span>{item.label}</span>
+                    {isActive && <div className="navbar__link-indicator"></div>}
+                  </Link>
+                );
+              })}
 
-            {/* Mobile-only auth links */}
-            {!currentUser && (
-              <div className="navbar__mobile-auth">
-                <Link to="/login" className="navbar__mobile-login">
-                  Sign In
-                </Link>
-                <Link to="/register" className="navbar__mobile-register">
-                  Create Account
-                </Link>
-              </div>
-            )}
-          </nav>
+              {/* Mobile-only auth links */}
+              {!currentUser && (
+                <div className="navbar__mobile-auth">
+                  <Link to="/login" className="navbar__mobile-login">
+                    <span>Sign In</span>
+                  </Link>
+                  <Link to="/register" className="navbar__mobile-register">
+                    <span>Get Started</span>
+                    <HiChevronDown className="navbar__arrow" />
+                  </Link>
+                </div>
+              )}
+            </nav>
 
-          {/* Auth or User Info (Desktop) */}
-          <div className="navbar__actions">
-            {currentUser ? (
-              <div className="navbar__user">
-                <Link to="/profile" className="navbar__user-profile">
-                  <div className="navbar__user-avatar">
-                    <img src={userAvatarSrc} alt="User Avatar" />
+            {/* Auth or User Info (Desktop) */}
+            <div className="navbar__actions">
+              {currentUser ? (
+                <div className="navbar__user">
+                  <button className="navbar__notification-btn">
+                    <HiBell />
                     {notificationNumber > 0 && (
-                      <div className="navbar__notification-badge">
+                      <span className="navbar__notification-count">
                         {notificationNumber > 9 ? "9+" : notificationNumber}
-                      </div>
+                      </span>
                     )}
-                  </div>
-                  <div className="navbar__user-info">
-                    <span className="navbar__user-name">{currentUser.username}</span>
-                    <span className="navbar__user-label">My Profile</span>
-                  </div>
-                </Link>
-              </div>
-            ) : (
-              <div className="navbar__auth">
-                <Link to="/login" className="navbar__auth-login">
-                  Sign In
-                </Link>
-                <Link to="/register" className="navbar__auth-register">
-                  Get Started
-                </Link>
-              </div>
-            )}
-          </div>
+                  </button>
+                  
+                  <Link to="/profile" className="navbar__user-profile">
+                    <div className="navbar__user-avatar">
+                      <img src={userAvatarSrc} alt="User Avatar" />
+                      <div className="navbar__user-status"></div>
+                    </div>
+                    <div className="navbar__user-info">
+                      <span className="navbar__user-name">{currentUser.username}</span>
+                      <span className="navbar__user-label">My Dashboard</span>
+                    </div>
+                    <HiChevronDown className="navbar__user-arrow" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="navbar__auth">
+                  <Link to="/login" className="navbar__auth-login">
+                    <span>Sign In</span>
+                  </Link>
+                  <Link to="/register" className="navbar__auth-register">
+                    <span>Get Started</span>
+                    <div className="navbar__auth-shine"></div>
+                  </Link>
+                </div>
+              )}
+            </div>
 
-          {/* Mobile Toggle */}
-          <button
-            className="navbar__toggle"
-            onClick={() => {
-              if (!currentUser) setMenuOpen((prev) => !prev);
-              else navigate("/profile");
-            }}
-            aria-label="Toggle Menu"
-          >
-            {!currentUser ? (
-              menuOpen ? <IoClose /> : <TiThMenu />
-            ) : (
-              <div className="navbar__mobile-avatar-wrapper">
-                <img
-                  src={userAvatarSrc}
-                  alt="Mobile User Avatar"
-                  className="navbar__mobile-avatar"
-                />
-                {notificationNumber > 0 && (
-                  <div className="navbar__notification-dot"></div>
-                )}
-              </div>
-            )}
-          </button>
+            {/* Mobile Toggle */}
+            <button
+              className="navbar__toggle"
+              onClick={() => {
+                if (!currentUser) setMenuOpen((prev) => !prev);
+                else navigate("/profile");
+              }}
+              aria-label="Toggle Menu"
+            >
+              {!currentUser ? (
+                <div className="navbar__toggle-icon">
+                  {menuOpen ? <IoClose /> : <TiThMenu />}
+                </div>
+              ) : (
+                <div className="navbar__mobile-avatar-wrapper">
+                  <img
+                    src={userAvatarSrc}
+                    alt="Mobile User Avatar"
+                    className="navbar__mobile-avatar"
+                  />
+                  {notificationNumber > 0 && (
+                    <div className="navbar__notification-dot"></div>
+                  )}
+                </div>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+      
+      {/* Spacer to prevent content jump */}
+      <div className="navbar__spacer"></div>
+    </>
   );
 }
 

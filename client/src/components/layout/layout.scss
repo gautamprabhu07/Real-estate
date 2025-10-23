@@ -6,11 +6,11 @@
 
   &__main {
     flex: 1;
-    padding-top: 72px; // height exactly navbar height
-    min-height: calc(100vh - 72px);
+    // padding-top: 85px; // height exactly navbar height
+    // min-height: calc(100vh - 85px);
 
-    @media (max-width: 767px) {
-      padding-top: 70px;
-    }
+    // @media (max-width: 767px) {
+    //   padding-top: 70px;
+    // }
   }
 }

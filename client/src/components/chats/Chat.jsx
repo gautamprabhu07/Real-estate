@@ -5,12 +5,22 @@ import apiRequest from "../../lib/apiRequest";
 import { format } from "timeago.js";
 import { SocketContext } from "../../context/SocketContext";
 import { useNotificationStore } from "../../lib/notificationStore";
-
 import { createAvatar } from "@dicebear/core";
 import { bottts } from "@dicebear/collection";
+import { 
+  FiSend, 
+  FiX, 
+  FiMessageSquare, 
+  FiChevronDown,
+  FiChevronUp,
+  FiMoreVertical 
+} from "react-icons/fi";
+import { BsCheck2All, BsCheck2 } from "react-icons/bs";
+import { HiOutlineEmojiHappy } from "react-icons/hi";
 
 function Chat({ chats }) {
   const [chat, setChat] = useState(null);
+  const [isMinimized, setIsMinimized] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
   const messageEndRef = useRef();
@@ -27,6 +37,7 @@ function Chat({ chats }) {
         decrease();
       }
       setChat({ ...res.data, receiver });
+      setIsMinimized(false);
     } catch (err) {
       console.log(err);
     }
@@ -44,6 +55,7 @@ function Chat({ chats }) {
         messages: [...prev.messages, res.data],
       }));
       e.target.reset();
+      e.target.text.style.height = "auto";
       socket.emit("sendMessage", {
         receiverId: chat.receiver.id,
         data: res.data,
@@ -90,119 +102,162 @@ function Chat({ chats }) {
     return generateAvatar(user.username || user.id || "anonymous");
   };
 
-  return (
-    <div className={`chat ${chat ? "chat-open" : ""}`}>
-      <aside className="chat__sidebar">
-        <header className="sidebar__header">
-          <h1>Messages</h1>
-          {chats && (
-            <div className="sidebar__header-badge">
-              {chats.filter(c => !c.seenBy.includes(currentUser.id)).length}
-            </div>
-          )}
-        </header>
+  const unreadCount = chats?.filter(c => !c.seenBy.includes(currentUser.id)).length || 0;
 
-        <div className="chat__list">
+  return (
+    <div className={`chat-container ${chat ? "chat-active" : ""}`}>
+      <div className="chat-sidebar">
+        <div className="chat-sidebar__header">
+          <div className="header__title">
+            <FiMessageSquare className="header__icon" />
+            <h2>Messages</h2>
+          </div>
+          {unreadCount > 0 && (
+            <div className="header__badge">{unreadCount}</div>
+          )}
+        </div>
+
+        <div className="chat-sidebar__list">
           {!chats?.length ? (
-            <div className="chat__empty">
-              <div className="empty__content">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                  <circle cx="32" cy="32" r="30" stroke="#ccc" strokeWidth="2" />
-                  <path d="M20 28C20 26.8954 20.8954 26 22 26H42C43.1046 26 44 26.8954 44 28V36C44 37.1046 43.1046 38 42 38H28L20 44V28Z" fill="#eee" />
-                  <circle cx="28" cy="32" r="2" fill="#bbb" />
-                  <circle cx="32" cy="32" r="2" fill="#bbb" />
-                  <circle cx="36" cy="32" r="2" fill="#bbb" />
-                </svg>
-                <h3>No conversations yet</h3>
-                <p>Start chatting with property owners</p>
+            <div className="chat-empty-state">
+              <div className="empty-state__icon">
+                <FiMessageSquare />
               </div>
+              <h3>No conversations yet</h3>
+              <p>Start chatting with property owners to get started</p>
             </div>
           ) : (
             chats.map((c) => (
               <div
                 key={c.id}
-                className={`chat__item ${chat?.id === c.id ? "active" : ""} ${
+                className={`chat-item ${chat?.id === c.id ? "active" : ""} ${
                   !c.seenBy.includes(currentUser.id) ? "unread" : ""
                 }`}
                 onClick={() => handleOpenChat(c.id, c.receiver)}
               >
-                <div className="chat__avatar-wrapper">
+                <div className="chat-item__avatar">
                   <img
                     src={getAvatarSrc(c.receiver)}
                     alt={`${c.receiver.username || "User"} avatar`}
-                    className="chat__avatar"
                   />
-                  {!c.seenBy.includes(currentUser.id) && <div className="chat__unread-dot" />}
+                  {!c.seenBy.includes(currentUser.id) && (
+                    <div className="avatar__badge" />
+                  )}
                 </div>
 
-                <div className="chat__details">
-                  <div className="chat__details-header">
-                    <span className="chat__username">{c.receiver.username}</span>
-                    <span className="chat__time">{format(c.lastMessageDate)}</span>
+                <div className="chat-item__content">
+                  <div className="content__header">
+                    <span className="content__name">{c.receiver.username}</span>
+                    <span className="content__time">{format(c.lastMessageDate)}</span>
                   </div>
-                  <p className="chat__preview">{c.lastMessage}</p>
+                  <div className="content__message">
+                    <p>{c.lastMessage}</p>
+                    {!c.seenBy.includes(currentUser.id) && (
+                      <div className="message__unread-indicator" />
+                    )}
+                  </div>
                 </div>
               </div>
             ))
           )}
         </div>
-      </aside>
+      </div>
 
       {chat && (
-        <section className="chat__window">
-          <div className="chat__header">
+        <div className={`chat-window ${isMinimized ? "minimized" : ""}`}>
+          <div className="chat-window__header">
             <div className="header__user">
-              <img src={getAvatarSrc(chat.receiver)} alt={`${chat.receiver.username} avatar`} />
-              <div className="header__user-info">
-                <span className="header__username">{chat.receiver.username}</span>
-                <span className="header__status">Active now</span>
+              <div className="user__avatar">
+                <img src={getAvatarSrc(chat.receiver)} alt={`${chat.receiver.username} avatar`} />
+                <div className="avatar__status" />
+              </div>
+              <div className="user__info">
+                <span className="user__name">{chat.receiver.username}</span>
+                <span className="user__status">Active now</span>
               </div>
             </div>
-            <button className="chat__close" onClick={() => setChat(null)} aria-label="Close chat">
-              ×
-            </button>
+            <div className="header__actions">
+              <button 
+                className="action-btn minimize-btn"
+                onClick={() => setIsMinimized(!isMinimized)}
+                aria-label={isMinimized ? "Maximize chat" : "Minimize chat"}
+              >
+                {isMinimized ? <FiChevronUp /> : <FiChevronDown />}
+              </button>
+              <button 
+                className="action-btn close-btn" 
+                onClick={() => setChat(null)} 
+                aria-label="Close chat"
+              >
+                <FiX />
+              </button>
+            </div>
           </div>
 
-          <div className="chat__body">
-            {chat.messages.length === 0 ? (
-              <div className="chat__empty">
-                <div className="empty__content">
-                  <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                    <circle cx="24" cy="24" r="22" stroke="#ccc" strokeWidth="2" />
-                    <path d="M16 20C16 19.4477 16.4477 19 17 19H31C31.5523 19 32 19.4477 32 20V26C32 26.5523 31.5523 27 31 27H22L16 31V20Z" fill="#eee" />
-                  </svg>
-                  <h3>Start the conversation</h3>
-                </div>
+          {!isMinimized && (
+            <>
+              <div className="chat-window__body">
+                {chat.messages.length === 0 ? (
+                  <div className="chat-empty-state">
+                    <div className="empty-state__icon">
+                      <HiOutlineEmojiHappy />
+                    </div>
+                    <h3>Start the conversation</h3>
+                    <p>Send a message to begin chatting</p>
+                  </div>
+                ) : (
+                  chat.messages.map((message, index) => {
+                    const isSent = message.userId === currentUser.id;
+                    const showAvatar = index === 0 || 
+                      chat.messages[index - 1].userId !== message.userId;
+                    
+                    return (
+                      <div
+                        key={message.id}
+                        className={`message ${isSent ? "sent" : "received"} ${
+                          showAvatar ? "show-avatar" : ""
+                        }`}
+                      >
+                        {!isSent && showAvatar && (
+                          <img 
+                            src={getAvatarSrc(chat.receiver)} 
+                            alt="avatar" 
+                            className="message__avatar"
+                          />
+                        )}
+                        <div className="message__bubble">
+                          <p>{message.text}</p>
+                          <span className="message__time">
+                            {format(message.createdAt)}
+                            {isSent && (
+                              <BsCheck2All className="message__check" />
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+                <div ref={messageEndRef} />
               </div>
-            ) : (
-              chat.messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`chat__message ${
-                    message.userId === currentUser.id ? "sent" : "received"
-                  }`}
-                >
-                  <p>{message.text}</p>
-                  <span>{format(message.createdAt)}</span>
-                </div>
-              ))
-            )}
-            <div ref={messageEndRef} />
-          </div>
 
-          <form className="chat__input" onSubmit={handleSubmit}>
-            <textarea
-              name="text"
-              placeholder="Type a message..."
-              rows="1"
-              onInput={(e) => {
-                e.target.style.height = "auto";
-                e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-              }}
-            />
-            <button type="submit" aria-label="Send message">Send</button>
-          </form>
-        </section>
+              <form className="chat-window__input" onSubmit={handleSubmit}>
+                <textarea
+                  name="text"
+                  placeholder="Type a message..."
+                  rows="1"
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+                  }}
+                />
+                <button type="submit" className="send-btn" aria-label="Send message">
+                  <FiSend />
+                </button>
+              </form>
+            </>
+          )}
+        </div>
       )}
     </div>
   );
