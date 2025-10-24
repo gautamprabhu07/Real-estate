@@ -14,6 +14,8 @@ $warning-light: #fbbf24;
 $info: #06b6d4;
 $info-light: #22d3ee;
 $danger: #ef4444;
+$navy: #123b66; // new navy blue for primary CTA
+$navy-dark: color.adjust($navy, $lightness: -10%);
 $text-dark: #0f172a;
 $text-medium: #475569;
 $text-light: #64748b;
@@ -585,7 +587,8 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
     align-items: center;
     gap: 10px;
     padding: 14px 28px;
-    background: linear-gradient(135deg, $warning 0%, $warning-light 100%);
+    /* changed: use solid navy color for a professional look */
+    background-color: $navy;
     color: white;
     border-radius: 12px;
     font-weight: 700;
@@ -594,7 +597,7 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
     cursor: pointer;
     border: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px rgba($warning, 0.3);
+    box-shadow: 0 4px 16px rgba(18, 59, 102, 0.12);
     position: relative;
     overflow: hidden;
 
@@ -605,7 +608,8 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba($warning, 0.4);
+      box-shadow: 0 8px 24px rgba(18, 59, 102, 0.18);
+      background-color: $navy-dark;
 
       svg {
         transform: rotate(90deg) scale(1.1);

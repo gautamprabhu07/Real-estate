@@ -75,7 +75,7 @@ function ProfilePage() {
                 <div className="profilePage__avatar-border"></div>
               </div>
               <button className="profilePage__avatar-edit">
-                <HiPencil />
+                
               </button>
             </div>
 
