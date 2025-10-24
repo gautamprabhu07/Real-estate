@@ -98,17 +98,21 @@ function Navbar() {
   // Determine avatar source
   const userAvatarSrc = currentUser?.avatar || generatedAvatar;
 
-  // Check if link is active
-  const isActiveLink = (path) => location.pathname === path;
-
   // Navigation items with icons
   const navItems = [
     { path: "/", label: "Home", icon: HiHome },
-    { path: "/listings", label: "Properties", icon: HiViewGrid },
+    // Properties points directly to list with buy query params
+    { path: "/list?type=buy&city=&minPrice=&maxPrice=", label: "Properties", icon: HiViewGrid },
     { path: "/agents", label: "Agents", icon: HiUserGroup },
     { path: "/about", label: "About", icon: HiInformationCircle },
     { path: "/contact", label: "Contact", icon: HiMail }
   ];
+
+  // Determine active link (compare full path + search)
+  const isActiveLink = (path) => {
+    const full = location.pathname + (location.search || "");
+    return full === path;
+  };
 
   return (
     <>
