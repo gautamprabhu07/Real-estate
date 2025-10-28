@@ -14,7 +14,10 @@ export const getUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
   const id = req.params.id;
-
+   // Add ObjectId format validation (simple version)
+  if (!id || !/^[a-f\d]{24}$/i.test(id)) {
+    return res.status(400).json({ message: "Invalid User ID" });
+  }
    try {
     const user = await prisma.user.findUnique({
       where: { id },  // pass string id directly
@@ -85,7 +88,12 @@ export const savePost = async (req, res) => {
   const postId = req.body.postId;
   const tokenUserId = req.userId;
 
+  if (!postId) {
+    return res.status(400).json({ message: "postId is required" });
+  }
+
   try {
+    // Check if the saved post relation already exists
     const savedPost = await prisma.savedPost.findUnique({
       where: {
         userId_postId: {
@@ -96,24 +104,32 @@ export const savePost = async (req, res) => {
     });
 
     if (savedPost) {
+      // If exists, delete (unsave) it
       await prisma.savedPost.delete({
         where: {
           id: savedPost.id,
         },
       });
-      res.status(200).json({ message: "Post removed from saved list" });
+      return res.status(200).json({ message: "Post removed from saved list" });
     } else {
+      // Otherwise create new saved post record
       await prisma.savedPost.create({
         data: {
           userId: tokenUserId,
           postId,
         },
       });
-      res.status(200).json({ message: "Post saved" });
+      return res.status(200).json({ message: "Post saved" });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Failed to delete users!" });
+    console.log("savePost error:", err);
+
+    // Handle unique constraint error gracefully
+    if (err.code === "P2002") {
+      return res.status(409).json({ message: "Post already saved" });
+    }
+
+    res.status(500).json({ message: "Failed to update saved posts" });
   }
 };
 

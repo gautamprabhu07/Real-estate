@@ -15,7 +15,7 @@ import {
   IoShareSocialOutline
 } from "react-icons/io5";
 import { useState } from "react";
-import apiRequest from '../../lib/apiRequest';
+import { savePost } from '../../lib/loaders';
 import "./card.scss";
 
 function Card({ item, viewMode }) {
@@ -30,7 +30,7 @@ function Card({ item, viewMode }) {
     setIsSaved(!prev);
     (async () => {
       try {
-        await apiRequest.post('/users/save', { postId: item.id });
+        await savePost(item.id);
       } catch (err) {
         // revert on error
         console.error('Failed to save post', err);
