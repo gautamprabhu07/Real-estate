@@ -75,6 +75,8 @@ export const addPost = async (req, res) => {
     const newPost = await prisma.post.create({
       data: {
         ...body.postData,
+        // ensure isFeatured exists; default to false if not provided
+        isFeatured: body.postData?.isFeatured ?? false,
         userId: tokenUserId,
         postDetail: {
           create: body.postDetail,

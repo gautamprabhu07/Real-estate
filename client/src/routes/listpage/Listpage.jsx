@@ -3,13 +3,43 @@ import Filter from "../../components/filter/Filter";
 import Card from "../../components/card/Card";
 import Map from "../../components/map/Map";
 import { Await, useLoaderData } from "react-router-dom";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 
 function ListPage() {
   const data = useLoaderData();
   const [isLoaded, setIsLoaded] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [sortBy, setSortBy] = useState('featured');
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef(null);
+
+  const sortOptions = [
+    { value: 'featured', label: 'Featured' },
+    { value: 'price-low', label: 'Price: Low to High' },
+    { value: 'price-high', label: 'Price: High to Low' },
+    { value: 'newest', label: 'Newest First' }
+  ];
+
+  const handleSelect = (value) => {
+    setSortBy(value);
+    setSortOpen(false);
+  };
+
+  // close dropdown on outside click or Escape
+  useEffect(() => {
+    function onDoc(e) {
+      if (sortRef.current && !sortRef.current.contains(e.target)) setSortOpen(false);
+    }
+    function onKey(e) {
+      if (e.key === 'Escape') setSortOpen(false);
+    }
+    document.addEventListener('mousedown', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
@@ -94,18 +124,45 @@ function ListPage() {
                 </Suspense>
               </div>
               <div className="toolbarRight">
-                <div className="sortDropdown">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                  </svg>
-                  <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                    <option value="featured">Featured</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="newest">Newest First</option>
-                  </select>
+                <div className="sortDropdown" ref={sortRef}>
+                  <button
+                    className={`sortBtn ${sortOpen ? 'open' : ''}`}
+                    aria-haspopup="listbox"
+                    aria-expanded={sortOpen}
+                    onClick={() => setSortOpen((s) => !s)}
+                    title="Sort listings"
+                  >
+                    <svg xmlns="http://ww
+                    
+                    w.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sortIcon">
+                      <line x1="3" y1="6" x2="21" y2="6"></line>
+                      <line x1="3" y1="12" x2="21" y2="12"></line>
+                      <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    <span className="sortLabel">{sortOptions.find(o => o.value === sortBy)?.label || 'Sort'}</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="caret">
+                      <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                  </button>
+
+                  <ul className={`sortMenu ${sortOpen ? 'open' : ''}`} role="listbox" tabIndex={-1} aria-label="Sort options">
+                    {sortOptions.map((opt) => (
+                      <li
+                        key={opt.value}
+                        role="option"
+                        aria-selected={sortBy === opt.value}
+                        className={`sortOption ${sortBy === opt.value ? 'selected' : ''}`}
+                        onClick={() => handleSelect(opt.value)}
+                      >
+                        <span className="optionLabel">{opt.label}</span>
+                        {sortBy === opt.value && (
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="check">
+                            <polyline points="20 6 9 17 4 12" />
+                          </svg>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <div className="viewToggle">
                   <button 
@@ -176,16 +233,48 @@ function ListPage() {
                           <p>Try adjusting your filters to see more results</p>
                         </div>
                       ) : (
-                        postResponse.data.map((post, index) => (
-                          <div 
-                            key={post.id} 
-                            className="cardWrapper"
-                            style={{ animationDelay: `${index * 0.05}s` }}
-                          >
-                            {/* pass viewMode so Card can render list-style when requested */}
-                            <Card item={post} viewMode={viewMode} />
-                          </div>
-                        ))
+                        (() => {
+                          // create a shallow copy and sort based on sortBy
+                          const sortedPosts = [...postResponse.data];
+                          switch (sortBy) {
+                            case 'price-low':
+                              sortedPosts.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+                              break;
+                            case 'price-high':
+                              sortedPosts.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+                              break;
+                            case 'newest':
+                              sortedPosts.sort((a, b) => {
+                                const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                                const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                                return tb - ta;
+                              });
+                              break;
+                            case 'featured':
+                            default:
+                              // put trending/featured items first, then newest
+                              sortedPosts.sort((a, b) => {
+                                const fa = a.trending ? 1 : 0;
+                                const fb = b.trending ? 1 : 0;
+                                if (fb - fa !== 0) return fb - fa;
+                                const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                                const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                                return tb - ta;
+                              });
+                              break;
+                          }
+
+                          return sortedPosts.map((post, index) => (
+                            <div 
+                              key={post.id} 
+                              className="cardWrapper"
+                              style={{ animationDelay: `${index * 0.05}s` }}
+                            >
+                              {/* pass viewMode so Card can render list-style when requested */}
+                              <Card item={post} viewMode={viewMode} />
+                            </div>
+                          ));
+                        })()
                       )}
                     </>
                   )}

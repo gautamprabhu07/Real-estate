@@ -248,43 +248,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
     }
   }
 
-  // Map Footer
-  .mapFooter {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 16px 24px;
-    background: $bg-gray;
-    border-top: 1px solid $border-color;
-    animation: slideUp 0.5s ease-out 0.8s both;
-
-    .mapStat {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: $text-light;
-      font-size: 13px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-
-      svg {
-        width: 18px;
-        height: 18px;
-        color: $primary-color;
-        transition: all 0.3s ease;
-      }
-
-      &:hover {
-        color: $text-dark;
-        transform: translateY(-2px);
-
-        svg {
-          color: $accent-color;
-          transform: scale(1.1);
-        }
-      }
-    }
-  }
+  // mapFooter removed
 }
 
 // Animations
@@ -462,24 +426,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
       }
     }
 
-    .mapFooter {
-      padding: 12px 16px;
-      gap: 12px;
-
-      .mapStat {
-        font-size: 12px;
-        gap: 8px;
-
-        svg {
-          width: 16px;
-          height: 16px;
-        }
-
-        span {
-          display: none;
-        }
-      }
-    }
+    /* mapFooter removed */
   }
 }
 
@@ -545,19 +492,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
       }
     }
 
-    .mapFooter {
-      padding: 10px 16px;
-
-      .mapStat {
-        gap: 6px;
-
-        svg {
-          width: 14px;
-          height: 14px;
-        }
-      }
-    }
-  }
+    
 }
 
 // Dark mode support (optional)
@@ -570,18 +505,7 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
       background: #111827;
     }
 
-    .mapFooter {
-      background: #111827;
-      border-color: #374151;
-
-      .mapStat {
-        color: #9ca3af;
-
-        &:hover {
-          color: #f3f4f6;
-        }
-      }
-    }
+    
 
     .mapControls {
       .mapControlBtn {
@@ -599,4 +523,4 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
       }
     }
   }
-}
+}}

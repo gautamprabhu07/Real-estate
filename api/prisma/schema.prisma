@@ -24,6 +24,7 @@ model Post {
   bathroom   Int
   latitude   String
   longitude  String
+  isFeatured Boolean     @default(false)
   type       Type
   property   Property
   createdAt  DateTime    @default(now())
