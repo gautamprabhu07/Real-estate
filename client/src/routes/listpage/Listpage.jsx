@@ -209,7 +209,7 @@ function ListPage() {
                 </div>
               }>
                 <Await
-                  resolve={data.postResponse}
+                  resolve={Promise.all([data.postResponse, data.savedIds])}
                   errorElement={
                     <div className="errorState">
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -222,11 +222,12 @@ function ListPage() {
                     </div>
                   }
                 >
-                  {(postResponse) => (
+                  {([postResponse, savedIds]) => (
                     <>
                       {(() => {
                         // prepare and sort/filter posts based on sortBy
                         let sortedPosts = [...postResponse.data];
+                        const savedSet = new Set(savedIds || []);
 
                         switch (sortBy) {
                           case 'price-low':
@@ -280,7 +281,7 @@ function ListPage() {
                             style={{ animationDelay: `${index * 0.05}s` }}
                           >
                             {/* pass viewMode so Card can render list-style when requested */}
-                            <Card item={post} viewMode={viewMode} />
+                            <Card item={post} viewMode={viewMode} isSavedInitial={savedSet.has(post.id)} />
                           </div>
                         ));
                       })()}

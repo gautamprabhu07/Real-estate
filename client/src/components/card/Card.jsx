@@ -14,13 +14,18 @@ import {
   IoResizeOutline,
   IoShareSocialOutline
 } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { savePost } from '../../lib/loaders';
 import "./card.scss";
 
-function Card({ item, viewMode }) {
-  const [isSaved, setIsSaved] = useState(false);
+function Card({ item, viewMode, isSavedInitial = false }) {
+  const [isSaved, setIsSaved] = useState(Boolean(isSavedInitial));
   const [imageError, setImageError] = useState(false);
+
+  // keep local saved state in sync if parent provides updates
+  useEffect(() => {
+    setIsSaved(Boolean(isSavedInitial));
+  }, [isSavedInitial]);
 
   const handleSave = (e) => {
     e.preventDefault();

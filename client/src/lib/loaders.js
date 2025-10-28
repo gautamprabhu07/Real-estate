@@ -7,9 +7,20 @@ export const singlePageLoader = async ({ request, params }) => {
 };
 export const listPageLoader = async ({ request, params }) => {
   const query = request.url.split("?")[1];
-  const postPromise = apiRequest("/posts?" + query);
+  const postPromise = apiRequest("/posts?" + (query || ""));
+
+  // fetch saved posts for current user (if authenticated). If the request fails
+  // (user not signed in), resolve to an empty array so UI can render normally.
+  const savedIdsPromise = apiRequest("/users/profilePosts")
+    .then((res) => {
+      const saved = res.data?.savedPosts || [];
+      return saved.map((p) => p.id);
+    })
+    .catch(() => []);
+
   return defer({
     postResponse: postPromise,
+    savedIds: savedIdsPromise,
   });
 };
 
