@@ -9,15 +9,16 @@ function ListPage() {
   const data = useLoaderData();
   const [isLoaded, setIsLoaded] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-  const [sortBy, setSortBy] = useState('featured');
+  // default sort should be newest first per user request
+  const [sortBy, setSortBy] = useState('newest');
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef(null);
 
   const sortOptions = [
-    { value: 'featured', label: 'Featured' },
+    { value: 'newest', label: 'Newest First' },
     { value: 'price-low', label: 'Price: Low to High' },
     { value: 'price-high', label: 'Price: High to Low' },
-    { value: 'newest', label: 'Newest First' }
+    { value: 'featured', label: 'Featured' }
   ];
 
   const handleSelect = (value) => {
@@ -223,59 +224,66 @@ function ListPage() {
                 >
                   {(postResponse) => (
                     <>
-                      {postResponse.data.length === 0 ? (
-                        <div className="emptyState">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                          </svg>
-                          <h3>No Properties Found</h3>
-                          <p>Try adjusting your filters to see more results</p>
-                        </div>
-                      ) : (
-                        (() => {
-                          // create a shallow copy and sort based on sortBy
-                          const sortedPosts = [...postResponse.data];
-                          switch (sortBy) {
-                            case 'price-low':
-                              sortedPosts.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
-                              break;
-                            case 'price-high':
-                              sortedPosts.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
-                              break;
-                            case 'newest':
-                              sortedPosts.sort((a, b) => {
-                                const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-                                const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                                return tb - ta;
-                              });
-                              break;
-                            case 'featured':
-                            default:
-                              // put trending/featured items first, then newest
-                              sortedPosts.sort((a, b) => {
-                                const fa = a.trending ? 1 : 0;
-                                const fb = b.trending ? 1 : 0;
-                                if (fb - fa !== 0) return fb - fa;
-                                const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-                                const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                                return tb - ta;
-                              });
-                              break;
-                          }
+                      {(() => {
+                        // prepare and sort/filter posts based on sortBy
+                        let sortedPosts = [...postResponse.data];
 
-                          return sortedPosts.map((post, index) => (
-                            <div 
-                              key={post.id} 
-                              className="cardWrapper"
-                              style={{ animationDelay: `${index * 0.05}s` }}
-                            >
-                              {/* pass viewMode so Card can render list-style when requested */}
-                              <Card item={post} viewMode={viewMode} />
+                        switch (sortBy) {
+                          case 'price-low':
+                            sortedPosts.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+                            break;
+                          case 'price-high':
+                            sortedPosts.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
+                            break;
+                          case 'newest':
+                            sortedPosts.sort((a, b) => {
+                              const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                              const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                              return tb - ta;
+                            });
+                            break;
+                          case 'featured':
+                            // filter to only featured posts (treat missing as false)
+                            sortedPosts = sortedPosts.filter(p => !!p.isFeatured);
+                            break;
+                          case 'featured-default':
+                          default:
+                            // default: trending first, then newest
+                            sortedPosts.sort((a, b) => {
+                              const fa = a.trending ? 1 : 0;
+                              const fb = b.trending ? 1 : 0;
+                              if (fb - fa !== 0) return fb - fa;
+                              const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                              const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                              return tb - ta;
+                            });
+                            break;
+                        }
+
+                        if (sortedPosts.length === 0) {
+                          return (
+                            <div className="emptyState">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                              </svg>
+                              <h3>No Properties Found</h3>
+                              <p>Try adjusting your filters to see more results</p>
                             </div>
-                          ));
-                        })()
-                      )}
+                          );
+                        }
+
+                        return sortedPosts.map((post, index) => (
+                          <div 
+                            key={post.id} 
+                            className="cardWrapper"
+                            style={{ animationDelay: `${index * 0.05}s` }}
+                          >
+                            {/* pass viewMode so Card can render list-style when requested */}
+                            <Card item={post} viewMode={viewMode} />
+                          </div>
+                        ));
+                      })()}
                     </>
                   )}
                 </Await>

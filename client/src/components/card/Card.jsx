@@ -15,6 +15,7 @@ import {
   IoShareSocialOutline
 } from "react-icons/io5";
 import { useState } from "react";
+import apiRequest from '../../lib/apiRequest';
 import "./card.scss";
 
 function Card({ item, viewMode }) {
@@ -24,7 +25,18 @@ function Card({ item, viewMode }) {
   const handleSave = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsSaved(!isSaved);
+    // optimistic toggle + persist on server
+    const prev = isSaved;
+    setIsSaved(!prev);
+    (async () => {
+      try {
+        await apiRequest.post('/users/save', { postId: item.id });
+      } catch (err) {
+        // revert on error
+        console.error('Failed to save post', err);
+        setIsSaved(prev);
+      }
+    })();
   };
 
   const handleChat = (e) => {
