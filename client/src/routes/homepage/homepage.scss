@@ -348,9 +348,10 @@ $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 
     &--main {
       width: 420px;
       height: 520px;
-      top: 50%;
+      /* moved up a bit */
+      top: 45%;
       left: 0;
-      transform: translateY(-50%);
+      transform: translateY(-60%);
       z-index: 2;
       animation: floatImage 6s ease-in-out infinite;
     }
@@ -358,7 +359,8 @@ $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 
     &--small {
       width: 240px;
       height: 300px;
-      bottom: 40px;
+      /* raised the small card */
+      bottom: 80px;
       right: 0;
       z-index: 3;
       animation: floatImage 6s ease-in-out infinite 2s;
@@ -498,10 +500,10 @@ $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 
 
 @keyframes floatImage {
   0%, 100% {
-    transform: translateY(-50%);
+    transform: translateY(-60%);
   }
   50% {
-    transform: translateY(calc(-50% - 15px));
+    transform: translateY(calc(-60% - 15px));
   }
 }
 

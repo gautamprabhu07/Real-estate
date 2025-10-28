@@ -1,13 +1,45 @@
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import "./map.scss";
 import Pin from "../pin/Pin";
 import { useEffect, useState } from "react";
 
+function FitBounds({ items }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!items || items.length === 0) return;
+
+    // Filter items that have valid lat/lng
+    const coords = items
+      .map((it) => {
+        const lat = parseFloat(it.latitude);
+        const lng = parseFloat(it.longitude);
+        return Number.isFinite(lat) && Number.isFinite(lng) ? [lat, lng] : null;
+      })
+      .filter(Boolean);
+
+    if (coords.length === 0) return;
+
+    if (coords.length === 1) {
+      // single item: center and set a reasonable zoom
+      map.setView(coords[0], 13, { animate: true });
+    } else {
+      // multiple items: fit to bounds with padding
+      map.fitBounds(coords, { padding: [50, 50], animate: true });
+    }
+  }, [items, map]);
+
+  return null;
+}
+
 function Map({ items }) {
   const [isLoaded, setIsLoaded] = useState(false);
-  const position =
-    items.length === 1 ? [items[0].latitude, items[0].longitude] : [52.4797, -1.90269];
+
+  // Use first item's position as initial center when available
+  const defaultPosition = items && items.length > 0 && items[0].latitude && items[0].longitude
+    ? [parseFloat(items[0].latitude), parseFloat(items[0].longitude)]
+    : [52.4797, -1.90269];
 
   useEffect(() => {
     // Trigger animation after component mounts
@@ -42,22 +74,20 @@ function Map({ items }) {
       {/* Map Container */}
       <div className="mapContainer">
         <MapContainer
-          center={position}
+          center={defaultPosition}
           zoom={7}
           scrollWheelZoom={false}
+          zoomControl={false}     // changed: disable Leaflet's built-in zoom (+/-)
           className="map"
-          whenCreated={(map) => {
-            // Fit bounds if multiple markers present
-            if (items.length > 1) {
-              const bounds = items.map((item) => [item.latitude, item.longitude]);
-              map.fitBounds(bounds, { padding: [50, 50] });
-            }
-          }}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+
+          {/* Fit bounds / recenter whenever items change */}
+          <FitBounds items={items} />
+
           {items.map((item) => (
             <Pin item={item} key={item.id} />
           ))}

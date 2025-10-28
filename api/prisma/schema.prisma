@@ -41,6 +41,8 @@ enum Type {
 enum Property {
   apartment
   house
+  villa
+  townhouse
   condo
   land
 }

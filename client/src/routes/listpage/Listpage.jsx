@@ -182,7 +182,8 @@ function ListPage() {
                             className="cardWrapper"
                             style={{ animationDelay: `${index * 0.05}s` }}
                           >
-                            <Card item={post} />
+                            {/* pass viewMode so Card can render list-style when requested */}
+                            <Card item={post} viewMode={viewMode} />
                           </div>
                         ))
                       )}

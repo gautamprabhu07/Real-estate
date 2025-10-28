@@ -1,10 +1,9 @@
-import { useContext, useEffect, useRef } from "react";
+import {  useEffect, useRef } from "react";
 import SearchBar from "../../components/searchBar/SearchBar";
 import "./homepage.scss";
 import { AuthContext } from "../../context/AuthContext";
 
 function HomePage() {
-  const { currentUser } = useContext(AuthContext);
   const floatingRef = useRef([]);
 
   useEffect(() => {

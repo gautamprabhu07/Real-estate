@@ -152,7 +152,7 @@ function ProfilePage() {
                 <HiEye />
               </div>
               <div className="profilePage__stat-content">
-                <span className="profilePage__stat-value">1.2K</span>
+                <span className="profilePage__stat-value">0</span>
                 <span className="profilePage__stat-label">Profile Views</span>
               </div>
               <div className="profilePage__stat-trend profilePage__stat-trend--up">

@@ -1,5 +1,5 @@
 // filter.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   HiLocationMarker, 
   HiHome,
@@ -20,6 +20,9 @@ function Filter() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isExpanded, setIsExpanded] = useState(false);
   const [activeFilters, setActiveFilters] = useState(0);
+  const [openSelect, setOpenSelect] = useState(null); // 'type' | 'property' | null
+  const wrapperRef = useRef(null);
+
   const [query, setQuery] = useState({
     type: searchParams.get("type") || "",
     city: searchParams.get("city") || "",
@@ -34,6 +37,17 @@ function Filter() {
     const count = Object.values(query).filter(val => val !== "").length;
     setActiveFilters(count);
   }, [query]);
+
+  // click outside to close custom selects
+  useEffect(() => {
+    const onDoc = (e) => {
+      if (openSelect && wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setOpenSelect(null);
+      }
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [openSelect]);
 
   const handleChange = (e) => {
     setQuery({
@@ -63,7 +77,7 @@ function Filter() {
   const cityName = searchParams.get("city") || "All Locations";
 
   return (
-    <div className={`filter ${isExpanded ? "filter--expanded" : ""}`}>
+    <div className={`filter ${isExpanded ? "filter--expanded" : ""}`} ref={wrapperRef}>
       {/* Header */}
       <div className="filter__header">
         <div className="filter__title-section">
@@ -141,51 +155,81 @@ function Filter() {
         {/* Advanced Filters */}
         <div className="filter__advanced">
           <div className="filter__grid">
-            {/* Type */}
+            {/* Type (custom dropdown) */}
             <div className="filter__field">
               <label htmlFor="type" className="filter__label">
                 <HiAdjustments />
                 <span>Listing Type</span>
               </label>
-              <div className="filter__select-wrapper">
-                <select
-                  name="type"
-                  id="type"
-                  onChange={handleChange}
-                  value={query.type}
-                  className="filter__select"
+
+              <div className="filter__custom-select">
+                <button
+                  type="button"
+                  className={`filter__custom-btn ${openSelect === "type" ? "open" : ""}`}
+                  onClick={() => setOpenSelect(openSelect === "type" ? null : "type")}
+                  aria-haspopup="listbox"
+                  aria-expanded={openSelect === "type"}
                 >
-                  <option value="">Any Type</option>
-                  <option value="buy">For Sale</option>
-                  <option value="rent">For Rent</option>
-                </select>
-                <HiChevronDown className="filter__select-icon" />
+                  <span className="filter__custom-value">
+                    {query.type ? (query.type === "buy" ? "For Sale" : "For Rent") : "Any Type"}
+                  </span>
+                  <HiChevronDown className="filter__select-icon" />
+                </button>
+
+                <ul
+                  role="listbox"
+                  tabIndex="-1"
+                  className={`filter__options ${openSelect === "type" ? "open" : ""}`}
+                >
+                  <li className={`filter__option ${query.type === "" ? "selected" : ""}`} onClick={() => { setQuery({...query, type: ""}); setOpenSelect(null); }}>
+                    Any Type
+                  </li>
+                  <li className={`filter__option ${query.type === "buy" ? "selected" : ""}`} onClick={() => { setQuery({...query, type: "buy"}); setOpenSelect(null); }}>
+                    For Sale
+                  </li>
+                  <li className={`filter__option ${query.type === "rent" ? "selected" : ""}`} onClick={() => { setQuery({...query, type: "rent"}); setOpenSelect(null); }}>
+                    For Rent
+                  </li>
+                </ul>
               </div>
             </div>
 
-            {/* Property Type */}
+            {/* Property Type (custom dropdown) */}
             <div className="filter__field">
               <label htmlFor="property" className="filter__label">
                 <HiHome />
                 <span>Property Type</span>
               </label>
-              <div className="filter__select-wrapper">
-                <select
-                  name="property"
-                  id="property"
-                  onChange={handleChange}
-                  value={query.property}
-                  className="filter__select"
+
+              <div className="filter__custom-select">
+                <button
+                  type="button"
+                  className={`filter__custom-btn ${openSelect === "property" ? "open" : ""}`}
+                  onClick={() => setOpenSelect(openSelect === "property" ? null : "property")}
+                  aria-haspopup="listbox"
+                  aria-expanded={openSelect === "property"}
                 >
-                  <option value="">Any Property</option>
-                  <option value="apartment">Apartment</option>
-                  <option value="house">House</option>
-                  <option value="condo">Condo</option>
-                  <option value="land">Land</option>
-                  <option value="villa">Villa</option>
-                  <option value="townhouse">Townhouse</option>
-                </select>
-                <HiChevronDown className="filter__select-icon" />
+                  <span className="filter__custom-value">
+                    {query.property ? query.property.charAt(0).toUpperCase() + query.property.slice(1) : "Any Property"}
+                  </span>
+                  <HiChevronDown className="filter__select-icon" />
+                </button>
+
+                <ul
+                  role="listbox"
+                  tabIndex="-1"
+                  className={`filter__options ${openSelect === "property" ? "open" : ""}`}
+                >
+                  {["", "apartment", "house", "condo", "land", "villa", "townhouse"].map((p) => (
+                    <li
+                      key={p || "any"}
+                      className={`filter__option ${query.property === p ? "selected" : ""}`}
+                      onClick={() => { setQuery({...query, property: p}); setOpenSelect(null); }}
+                    >
+                      {p ? (p.charAt(0).toUpperCase() + p.slice(1)) : "Any Property"}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 

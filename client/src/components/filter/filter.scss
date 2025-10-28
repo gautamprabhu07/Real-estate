@@ -22,6 +22,11 @@ $shadow-medium: rgba(15, 23, 42, 0.08);
 $shadow-heavy: rgba(15, 23, 42, 0.15);
 $danger: #ef4444; // danger / error color (red) consistent with the palette
 
+// Add subtle select-specific variables
+$select-bg: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+$select-border-focus: rgba(37, 99, 235, 0.16);
+$select-caret: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%230f172a'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/></svg>";
+
 .filter {
   display: flex;
   flex-direction: column;
@@ -384,52 +389,76 @@ $danger: #ef4444; // danger / error color (red) consistent with the palette
   // Select Styles
   &__select-wrapper {
     position: relative;
+    display: block;
+    width: 100%;
+    border-radius: 12px;
+
+    /* Custom caret using pseudo-element so native arrow is hidden */
+    &::after {
+      content: "";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      background-image: url(#{$select-caret});
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      transition: transform 180ms ease, opacity 180ms ease;
+      opacity: 0.95;
+    }
   }
 
   &__select {
-    width: 100%;
-    padding: 14px 40px 14px 16px;
-    border: 2px solid $border;
-    border-radius: 12px;
-    font-size: 0.9375rem;
-    font-family: inherit;
-    font-weight: 500;
-    color: $text-dark;
-    background: white;
-    cursor: pointer;
+    /* remove native appearance to allow custom caret */
+    -webkit-appearance: none;
+    -moz-appearance: none;
     appearance: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+    width: 100%;
+    padding: 14px 46px 14px 16px; /* right padding accounts for custom caret */
+    border-radius: 12px;
+    border: 1px solid rgba($border, 0.95);
+    background: $select-bg;
+    color: $text-dark;
+    font-weight: 700;
+    font-size: 0.95rem;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px rgba(16,24,40,0.04);
+    cursor: pointer;
+    transition: transform 160ms ease, box-shadow 180ms ease, border-color 180ms ease;
+
+    /* finer hover / focus affordances */
     &:hover {
-      border-color: rgba($accent, 0.3);
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75), 0 12px 30px rgba(16,24,40,0.06);
+      border-color: rgba($accent, 0.22);
     }
 
     &:focus {
       outline: none;
       border-color: $accent;
-      box-shadow: 0 0 0 4px rgba($accent, 0.1);
-      transform: translateY(-1px);
+      box-shadow: 0 8px 28px $select-border-focus, 0 0 0 6px rgba($accent, 0.06);
     }
 
+    /* Slightly bigger clickable area for number-style selects */
+    &--number {
+      padding-left: 40px;
+    }
+
+    /* Option appearance (note: styling of option is limited in some browsers) */
     option {
-      padding: 12px;
-      font-weight: 500;
+      padding: 10px 12px;
+      color: $text-dark;
+      background: #fff;
+      font-weight: 600;
     }
   }
 
+  /* hide the previous select icon element (if present) to avoid duplicate caret */
   &__select-icon {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 1.125rem;
-    color: $text-medium;
-    pointer-events: none;
-    transition: transform 0.3s ease;
-
-    .filter__select:focus ~ & {
-      transform: translateY(-50%) rotate(180deg);
-    }
+    display: none;
   }
 
   // Search Button
@@ -561,6 +590,113 @@ $danger: #ef4444; // danger / error color (red) consistent with the palette
         transform: scale(1.15);
       }
     }
+  }
+}
+
+/* Custom select dropdown visuals (Listing Type & Property Type) */
+.filter__custom-select {
+  position: relative;
+  width: 100%;
+
+  .filter__custom-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 46px 14px 16px;
+    background: $select-bg;
+    border: 1px solid rgba($border, 0.95);
+    border-radius: 12px;
+    font-weight: 700;
+    color: $text-dark;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 8px 24px rgba(16,24,40,0.04);
+    transition: transform 180ms ease, box-shadow 200ms ease, border-color 180ms ease;
+
+    .filter__select-icon {
+      position: absolute;
+      right: 14px;
+      font-size: 1.05rem;
+      color: $text-medium;
+      transition: transform 220ms ease;
+    }
+
+    &.open, &.open .filter__select-icon {
+      transform: translateY(-1px);
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(16,24,40,0.06);
+      border-color: rgba($accent, 0.22);
+    }
+  }
+
+  .filter__options {
+    position: absolute;
+    right: 0;
+    left: 0;
+    margin-top: 10px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid $border;
+    box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform-origin: top center;
+    transform: translateY(-6px) scaleY(0.98);
+    transition: max-height 260ms ease, opacity 220ms ease, transform 220ms ease;
+    z-index: 40;
+    pointer-events: none;
+    list-style: none;
+    padding: 6px;
+  }
+
+  .filter__options.open {
+    max-height: 320px;
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    pointer-events: auto;
+  }
+
+  .filter__option {
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    color: $text-dark;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 160ms ease, color 160ms ease, transform 120ms ease;
+  }
+
+  .filter__option + .filter__option {
+    margin-top: 6px;
+  }
+
+  .filter__option:hover {
+    background: linear-gradient(90deg, rgba($primary, 0.04), rgba($accent, 0.03));
+    transform: translateY(-2px);
+  }
+
+  .filter__option.selected {
+    background: linear-gradient(90deg, rgba($accent, 0.08), rgba($primary, 0.03));
+    color: $primary;
+    box-shadow: inset 0 -2px 0 rgba($primary, 0.02);
+  }
+}
+
+/* small screens adjustments */
+@media (max-width: 480px) {
+  .filter__custom-select .filter__options {
+    right: 6px;
+    left: 6px;
+  }
+
+  .filter__custom-btn {
+    padding: 12px 40px 12px 12px;
   }
 }
 

@@ -18,7 +18,7 @@ import {
 import { useState } from "react";
 import "./card.scss";
 
-function Card({ item }) {
+function Card({ item, viewMode }) {
   const [isSaved, setIsSaved] = useState(false);
   const [imageError, setImageError] = useState(false);
 
@@ -40,6 +40,24 @@ function Card({ item }) {
     // Handle share logic
   };
 
+  // compute "time ago" based on createdAt (falls back to postedTime if not present)
+  const getPostedTime = (iso) => {
+    if (!iso) return null;
+    const diffMs = Date.now() - new Date(iso).getTime();
+    if (diffMs < 0) return "just now";
+
+    const minutes = Math.floor(diffMs / 60000);
+    if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
+
+    const hours = Math.floor(diffMs / 3600000);
+    if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+
+    const days = Math.floor(diffMs / 86400000);
+    return `${days} day${days !== 1 ? "s" : ""} ago`;
+  };
+
+  const postedLabel = item.createdAt ? getPostedTime(item.createdAt) : (item.postedTime || "2 days ago");
+
   // Determine property type badge
   const getPropertyBadge = () => {
     if (item.type === "rent") return { label: "For Rent", class: "rent" };
@@ -50,7 +68,7 @@ function Card({ item }) {
   const badge = getPropertyBadge();
 
   return (
-    <div className="card">
+    <div className={`card ${viewMode === 'list' ? 'card--list' : ''}`}>
       <Link to={`/${item.id}`} className="card__image-wrapper">
         {/* Property Badge */}
         <div className={`card__badge card__badge--${badge.class}`}>
@@ -146,7 +164,7 @@ function Card({ item }) {
         <div className="card__footer">
           <div className="card__posted">
             <HiClock className="card__posted-icon" />
-            <span>{item.postedTime || "2 days ago"}</span>
+            <span>{postedLabel}</span>
           </div>
           <button 
             className="card__chat-btn"
