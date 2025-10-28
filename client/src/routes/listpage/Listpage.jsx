@@ -139,7 +139,7 @@ function ListPage() {
             </div>
 
             {/* Property Cards */}
-            <div className={`cardsContainer ${viewMode}`}>
+<div className={`cardsContainer ${viewMode === 'list' ? 'cardsContainer--list' : 'cardsContainer--grid'}`}>
               <Suspense fallback={
                 <div className="loadingState">
                   <div className="loadingSpinner">

@@ -316,21 +316,20 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 
         }
       }
 
-      // Cards Container
       .cardsContainer {
-        display: grid;
-        gap: 24px;
-        padding-bottom: 24px;
-        overflow-y: auto;
-        padding-right: 8px;
+  display: grid;
+  gap: 24px;
+  padding-bottom: 24px;
+  overflow-y: auto;
+  padding-right: 8px;
 
-        &.grid {
-          grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        }
+  &--grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
 
-        &.list {
-          grid-template-columns: 1fr;
-        }
+  &--list {
+    grid-template-columns: 1fr;
+  }
 
         // Custom scrollbar
         &::-webkit-scrollbar {
