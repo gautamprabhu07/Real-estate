@@ -3,9 +3,11 @@ import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState, useEffect, useMemo } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
+import { createAvatar } from "@dicebear/core";
+import { bottts } from "@dicebear/collection";
 
 function SinglePage() {
   const post = useLoaderData();
@@ -43,6 +45,23 @@ function SinglePage() {
     alert("Link copied to clipboard!");
     setShowShareMenu(false);
   };
+
+
+
+
+  const agentAvatarSrc = useMemo(() => {
+    if (post.user && post.user.avatar) {
+      return post.user.avatar;
+    }
+    // Use username or fallback seed for deterministic avatar
+    const seed = post.user?.username || "agent";
+    return createAvatar(bottts, {
+      seed,
+      backgroundType: ["gradientLinear"],
+      backgroundColor: ["b6e3f4", "c0aede", "d1f4a5"],
+      size: 80,
+    }).toDataUri();
+  }, [post.user]);
 
   return (
     <div className={`singlePage ${isLoaded ? 'loaded' : ''}`}>
@@ -133,7 +152,7 @@ function SinglePage() {
                 </svg>
               </div>
               <div className="statInfo">
-                <span className="statValue">{post.postDetail.size}</span>
+                <span className="statValue">{post.sqft ?? post.postDetail?.size ?? "—"}</span>
                 <span className="statLabel">Sq Ft</span>
               </div>
             </div>
@@ -147,7 +166,7 @@ function SinglePage() {
                 </svg>
               </div>
               <div className="statInfo">
-                <span className="statValue">2024</span>
+                <span className="statValue">{post.yearBuilt ?? "—"}</span>
                 <span className="statLabel">Year Built</span>
               </div>
             </div>
@@ -187,7 +206,7 @@ function SinglePage() {
             <div className="agentContent">
               <div className="agentInfo">
                 <div className="agentAvatar">
-                  <img src={post.user.avatar} alt={`${post.user.username} avatar`} />
+                   <img src={agentAvatarSrc} alt={`${post.user?.username || 'Agent'} avatar`} />
                   <div className="onlineIndicator"></div>
                 </div>
                 <div className="agentDetails">
@@ -203,11 +222,11 @@ function SinglePage() {
               </div>
               <div className="agentStats">
                 <div className="agentStat">
-                  <span className="statNumber">250+</span>
+                  <span className="statNumber">12</span>
                   <span className="statText">Properties</span>
                 </div>
                 <div className="agentStat">
-                  <span className="statNumber">8 yrs</span>
+                  <span className="statNumber">-</span>
                   <span className="statText">Experience</span>
                 </div>
               </div>

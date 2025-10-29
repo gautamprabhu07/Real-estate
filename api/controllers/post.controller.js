@@ -74,13 +74,13 @@ export const addPost = async (req, res) => {
   try {
     const newPost = await prisma.post.create({
       data: {
+        // spread provided post fields (includes sqft, yearBuilt if present)
         ...body.postData,
         // ensure isFeatured exists; default to false if not provided
         isFeatured: body.postData?.isFeatured ?? false,
         userId: tokenUserId,
-        postDetail: {
-          create: body.postDetail,
-        },
+        // optionally create nested postDetail
+        postDetail: body.postDetail ? { create: body.postDetail } : undefined,
       },
     });
     res.status(200).json(newPost);
@@ -91,11 +91,38 @@ export const addPost = async (req, res) => {
 };
 
 export const updatePost = async (req, res) => {
+  const id = req.params.id;
+  const tokenUserId = req.userId;
+  const { postData, postDetail } = req.body || {};
+
   try {
-    res.status(200).json();
+    const existing = await prisma.post.findUnique({ where: { id } });
+    if (!existing) return res.status(404).json({ message: 'Post not found' });
+    if (existing.userId !== tokenUserId) return res.status(403).json({ message: 'Not Authorized!' });
+
+    const updatePayload = {
+      ...(postData || {}),
+    };
+
+    // handle nested postDetail upsert
+    if (postDetail) {
+      updatePayload.postDetail = {
+        upsert: {
+          create: postDetail,
+          update: postDetail,
+        },
+      };
+    }
+
+    const updated = await prisma.post.update({
+      where: { id },
+      data: updatePayload,
+    });
+
+    res.status(200).json(updated);
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Failed to update posts" });
+    res.status(500).json({ message: 'Failed to update posts' });
   }
 };
 

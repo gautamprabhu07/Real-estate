@@ -22,6 +22,8 @@ model Post {
   city       String
   bedroom    Int
   bathroom   Int
+  sqft       Int?
+  yearBuilt  Int?
   latitude   String
   longitude  String
   isFeatured Boolean     @default(false)

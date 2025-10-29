@@ -2,6 +2,17 @@ import prisma from "../lib/prisma.js";
 import bcrypt from "bcrypt";
 import { ObjectId } from "mongodb";
 
+export const getPostsByUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const posts = await prisma.post.findMany({ where: { userId } });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({ message: "Could not fetch posts for user" });
+  }
+};
+
+
 export const getUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany();
