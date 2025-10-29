@@ -2,7 +2,7 @@ import "./listPage.scss";
 import Filter from "../../components/filter/Filter";
 import Card from "../../components/card/Card";
 import Map from "../../components/map/Map";
-import { Await, useLoaderData } from "react-router-dom";
+import { Await, useLoaderData, useLocation } from "react-router-dom";
 import { Suspense, useState, useEffect, useRef } from "react";
 
 function ListPage() {
@@ -13,6 +13,7 @@ function ListPage() {
   const [sortBy, setSortBy] = useState('newest');
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef(null);
+  const location = useLocation();
 
   const sortOptions = [
     { value: 'newest', label: 'Newest First' },
@@ -46,6 +47,17 @@ function ListPage() {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // initialize sort from query param (e.g. ?sort=featured)
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(location.search);
+      const s = params.get('sort');
+      if (s) setSortBy(s);
+    } catch {
+      // ignore
+    }
+  }, [location.search]);
 
   return (
     <div className={`listPage ${isLoaded ? 'loaded' : ''}`}>

@@ -1,10 +1,12 @@
-import {  useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import SearchBar from "../../components/searchBar/SearchBar";
 import "./homepage.scss";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 function HomePage() {
   const floatingRef = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Animate floating elements on scroll
@@ -21,6 +23,11 @@ function HomePage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleCardClick = () => {
+    console.log("Card clicked, navigating to: /68ff7a0dd9136a34a7b7c41f");
+    navigate("/68ff7a0dd9136a34a7b7c41f");
+  };
 
   return (
     <section className="homepage">
@@ -132,13 +139,15 @@ function HomePage() {
                 loading="eager"
               />
               <div className="homepage__image-overlay">
-                <div className="homepage__image-badge">
-                  <svg viewBox="0 0 24 24" fill="none">
-                    <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  <span>Featured</span>
-                </div>
+                <Link to="/list?sort=featured" className="homepage__image-badge-link">
+                  <div className="homepage__image-badge">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span>Featured</span>
+                  </div>
+                </Link>
               </div>
             </div>
             
@@ -150,8 +159,12 @@ function HomePage() {
               />
             </div>
 
-            {/* Floating Info Card */}
-            <div className="homepage__floating-card">
+            {/* Floating Info Card - FIXED */}
+            <div 
+              className="homepage__floating-card" 
+              onClick={handleCardClick}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="homepage__floating-card-icon">
                 <svg viewBox="0 0 24 24" fill="none">
                   <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2"/>

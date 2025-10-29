@@ -14,18 +14,27 @@ import {
   IoResizeOutline,
   IoShareSocialOutline
 } from "react-icons/io5";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { savePost } from '../../lib/loaders';
 import "./card.scss";
 
 function Card({ item, viewMode, isSavedInitial = false }) {
   const [isSaved, setIsSaved] = useState(Boolean(isSavedInitial));
   const [imageError, setImageError] = useState(false);
+  const [showCopied, setShowCopied] = useState(false);
+  const timerRef = useRef(null);
 
   // keep local saved state in sync if parent provides updates
   useEffect(() => {
     setIsSaved(Boolean(isSavedInitial));
   }, [isSavedInitial]);
+
+  // cleanup any pending timers on unmount
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -53,7 +62,41 @@ function Card({ item, viewMode, isSavedInitial = false }) {
   const handleShare = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Handle share logic
+    // copy link to clipboard (robust fallback)
+    const shareUrl = (typeof window !== 'undefined') ? `${window.location.origin}/${item.id}` : item.id;
+
+    const copyText = async (text) => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      // fallback
+      return new Promise((resolve, reject) => {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          if (ok) resolve(); else reject(new Error('copy failed'));
+        } catch (err) {
+          reject(err);
+        }
+      });
+    };
+
+    copyText(shareUrl)
+      .then(() => {
+        setShowCopied(true);
+        if (timerRef.current) clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setShowCopied(false), 2000);
+      })
+      .catch((err) => {
+        console.error('Copy failed', err);
+      });
   };
 
   // compute "time ago" based on createdAt (falls back to postedTime if not present)
@@ -126,6 +169,26 @@ function Card({ item, viewMode, isSavedInitial = false }) {
           >
             <IoShareSocialOutline />
           </button>
+          {showCopied && (
+            <div
+              className="card__share-toast"
+              role="status"
+              aria-live="polite"
+              style={{
+                position: 'absolute',
+                top: 8,
+                right: 8,
+                background: 'rgba(0,0,0,0.85)',
+                color: '#fff',
+                padding: '6px 8px',
+                borderRadius: 6,
+                fontSize: 12,
+                zIndex: 60,
+              }}
+            >
+              Link copied
+            </div>
+          )}
         </div>
       </Link>
 

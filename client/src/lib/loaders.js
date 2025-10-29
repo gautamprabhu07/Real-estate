@@ -2,9 +2,19 @@ import { defer } from "react-router-dom";
 import apiRequest from "./apiRequest";
 
 export const singlePageLoader = async ({ request, params }) => {
-  const res = await apiRequest("/posts/" + params.id);
-  return res.data;
+  try {
+    console.log("Loading post with ID:", params.id); // Debug log
+    const res = await apiRequest("/posts/" + params.id);
+    console.log("Post data received:", res.data); // Debug log
+    return res.data;
+  } catch (error) {
+    console.error("Error loading post:", error);
+    console.error("Error response:", error.response?.data);
+    // Throw the error so React Router can handle it
+    throw new Response("Post not found", { status: 404 });
+  }
 };
+
 export const listPageLoader = async ({ request, params }) => {
   const query = request.url.split("?")[1];
   const postPromise = apiRequest("/posts?" + (query || ""));

@@ -16,6 +16,7 @@ import { profilePageLoader, singlePageLoader, listPageLoader } from "./lib/loade
 import ProfileUpdatePage from "./routes/profileupdate/ProfileUpdatePage";
 import { RequireAuth } from "./components/layout/Layout";
 
+
 function App() {
   const router = createBrowserRouter([
     {
@@ -32,9 +33,12 @@ function App() {
           loader: listPageLoader,
         },
         {
-          path: "/:id",
-          element: <SinglePage />,
-          loader: singlePageLoader,
+          path: "/login",
+          element: <LoginPage />,
+        },
+        {
+          path: "/register",
+          element: <RegisterPage />,
         },
         // Add these routes as you create the components
         // {
@@ -54,12 +58,9 @@ function App() {
         //   element: <AgentsPage />,
         // },
         {
-          path: "/login",
-          element: <LoginPage />,
-        },
-        {
-          path: "/register",
-          element: <RegisterPage />,
+          path: "/:id",
+          element: <SinglePage />,
+          loader: singlePageLoader,
         },
       ],
     }, {
@@ -83,7 +84,9 @@ function App() {
     },
   ]);
 
+
   return <RouterProvider router={router} />;
 }
+
 
 export default App;
