@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { 
   HiLocationMarker, 
   HiBadgeCheck, 
@@ -18,16 +18,20 @@ import { useState, useEffect, useRef } from "react";
 import { savePost } from '../../lib/loaders';
 import "./card.scss";
 
+
 function Card({ item, viewMode, isSavedInitial = false }) {
   const [isSaved, setIsSaved] = useState(Boolean(isSavedInitial));
   const [imageError, setImageError] = useState(false);
   const [showCopied, setShowCopied] = useState(false);
   const timerRef = useRef(null);
+  const navigate = useNavigate();
+
 
   // keep local saved state in sync if parent provides updates
   useEffect(() => {
     setIsSaved(Boolean(isSavedInitial));
   }, [isSavedInitial]);
+
 
   // cleanup any pending timers on unmount
   useEffect(() => {
@@ -35,6 +39,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
+
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -53,17 +58,21 @@ function Card({ item, viewMode, isSavedInitial = false }) {
     })();
   };
 
+
   const handleChat = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    // Handle chat logic
+    console.log("Navigating to chat for item ID:", item.id);
+    navigate(`/${item.id}?openChat=true`);
   };
+
 
   const handleShare = (e) => {
     e.preventDefault();
     e.stopPropagation();
     // copy link to clipboard (robust fallback)
     const shareUrl = (typeof window !== 'undefined') ? `${window.location.origin}/${item.id}` : item.id;
+
 
     const copyText = async (text) => {
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -88,6 +97,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
       });
     };
 
+
     copyText(shareUrl)
       .then(() => {
         setShowCopied(true);
@@ -99,23 +109,29 @@ function Card({ item, viewMode, isSavedInitial = false }) {
       });
   };
 
+
   // compute "time ago" based on createdAt (falls back to postedTime if not present)
   const getPostedTime = (iso) => {
     if (!iso) return null;
     const diffMs = Date.now() - new Date(iso).getTime();
     if (diffMs < 0) return "just now";
 
+
     const minutes = Math.floor(diffMs / 60000);
     if (minutes < 60) return `${minutes} minute${minutes !== 1 ? "s" : ""} ago`;
 
+
     const hours = Math.floor(diffMs / 3600000);
     if (hours < 24) return `${hours} hour${hours !== 1 ? "s" : ""} ago`;
+
 
     const days = Math.floor(diffMs / 86400000);
     return `${days} day${days !== 1 ? "s" : ""} ago`;
   };
 
+
   const postedLabel = item.createdAt ? getPostedTime(item.createdAt) : (item.postedTime || "2 days ago");
+
 
   // Determine property type badge
   const getPropertyBadge = () => {
@@ -124,7 +140,9 @@ function Card({ item, viewMode, isSavedInitial = false }) {
     return { label: "Featured", class: "featured" };
   };
 
+
   const badge = getPropertyBadge();
+
 
   return (
     <div className={`card ${viewMode === 'list' ? 'card--list' : ''}`}>
@@ -135,6 +153,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
           <span>{badge.label}</span>
         </div>
 
+
         {/* Image Count Badge */}
         {item.images && item.images.length > 1 && (
           <div className="card__image-count">
@@ -142,6 +161,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
             <span>{item.images.length}</span>
           </div>
         )}
+
 
         {/* Property Image */}
         <div className="card__image">
@@ -152,6 +172,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
           />
           <div className="card__image-overlay"></div>
         </div>
+
 
         {/* Quick Actions Overlay */}
         <div className="card__quick-actions">
@@ -192,6 +213,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
         </div>
       </Link>
 
+
       <div className="card__content">
         {/* Price Section */}
         <div className="card__price-section">
@@ -207,16 +229,19 @@ function Card({ item, viewMode, isSavedInitial = false }) {
           )}
         </div>
 
+
         {/* Title */}
         <Link to={`/${item.id}`} className="card__title">
           <h3>{item.title}</h3>
         </Link>
+
 
         {/* Address */}
         <div className="card__address">
           <HiLocationMarker className="card__address-icon" />
           <span>{item.address}</span>
         </div>
+
 
         {/* Property Stats */}
         <div className="card__stats">
@@ -234,10 +259,11 @@ function Card({ item, viewMode, isSavedInitial = false }) {
           <div className="card__stat-divider"></div>
           <div className="card__stat">
             <IoResizeOutline className="card__stat-icon" />
-            <span className="card__stat-value">{item.size || "1,200"}</span>
+            <span className="card__stat-value">{item.sqft ?? item.postDetail?.size ?? "—"}</span>
             <span className="card__stat-label">sqft</span>
           </div>
         </div>
+
 
         {/* Footer */}
         <div className="card__footer">
@@ -245,13 +271,7 @@ function Card({ item, viewMode, isSavedInitial = false }) {
             <HiClock className="card__posted-icon" />
             <span>{postedLabel}</span>
           </div>
-          <button 
-            className="card__chat-btn"
-            onClick={handleChat}
-          >
-            <HiChat />
-            <span>Contact</span>
-          </button>
+          
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 import "./singlePage.scss";
 import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
-import { useNavigate, useLoaderData } from "react-router-dom";
+import { useNavigate, useLoaderData, useSearchParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useContext, useState, useEffect, useMemo, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -30,12 +30,22 @@ function SinglePage() {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const { currentUser } = useContext(AuthContext);
   const { socket } = useContext(SocketContext);
+  const [searchParams] = useSearchParams();
+
   const navigate = useNavigate();
 
   // Chat-related states
   const [chat, setChat] = useState(null);
   const [isMinimized, setIsMinimized] = useState(false);
   const messageEndRef = useRef();
+
+  useEffect(() => {
+  if (searchParams.get("openChat") === "true") {
+    // Reuse your existing chat open logic
+    handleSendMessage();
+  }
+}, [searchParams, post, currentUser]);
+
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
