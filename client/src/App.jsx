@@ -3,8 +3,6 @@ import { Layout } from "./components/layout/Layout";
 import HomePage from "./routes/homepage/HomePage";
 import AboutPage from "./routes/aboutPage/AboutPage"; // <-- IMPORTED
 import ContactPage from "./routes/contactPage/ContactPage"; // <-- IMPORTED
-// import PropertiesPage from "./routes/properties/PropertiesPage";
-// import AgentsPage from "./routes/agents/AgentsPage";
 import SinglePage from "./routes/singlepage/Singlepage";
 import NewPostPage from "./routes/newpostpage/Newpostpage";
 import ProfilePage from "./routes/profilePage/ProfilePage";
@@ -46,14 +44,6 @@ function App() {
           path: "/contact",           // <--- ADDED
           element: <ContactPage />,
         },
-        // {
-        //   path: "/properties",
-        //   element: <PropertiesPage />,
-        // },
-        // {
-        //   path: "/agents",
-        //   element: <AgentsPage />,
-        // },
         {
           path: "/:id",
           element: <SinglePage />,
