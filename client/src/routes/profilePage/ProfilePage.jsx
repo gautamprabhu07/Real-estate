@@ -1,4 +1,3 @@
-// profile.jsx
 import { Suspense, useContext, useMemo, useState } from "react";
 import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
 import { 
@@ -11,7 +10,6 @@ import {
   HiEye,
   HiLocationMarker,
   HiMail,
-  HiDotsVertical
 } from "react-icons/hi";
 import Chat from "../../components/chats/Chat";
 import List from "../../components/lists/List";
@@ -85,163 +83,170 @@ function ProfilePage() {
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="profilePage__stats">
-          <div className="profilePage__stat">
-            <div className="profilePage__stat-icon">
-              <HiHome />
-            </div>
-            <div className="profilePage__stat-info">
-              <span className="profilePage__stat-value">12</span>
-              <span className="profilePage__stat-label">Listings</span>
-            </div>
-          </div>
-          <div className="profilePage__stat">
-            <div className="profilePage__stat-icon">
-              <HiHeart />
-            </div>
-            <div className="profilePage__stat-info">
-              <span className="profilePage__stat-value">8</span>
-              <span className="profilePage__stat-label">Saved</span>
-            </div>
-          </div>
-          <div className="profilePage__stat">
-            <div className="profilePage__stat-icon">
-              <HiEye />
-            </div>
-            <div className="profilePage__stat-info">
-              <span className="profilePage__stat-value">342</span>
-              <span className="profilePage__stat-label">Views</span>
-            </div>
-          </div>
-          <div className="profilePage__stat">
-            <div className="profilePage__stat-icon">
-              <HiChat />
-            </div>
-            <div className="profilePage__stat-info">
-              <span className="profilePage__stat-value">3</span>
-              <span className="profilePage__stat-label">Messages</span>
-            </div>
-          </div>
-        </div>
+        {/* Stats Section wrapped inside Await to access counts */}
+        <Suspense fallback={<div>Loading stats...</div>}>
+          <Await resolve={data.postResponse}>
+            {(postResponse) => {
+              const userPostsCount = (postResponse.userPosts || []).length;
+              const savedPostsCount = (postResponse.savedPosts || []).length;
 
-        <div className="profilePage__content">
-          {/* Main Content */}
-          <div className="profilePage__main">
-            {/* Tabs */}
-            <div className="profilePage__tabs">
-              <button 
-                className={`profilePage__tab ${activeTab === "listings" ? "profilePage__tab--active" : ""}`}
-                onClick={() => setActiveTab("listings")}
-              >
-                <HiHome />
-                My Listings
-              </button>
-              <button 
-                className={`profilePage__tab ${activeTab === "saved" ? "profilePage__tab--active" : ""}`}
-                onClick={() => setActiveTab("saved")}
-              >
-                <HiHeart />
-                Saved Properties
-              </button>
-            </div>
-
-            {/* Listings Section */}
-            {activeTab === "listings" && (
-              <div className="profilePage__section">
-                <div className="profilePage__section-header">
-                  <div>
-                    <h2>My Listings</h2>
-                    <p>Manage your property listings</p>
-                  </div>
-                  <Link
-                    to="/add"
-                    className="profilePage__btn profilePage__btn--primary"
-                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                  >
-                    <HiPlus />
-                    Add Property
-                  </Link>
-                </div>
-
-                <Suspense fallback={
-                  <div className="profilePage__loading">
-                    <div className="profilePage__spinner"></div>
-                    <p>Loading...</p>
-                  </div>
-                }>
-                  <Await 
-                    resolve={data.postResponse} 
-                    errorElement={
-                      <div className="profilePage__error">
-                        <p>Failed to load listings</p>
+              return (
+                <>
+                  <div className="profilePage__stats">
+                    <div className="profilePage__stat">
+                      <div className="profilePage__stat-icon">
+                        <HiHome />
                       </div>
-                    }
-                  >
-                    {(postResponse) => <List posts={postResponse.userPosts} />}
-                  </Await>
-                </Suspense>
-              </div>
-            )}
-
-            {/* Saved Section */}
-            {activeTab === "saved" && (
-              <div className="profilePage__section">
-                <div className="profilePage__section-header">
-                  <div>
-                    <h2>Saved Properties</h2>
-                    <p>Your bookmarked properties</p>
-                  </div>
-                </div>
-
-                <Suspense fallback={
-                  <div className="profilePage__loading">
-                    <div className="profilePage__spinner"></div>
-                    <p>Loading...</p>
-                  </div>
-                }>
-                  <Await 
-                    resolve={data.postResponse} 
-                    errorElement={
-                      <div className="profilePage__error">
-                        <p>Failed to load saved properties</p>
+                      <div className="profilePage__stat-info">
+                        <span className="profilePage__stat-value">{userPostsCount}</span>
+                        <span className="profilePage__stat-label">Listings</span>
                       </div>
-                    }
-                  >
-                    {(postResponse) => <List posts={postResponse.savedPosts} />}
-                  </Await>
-                </Suspense>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar - Chat */}
-          <aside className="profilePage__sidebar">
-            <div className="profilePage__chat">
-              <div className="profilePage__chat-header">
-                <h3>Messages</h3>
-                <span className="profilePage__chat-count">3</span>
-              </div>
-
-              <Suspense fallback={
-                <div className="profilePage__loading profilePage__loading--compact">
-                  <div className="profilePage__spinner"></div>
-                </div>
-              }>
-                <Await 
-                  resolve={data.chatResponse} 
-                  errorElement={
-                    <div className="profilePage__error profilePage__error--compact">
-                      <p>Failed to load messages</p>
                     </div>
-                  }
-                >
-                  {(chatResponse) => <Chat chats={chatResponse} />}
-                </Await>
-              </Suspense>
-            </div>
-          </aside>
-        </div>
+                    <div className="profilePage__stat">
+                      <div className="profilePage__stat-icon">
+                        <HiHeart />
+                      </div>
+                      <div className="profilePage__stat-info">
+                        <span className="profilePage__stat-value">{savedPostsCount}</span>
+                        <span className="profilePage__stat-label">Saved</span>
+                      </div>
+                    </div>
+                    <div className="profilePage__stat">
+                      <div className="profilePage__stat-icon">
+                        <HiEye />
+                      </div>
+                      <div className="profilePage__stat-info">
+                        <span className="profilePage__stat-value">0</span>
+                        <span className="profilePage__stat-label">Views</span>
+                      </div>
+                    </div>
+                    <div className="profilePage__stat">
+                      <div className="profilePage__stat-icon">
+                        <HiChat />
+                      </div>
+                      <div className="profilePage__stat-info">
+                        <span className="profilePage__stat-value">3</span>
+                        <span className="profilePage__stat-label">Messages</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="profilePage__content">
+                    {/* Tabs */}
+                    <div className="profilePage__main">
+                      <div className="profilePage__tabs">
+                        <button 
+                          className={`profilePage__tab ${activeTab === "listings" ? "profilePage__tab--active" : ""}`}
+                          onClick={() => setActiveTab("listings")}
+                        >
+                          <HiHome />
+                          My Listings
+                        </button>
+                        <button 
+                          className={`profilePage__tab ${activeTab === "saved" ? "profilePage__tab--active" : ""}`}
+                          onClick={() => setActiveTab("saved")}
+                        >
+                          <HiHeart />
+                          Saved Properties
+                        </button>
+                      </div>
+
+                      {/* Listings Section */}
+                      {activeTab === "listings" && (
+                        <div className="profilePage__section">
+                          <div className="profilePage__section-header">
+                            <div>
+                              <h2>My Listings</h2>
+                              <p>Manage your property listings</p>
+                            </div>
+                            <Link
+                              to="/add"
+                              className="profilePage__btn profilePage__btn--primary"
+                              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                            >
+                              <HiPlus />
+                              Add Property
+                            </Link>
+                          </div>
+
+                          <Suspense fallback={
+                            <div className="profilePage__loading">
+                              <div className="profilePage__spinner"></div>
+                              <p>Loading...</p>
+                            </div>
+                          }>
+                            <Await 
+                              resolve={data.postResponse} 
+                              errorElement={
+                                <div className="profilePage__error">
+                                  <p>Failed to load listings</p>
+                                </div>
+                              }
+                            >
+                              {(postResponse) => <List posts={postResponse.userPosts || []} />}
+                            </Await>
+                          </Suspense>
+                        </div>
+                      )}
+
+                      {/* Saved Section */}
+                      {activeTab === "saved" && (
+                        <div className="profilePage__section">
+                          <div className="profilePage__section-header">
+                            <div>
+                              <h2>Saved Properties</h2>
+                              <p>Your bookmarked properties</p>
+                            </div>
+                          </div>
+
+                          <Suspense fallback={
+                            <div className="profilePage__loading">
+                              <div className="profilePage__spinner"></div>
+                              <p>Loading...</p>
+                            </div>
+                          }>
+                            <Await 
+                              resolve={data.postResponse} 
+                              errorElement={
+                                <div className="profilePage__error">
+                                  <p>Failed to load saved properties</p>
+                                </div>
+                              }
+                            >
+                              {(postResponse) => <List posts={postResponse.savedPosts || []} />}
+                            </Await>
+                          </Suspense>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Sidebar - Chat */}
+                    <aside className="profilePage__sidebar">
+                      <div className="profilePage__chat">
+                        <Suspense fallback={
+                          <div className="profilePage__loading profilePage__loading--compact">
+                            <div className="profilePage__spinner"></div>
+                          </div>
+                        }>
+                          <Await 
+                            resolve={data.chatResponse} 
+                            errorElement={
+                              <div className="profilePage__error profilePage__error--compact">
+                                <p>Failed to load messages</p>
+                              </div>
+                            }
+                          >
+                            {(chatResponse) => <Chat chats={chatResponse} />}
+                          </Await>
+                        </Suspense>
+                      </div>
+                    </aside>
+                  </div>
+                </>
+              );
+            }}
+          </Await>
+        </Suspense>
       </div>
     </div>
   );
