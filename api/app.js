@@ -13,6 +13,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
+//http://localhost:5173
+
 app.use("/api/posts", postroute);
 app.use("/api/auth", authroute);
 app.use("/api/test", testroute);
