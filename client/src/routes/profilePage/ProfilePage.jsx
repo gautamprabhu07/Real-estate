@@ -64,10 +64,7 @@ function ProfilePage() {
                   <HiMail />
                   {currentUser?.email}
                 </span>
-                <span className="profilePage__detail">
-                  <HiLocationMarker />
-                  New York, USA
-                </span>
+                
               </div>
             </div>
           </div>
@@ -120,15 +117,7 @@ function ProfilePage() {
                         <span className="profilePage__stat-label">Views</span>
                       </div>
                     </div>
-                    <div className="profilePage__stat">
-                      <div className="profilePage__stat-icon">
-                        <HiChat />
-                      </div>
-                      <div className="profilePage__stat-info">
-                        <span className="profilePage__stat-value">3</span>
-                        <span className="profilePage__stat-label">Messages</span>
-                      </div>
-                    </div>
+                    
                   </div>
 
                   <div className="profilePage__content">

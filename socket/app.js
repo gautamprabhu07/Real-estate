@@ -28,10 +28,15 @@ io.on("connection", (socket) => {
     addUser(userId, socket.id);
   });
 
-  socket.on("sendMessage", ({ receiverId, data }) => {
-    const receiver = getUser(receiverId);
+ socket.on("sendMessage", ({ receiverId, data }) => {
+  const receiver = getUser(receiverId);
+  if (receiver?.socketId) {
     io.to(receiver.socketId).emit("getMessage", data);
-  });
+  } else {
+    console.log("Receiver not found or offline:", receiverId);
+  }
+});
+
 
   socket.on("disconnect", () => {
     removeUser(socket.id);

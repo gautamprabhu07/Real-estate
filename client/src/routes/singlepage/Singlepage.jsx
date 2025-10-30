@@ -100,9 +100,11 @@ function SinglePage() {
   };
 
   // Chat functionality
-  const handleSendMessage = async () => {
+  // inside SinglePage component
+
+const handleSendMessage = async () => {
   if (!currentUser) {
-    navigate('/login');
+    navigate("/login");
     return;
   }
 
@@ -110,87 +112,88 @@ function SinglePage() {
     const sellerId = post.userId || post.user._id;
     const currentUserId = currentUser.id;
 
-    // get all chats involving current user
-    const chatsRes = await apiRequest.get('/chats');
+    // Get all chats of the current user
+    const chatsRes = await apiRequest.get("/chats");
 
-    // find chat between current user and seller
-    const existingChat = chatsRes.data.find(chat => {
-      if (!chat.userIDs) return false;
-      return chat.userIDs.includes(currentUserId) && chat.userIDs.includes(sellerId);
-    });
+    // Find existing chat between current user and seller
+    const existingChat = chatsRes.data.find(
+      (chat) =>
+        chat.userIDs &&
+        chat.userIDs.includes(currentUserId) &&
+        chat.userIDs.includes(sellerId)
+    );
 
     if (existingChat) {
-      const res = await apiRequest.get("/chats/" + existingChat.id);
-      setChat({ ...res.data, receiver: post.user });
-      setIsMinimized(false);
-    } else {
-      const newChatRes = await apiRequest.post('/chats', {
-        userId1: currentUserId,
-        userId2: sellerId,
-      });
-      setChat({ 
-        ...newChatRes.data, 
+      // If chat exists, fetch it and open chat window
+      const res = await apiRequest.get("/chats/" + (existingChat.id || existingChat._id));
+
+      setChat({
+        ...res.data,
+        id: res.data.id || res.data._id, // Normalize ID field
         receiver: post.user,
-        messages: []
       });
-      setIsMinimized(false);
+    } else {
+      // No chat exists: create new chat by posting only receiverId
+      const newChatRes = await apiRequest.post("/chats", {
+        receiverId: sellerId,
+      });
+
+      setChat({
+        ...newChatRes.data,
+        id: newChatRes.data.id || newChatRes.data._id,
+        receiver: post.user,
+        messages: [],
+      });
     }
+
+    setIsMinimized(false);
   } catch (err) {
     console.error("Error opening chat:", err);
     setChat({
       id: null,
       receiver: post.user,
       messages: [],
-      seenBy: []
+      seenBy: [],
     });
     setIsMinimized(false);
   }
 };
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const text = e.target.text.value;
-    if (!text.trim()) return;
 
-    try {
-      // If no chat ID exists yet, create the chat first
-      if (!chat.id) {
-        const newChatRes = await apiRequest.post('/chats', {
-          receiverId: post.user.id || post.user._id
-        });
-        setChat(prev => ({ ...prev, id: newChatRes.data.id }));
-        
-        // Now send the message
-        const res = await apiRequest.post("/messages/" + newChatRes.data.id, { text });
-        setChat((prev) => ({
-          ...prev,
-          messages: [...prev.messages, res.data],
-        }));
-        
-        socket.emit("sendMessage", {
-          receiverId: post.user.id || post.user._id,
-          data: res.data,
-        });
-      } else {
-        const res = await apiRequest.post("/messages/" + chat.id, { text });
-        setChat((prev) => ({
-          ...prev,
-          messages: [...prev.messages, res.data],
-        }));
-        
-        socket.emit("sendMessage", {
-          receiverId: chat.receiver.id || chat.receiver._id,
-          data: res.data,
-        });
-      }
-      
-      e.target.reset();
-      e.target.text.style.height = "auto";
-    } catch (err) {
-      console.error("Error sending message:", err);
-    }
-  };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  const text = e.target.text.value.trim();
+  if (!text) return;
+
+  if (!chat || !chat.id) {
+    console.error("No active chat to send the message");
+    return;
+  }
+
+  try {
+    const res = await apiRequest.post("/messages/" + chat.id, { text });
+
+    // Update chat messages locally
+    setChat((prev) => ({
+      ...prev,
+      messages: [...(prev.messages || []), res.data],
+    }));
+
+    // Emit socket event to notify receiver in real time
+    socket.emit("sendMessage", {
+      receiverId: chat.receiver.id || chat.receiver._id,
+      data: res.data,
+    });
+
+    // Reset textarea height and content
+    e.target.reset();
+    e.target.text.style.height = "auto";
+  } catch (err) {
+    console.error("Sending message failed:", err);
+  }
+};
 
   useEffect(() => {
     const markRead = async () => {
@@ -722,19 +725,19 @@ function SinglePage() {
               </div>
 
               <form className="chat-window__input" onSubmit={handleSubmit}>
-                <textarea
-                  name="text"
-                  placeholder="Type a message..."
-                  rows="1"
-                  onInput={(e) => {
-                    e.target.style.height = "auto";
-                    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-                  }}
-                />
-                <button type="submit" className="send-btn" aria-label="Send message">
-                  <FiSend />
-                </button>
-              </form>
+  <textarea
+    name="text"
+    placeholder="Type a message..."
+    rows="1"
+    onInput={(e) => {
+      e.target.style.height = "auto";
+      e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+    }}
+  />
+  <button type="submit" className="send-btn" aria-label="Send message">
+    <FiSend />
+  </button>
+</form>
             </>
           )}
         </div>

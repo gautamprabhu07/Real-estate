@@ -2,11 +2,10 @@ import { useState, useEffect, useRef, useContext, useMemo } from "react";
 import "./navbar.scss";
 import { TiThMenu } from "react-icons/ti";
 import { IoClose } from "react-icons/io5";
-import { 
-  HiHome, 
-  HiViewGrid, 
-  HiUserGroup, 
-  HiInformationCircle, 
+import {
+  HiHome,
+  HiViewGrid,
+  HiInformationCircle,
   HiMail,
   HiBell,
   HiChevronDown
@@ -58,7 +57,7 @@ function Navbar() {
     const handleScroll = () => {
       const currentScroll = window.scrollY;
       if (currentScroll < 0) return;
-      
+
       setIsScrolled(currentScroll > 50);
       setShowNavbar(currentScroll < lastScroll.current || currentScroll < 100);
       lastScroll.current = currentScroll;
@@ -103,7 +102,6 @@ function Navbar() {
     { path: "/", label: "Home", icon: HiHome },
     // Properties points directly to list with buy query params
     { path: "/list?type=buy&city=&minPrice=&maxPrice=", label: "Properties", icon: HiViewGrid },
-    { path: "/agents", label: "Agents", icon: HiUserGroup },
     { path: "/about", label: "About", icon: HiInformationCircle },
     { path: "/contact", label: "Contact", icon: HiMail }
   ];
@@ -138,11 +136,11 @@ function Navbar() {
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = isActiveLink(item.path);
-                
+
                 return (
-                  <Link 
+                  <Link
                     key={item.path}
-                    to={item.path} 
+                    to={item.path}
                     className={`navbar__link ${isActive ? "navbar__link--active" : ""}`}
                   >
                     <Icon className="navbar__link-icon" />
@@ -178,7 +176,7 @@ function Navbar() {
                       </span>
                     )}
                   </button>
-                  
+
                   <Link to="/profile" className="navbar__user-profile">
                     <div className="navbar__user-avatar">
                       <img src={userAvatarSrc} alt="User Avatar" />
@@ -233,7 +231,6 @@ function Navbar() {
           </div>
         </div>
       </nav>
-      
       {/* Spacer to prevent content jump */}
       <div className="navbar__spacer"></div>
     </>

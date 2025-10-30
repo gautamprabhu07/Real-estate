@@ -201,6 +201,13 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
           }
 
           .passwordWrapper {
+            width: 100%;  // Full width to match other input box
+    display: flex;
+    align-items: center;
+
+    input {
+      flex: 1;    // Let input expand to fill available space next to button
+    }
             position: relative;
 
             input {

@@ -1,10 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import {Layout} from "./components/layout/Layout";
+import { Layout } from "./components/layout/Layout";
 import HomePage from "./routes/homepage/HomePage";
-// Import other pages as needed
+import AboutPage from "./routes/aboutPage/AboutPage"; // <-- IMPORTED
+import ContactPage from "./routes/contactPage/ContactPage"; // <-- IMPORTED
 // import PropertiesPage from "./routes/properties/PropertiesPage";
-// import AboutPage from "./routes/about/AboutPage";
-// import ContactPage from "./routes/contact/ContactPage";
 // import AgentsPage from "./routes/agents/AgentsPage";
 import SinglePage from "./routes/singlepage/Singlepage";
 import NewPostPage from "./routes/newpostpage/Newpostpage";
@@ -15,7 +14,6 @@ import ListPage from "./routes/listpage/Listpage";
 import { profilePageLoader, singlePageLoader, listPageLoader } from "./lib/loaders";
 import ProfileUpdatePage from "./routes/profileupdate/ProfileUpdatePage";
 import { RequireAuth } from "./components/layout/Layout";
-
 
 function App() {
   const router = createBrowserRouter([
@@ -40,18 +38,17 @@ function App() {
           path: "/register",
           element: <RegisterPage />,
         },
-        // Add these routes as you create the components
+        {
+          path: "/about",             // <--- ADDED
+          element: <AboutPage />,
+        },
+        {
+          path: "/contact",           // <--- ADDED
+          element: <ContactPage />,
+        },
         // {
         //   path: "/properties",
         //   element: <PropertiesPage />,
-        // },
-        // {
-        //   path: "/about",
-        //   element: <AboutPage />,
-        // },
-        // {
-        //   path: "/contact",
-        //   element: <ContactPage />,
         // },
         // {
         //   path: "/agents",
@@ -63,14 +60,15 @@ function App() {
           loader: singlePageLoader,
         },
       ],
-    }, {
+    },
+    {
       path: "/",
       element: <RequireAuth />,
       children: [
         {
           path: "/profile",
           element: <ProfilePage />,
-          loader: profilePageLoader
+          loader: profilePageLoader,
         },
         {
           path: "/profile/update",
@@ -84,9 +82,7 @@ function App() {
     },
   ]);
 
-
   return <RouterProvider router={router} />;
 }
-
 
 export default App;
