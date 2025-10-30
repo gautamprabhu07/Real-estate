@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import SearchBar from "../../components/searchBar/SearchBar";
+import SearchBar from "../../components/searchbar/SearchBar";
 import "./homepage.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
