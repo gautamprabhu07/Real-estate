@@ -10,11 +10,15 @@ import { createAvatar } from "@dicebear/core";
 import { bottts } from "@dicebear/collection";
 
 function SinglePage() {
+  console.log("SinglePage component rendered");
+  const [agentPostCount, setAgentPostCount] = useState("—"); // Add at the top
+
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,6 +51,48 @@ function SinglePage() {
   };
 
 
+
+useEffect(() => {
+  console.log("Fetching agent post count...");
+  console.log("Post data:", post);
+  if (!post?.user) {
+    setAgentPostCount("—");
+    return;
+  }
+
+  // Determine userId to use
+  const userId = post.userId || post.user._id;
+  console.log("Determined userId:", userId);
+
+
+  if (!userId) {
+    setAgentPostCount("—");
+    return;
+  }
+
+  let isMounted = true;
+
+  console.log("Fetching posts for userId:", userId);
+
+  apiRequest
+    .get(`/users/${userId}/posts`)
+    .then((res) => {
+      if (isMounted && Array.isArray(res.data)) {
+        console.log("Posts fetched:", res.data.length);
+        setAgentPostCount(res.data.length);
+      } else {
+        setAgentPostCount("—");
+      }
+    })
+    .catch((err) => {
+      console.error("Error fetching posts:", err);
+      setAgentPostCount("—");
+    });
+
+  return () => {
+    isMounted = false;
+  };
+}, [post?.user]);
 
 
   const agentAvatarSrc = useMemo(() => {
@@ -222,7 +268,7 @@ function SinglePage() {
               </div>
               <div className="agentStats">
                 <div className="agentStat">
-                  <span className="statNumber">12</span>
+                  <span className="statNumber">{agentPostCount}</span>
                   <span className="statText">Properties</span>
                 </div>
                 <div className="agentStat">
