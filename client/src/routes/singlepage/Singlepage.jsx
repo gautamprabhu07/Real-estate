@@ -3,40 +3,79 @@ import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { useContext, useState, useEffect, useMemo } from "react";
+import { useContext, useState, useEffect, useMemo, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import { SocketContext } from "../../context/SocketContext";
 import apiRequest from "../../lib/apiRequest";
+import { savePost } from '../../lib/loaders';
 import { createAvatar } from "@dicebear/core";
 import { bottts } from "@dicebear/collection";
+import { 
+  FiSend, 
+  FiX, 
+  FiChevronDown,
+  FiChevronUp,
+} from "react-icons/fi";
+import { BsCheck2All } from "react-icons/bs";
+import { HiOutlineEmojiHappy } from "react-icons/hi";
+import { format } from "timeago.js";
 
 function SinglePage() {
   console.log("SinglePage component rendered");
-  const [agentPostCount, setAgentPostCount] = useState("—"); // Add at the top
-
+  const [agentPostCount, setAgentPostCount] = useState("—");
+  
   const post = useLoaderData();
   const [saved, setSaved] = useState(post.isSaved);
   const [isLoaded, setIsLoaded] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const { currentUser } = useContext(AuthContext);
-  
+  const { socket } = useContext(SocketContext);
   const navigate = useNavigate();
+
+  // Chat-related states
+  const [chat, setChat] = useState(null);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const messageEndRef = useRef();
 
   useEffect(() => {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSave = async () => {
-    if (!currentUser) {
-      navigate("/login");
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chat]);
+
+  useEffect(() => {
+    if (!post || !post.id || !currentUser) {
+      setSaved(false);
       return;
     }
-    setSaved((prev) => !prev);
+    async function checkSaved() {
+      try {
+        const res = await apiRequest.get('/users/profilePosts');
+        const savedPosts = res.data?.savedPosts || [];
+        const isSaved = savedPosts.some(p => p.id === post.id);
+        setSaved(isSaved);
+      } catch {
+        setSaved(false);
+      }
+    }
+    checkSaved();
+  }, [post, currentUser]);
+
+  const handleSave = async () => {
+    if (!currentUser) {
+      navigate('/login');
+      return;
+    }
+    const prev = saved;
+    setSaved(!prev);
     try {
-      await apiRequest.post("/users/save", { postId: post.id });
+      await savePost(post.id);
     } catch (err) {
-      console.log(err);
-      setSaved((prev) => !prev);
+      console.error('Failed to toggle save', err);
+      setSaved(prev);
     }
   };
 
@@ -50,56 +89,180 @@ function SinglePage() {
     setShowShareMenu(false);
   };
 
-
-
-useEffect(() => {
-  console.log("Fetching agent post count...");
-  console.log("Post data:", post);
-  if (!post?.user) {
-    setAgentPostCount("—");
+  // Chat functionality
+  const handleSendMessage = async () => {
+  if (!currentUser) {
+    navigate('/login');
     return;
   }
 
-  // Determine userId to use
-  const userId = post.userId || post.user._id;
-  console.log("Determined userId:", userId);
+  try {
+    const sellerId = post.userId || post.user._id;
+    const currentUserId = currentUser.id;
 
+    // get all chats involving current user
+    const chatsRes = await apiRequest.get('/chats');
 
-  if (!userId) {
-    setAgentPostCount("—");
-    return;
-  }
-
-  let isMounted = true;
-
-  console.log("Fetching posts for userId:", userId);
-
-  apiRequest
-    .get(`/users/${userId}/posts`)
-    .then((res) => {
-      if (isMounted && Array.isArray(res.data)) {
-        console.log("Posts fetched:", res.data.length);
-        setAgentPostCount(res.data.length);
-      } else {
-        setAgentPostCount("—");
-      }
-    })
-    .catch((err) => {
-      console.error("Error fetching posts:", err);
-      setAgentPostCount("—");
+    // find chat between current user and seller
+    const existingChat = chatsRes.data.find(chat => {
+      if (!chat.userIDs) return false;
+      return chat.userIDs.includes(currentUserId) && chat.userIDs.includes(sellerId);
     });
 
-  return () => {
-    isMounted = false;
-  };
-}, [post?.user]);
+    if (existingChat) {
+      const res = await apiRequest.get("/chats/" + existingChat.id);
+      setChat({ ...res.data, receiver: post.user });
+      setIsMinimized(false);
+    } else {
+      const newChatRes = await apiRequest.post('/chats', {
+        userId1: currentUserId,
+        userId2: sellerId,
+      });
+      setChat({ 
+        ...newChatRes.data, 
+        receiver: post.user,
+        messages: []
+      });
+      setIsMinimized(false);
+    }
+  } catch (err) {
+    console.error("Error opening chat:", err);
+    setChat({
+      id: null,
+      receiver: post.user,
+      messages: [],
+      seenBy: []
+    });
+    setIsMinimized(false);
+  }
+};
 
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const text = e.target.text.value;
+    if (!text.trim()) return;
+
+    try {
+      // If no chat ID exists yet, create the chat first
+      if (!chat.id) {
+        const newChatRes = await apiRequest.post('/chats', {
+          receiverId: post.user.id || post.user._id
+        });
+        setChat(prev => ({ ...prev, id: newChatRes.data.id }));
+        
+        // Now send the message
+        const res = await apiRequest.post("/messages/" + newChatRes.data.id, { text });
+        setChat((prev) => ({
+          ...prev,
+          messages: [...prev.messages, res.data],
+        }));
+        
+        socket.emit("sendMessage", {
+          receiverId: post.user.id || post.user._id,
+          data: res.data,
+        });
+      } else {
+        const res = await apiRequest.post("/messages/" + chat.id, { text });
+        setChat((prev) => ({
+          ...prev,
+          messages: [...prev.messages, res.data],
+        }));
+        
+        socket.emit("sendMessage", {
+          receiverId: chat.receiver.id || chat.receiver._id,
+          data: res.data,
+        });
+      }
+      
+      e.target.reset();
+      e.target.text.style.height = "auto";
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
+  };
+
+  useEffect(() => {
+    const markRead = async () => {
+      try {
+        await apiRequest.put("/chats/read/" + chat.id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    if (chat && socket && chat.id) {
+      socket.on("getMessage", (data) => {
+        if (chat.id === data.chatId) {
+          setChat((prev) => ({
+            ...prev,
+            messages: [...prev.messages, data],
+          }));
+          markRead();
+        }
+      });
+    }
+    return () => socket?.off("getMessage");
+  }, [socket, chat]);
+
+  const generateAvatar = (seed) => {
+    return createAvatar(bottts, {
+      seed,
+      size: 56,
+      backgroundType: ["gradientLinear"],
+      backgroundColor: ["b6e3f4", "c0aede", "d1f4a5"],
+    }).toDataUri();
+  };
+
+  const getAvatarSrc = (user) => {
+    if (user?.avatar) return user.avatar;
+    return generateAvatar(user?.username || user?.id || "anonymous");
+  };
+
+  useEffect(() => {
+    console.log("Fetching agent post count...");
+    console.log("Post data:", post);
+    if (!post?.user) {
+      setAgentPostCount("—");
+      return;
+    }
+
+    const userId = post.userId || post.user._id;
+    console.log("Determined userId:", userId);
+
+    if (!userId) {
+      setAgentPostCount("—");
+      return;
+    }
+
+    let isMounted = true;
+
+    console.log("Fetching posts for userId:", userId);
+
+    apiRequest
+      .get(`/users/${userId}/posts`)
+      .then((res) => {
+        if (isMounted && Array.isArray(res.data)) {
+          console.log("Posts fetched:", res.data.length);
+          setAgentPostCount(res.data.length);
+        } else {
+          setAgentPostCount("—");
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching posts:", err);
+        setAgentPostCount("—");
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [post?.user]);
 
   const agentAvatarSrc = useMemo(() => {
     if (post.user && post.user.avatar) {
       return post.user.avatar;
     }
-    // Use username or fallback seed for deterministic avatar
     const seed = post.user?.username || "agent";
     return createAvatar(bottts, {
       seed,
@@ -428,7 +591,7 @@ useEffect(() => {
 
           {/* Action Buttons */}
           <div className="actionButtons">
-            <button className="actionBtn primary">
+            <button className="actionBtn primary" onClick={handleSendMessage}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
               </svg>
@@ -468,8 +631,105 @@ useEffect(() => {
           </div>
         </div>
       </div>
-    </div>
-  );
-}
 
-export default SinglePage;
+      {/* Chat Window */}
+      {chat && (
+        <div className={`chat-window ${isMinimized ? "minimized" : ""}`}>
+          <div className="chat-window__header">
+            <div className="header__user">
+              <div className="user__avatar">
+                <img src={getAvatarSrc(chat.receiver)} alt={`${chat.receiver.username} avatar`} />
+                <div className="avatar__status" />
+              </div>
+              <div className="user__info">
+                <span className="user__name">{chat.receiver.username}</span>
+                <span className="user__status">Active now</span>
+              </div>
+            </div>
+            <div className="header__actions">
+              <button 
+                className="action-btn minimize-btn"
+                onClick={() => setIsMinimized(!isMinimized)}
+                aria-label={isMinimized ? "Maximize chat" : "Minimize chat"}
+              >
+                {isMinimized ? <FiChevronUp /> : <FiChevronDown />}
+              </button>
+              <button 
+                className="action-btn close-btn" 
+                onClick={() => setChat(null)} 
+                aria-label="Close chat"
+              >
+                <FiX />
+              </button>
+            </div>
+          </div>
+
+          {!isMinimized && (
+            <>
+              <div className="chat-window__body">
+                {chat.messages.length === 0 ? (
+                  <div className="chat-empty-state">
+                    <div className="empty-state__icon">
+                      <HiOutlineEmojiHappy />
+                    </div>
+                    <h3>Start the conversation</h3>
+                    <p>Send a message to begin chatting</p>
+                  </div>
+                ) : (
+                  chat.messages.map((message, index) => {
+                    const isSent = message.userId === currentUser.id;
+                    const showAvatar = index === 0 || 
+                      chat.messages[index - 1].userId !== message.userId;
+                    
+                    return (
+                      <div
+                        key={message.id}
+                        className={`message ${isSent ? "sent" : "received"} ${
+                          showAvatar ? "show-avatar" : ""
+                        }`}
+                      >
+                        {!isSent && showAvatar && (
+                          <img 
+                            src={getAvatarSrc(chat.receiver)} 
+                            alt="avatar" 
+                            className="message__avatar"
+                          />
+                        )}
+                        <div className="message__bubble">
+                          <p>{message.text}</p>
+                          <span className="message__time">
+                            {format(message.createdAt)}
+                            {isSent && (
+                              <BsCheck2All className="message__check" />
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+                <div ref={messageEndRef} />
+              </div>
+
+              <form className="chat-window__input" onSubmit={handleSubmit}>
+                <textarea
+                  name="text"
+                  placeholder="Type a message..."
+                  rows="1"
+                  onInput={(e) => {
+                    e.target.style.height = "auto";
+                    e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+                  }}
+                />
+                <button type="submit" className="send-btn" aria-label="Send message">
+                  <FiSend />
+                </button>
+              </form>
+            </>
+          )}
+        </div>
+      )}
+      
+    </div>
+  );}
+  export default SinglePage;

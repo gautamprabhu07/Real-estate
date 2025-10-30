@@ -1,320 +1,255 @@
 // profile.scss
-@use "sass:color";
 
-// Premium Real Estate Color Palette
-$primary: #0f172a;
-$primary-light: #1e293b;
+// Color Palette - Minimalist & Professional
+$primary: #1a1a1a;
+$primary-light: #2d2d2d;
 $accent: #2563eb;
 $accent-hover: #1d4ed8;
-$accent-light: #3b82f6;
-$success: #10b981;
-$success-light: #34d399;
-$warning: #f59e0b;
-$warning-light: #fbbf24;
-$info: #06b6d4;
-$info-light: #22d3ee;
-$danger: #ef4444;
-$navy: #123b66; // new navy blue for primary CTA
-$navy-dark: color.adjust($navy, $lightness: -10%);
-$text-dark: #0f172a;
-$text-medium: #475569;
-$text-light: #64748b;
+$text-dark: #1a1a1a;
+$text-medium: #6b7280;
+$text-light: #9ca3af;
 $background: #ffffff;
-$background-light: #f8fafc;
-$background-dark: #f1f5f9;
-$border: #e2e8f0;
-$shadow-soft: rgba(15, 23, 42, 0.04);
-$shadow-medium: rgba(15, 23, 42, 0.08);
-$shadow-heavy: rgba(15, 23, 42, 0.15);
-$shadow-xl: rgba(15, 23, 42, 0.25);
+$background-light: #f9fafb;
+$border: #e5e7eb;
+$border-light: #f3f4f6;
+$success: #10b981;
+$danger: #ef4444;
+$shadow-sm: rgba(0, 0, 0, 0.05);
+$shadow-md: rgba(0, 0, 0, 0.1);
 
 .profilePage {
   min-height: 100vh;
-  background: linear-gradient(135deg, $background-light 0%, $background-dark 100%);
-  padding-top: 85px;
-  animation: fadeIn 0.6s ease;
+  background: $background-light;
+  padding: 100px 0 60px;
 
-  // Hero Header Section
-  &__hero {
-    position: relative;
-    background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
-    padding: 3rem 0 8rem;
-    overflow: hidden;
-
-    &-pattern {
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(circle at 20% 50%, rgba($accent, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba($accent-light, 0.08) 0%, transparent 50%);
-      animation: patternMove 20s ease-in-out infinite;
-    }
-
-    &-content {
-      position: relative;
-      z-index: 1;
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 2.5rem;
-
-      @media (max-width: 768px) {
-        padding: 0 1.5rem;
-      }
-    }
-  }
-
-  &__user-card {
+  &__container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
     display: flex;
-    align-items: flex-start;
-    gap: 2.5rem;
-    padding: 2.5rem;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
-    border-radius: 20px;
-    box-shadow: 
-      0 10px 40px $shadow-xl,
-      0 0 0 1px rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-direction: column;
+    gap: 24px;
+  }
 
-    @media (max-width: 900px) {
+  // Header Card
+  &__header {
+    background: $background;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    animation: slideUp 0.5s ease;
+
+    @media (max-width: 768px) {
       flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 2rem;
-      padding: 2rem 1.5rem;
+      padding: 24px;
     }
   }
 
-  // Avatar Section
-  &__avatar-section {
-    position: relative;
-    flex-shrink: 0;
-  }
+  &__user {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 
-  &__avatar-wrapper {
-    position: relative;
-    width: 140px;
-    height: 140px;
-    border-radius: 50%;
-    padding: 6px;
-    /* static accent background — removed animated hue/rotation for a stable professional look */
-    background: linear-gradient(135deg, $accent 0%, $accent-light 100%);
-    /* animation: rotateGradient removed */
     @media (max-width: 768px) {
-      width: 120px;
-      height: 120px;
+      flex-direction: column;
+      text-align: center;
     }
   }
 
   &__avatar {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid white;
-    box-shadow: 0 8px 24px $shadow-medium;
-  }
+    position: relative;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
 
-  &__status-indicator {
-    position: absolute;
-    bottom: 8px;
-    right: 8px;
-    width: 36px;
-    height: 36px;
-    background: linear-gradient(135deg, $success 0%, $success-light 100%);
-    border: 4px solid white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.125rem;
-    box-shadow: 0 4px 12px rgba($success, 0.4);
-    animation: pulse 2s ease-in-out infinite;
-  }
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $border;
+    }
 
-  &__avatar-border {
-    position: absolute;
-    inset: -6px;
-    border-radius: 50%;
-    /* subtle static outline instead of animated gradient ring */
-    border: 2px solid rgba($accent, 0.12);
-    background: transparent;
-    pointer-events: none;
-    /* animation: rotate removed */
-  }
-
-  // User Info
-  &__user-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    min-width: 0;
-
-    @media (max-width: 900px) {
-      align-items: center;
+    &-status {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 16px;
+      height: 16px;
+      background: $success;
+      border: 3px solid $background;
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
     }
   }
 
-  &__user-header {
+  &__user-info {
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      color: $primary;
+      margin: 0 0 8px 0;
+      letter-spacing: -0.3px;
+    }
+  }
+
+  &__user-details {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 20px;
     flex-wrap: wrap;
 
-    @media (max-width: 900px) {
-      justify-content: center;
-    }
-  }
-
-  &__username {
-    font-size: 2rem;
-    font-weight: 800;
-    color: $primary;
-    margin: 0;
-    letter-spacing: -0.5px;
-    line-height: 1.2;
-
     @media (max-width: 768px) {
-      font-size: 1.75rem;
+      justify-content: center;
+      gap: 16px;
     }
   }
 
-  &__verified-badge {
+  &__detail {
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 14px;
-    background: linear-gradient(135deg, rgba($accent, 0.12) 0%, rgba($accent-light, 0.08) 100%);
-    border-radius: 20px;
-    color: $accent;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    border: 1px solid rgba($accent, 0.2);
+    font-size: 14px;
+    color: $text-medium;
 
     svg {
-      font-size: 1.125rem;
+      font-size: 16px;
+      color: $text-light;
     }
   }
 
-  &__email {
-    font-size: 1rem;
-    color: $text-medium;
-    margin: 0;
-    font-weight: 500;
+  &__header-actions {
+    display: flex;
+    gap: 12px;
+
+    @media (max-width: 768px) {
+      width: 100%;
+    }
   }
 
-  &__user-meta {
+  // Buttons
+  &__btn {
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
 
-    @media (max-width: 900px) {
+    svg {
+      font-size: 18px;
+    }
+
+    &--primary {
+      background: $accent;
+      color: $background;
+
+      &:hover {
+        background: $accent-hover;
+      }
+    }
+
+    &--ghost {
+      background: transparent;
+      color: $text-medium;
+      border: 1px solid $border;
+
+      &:hover {
+        background: $background-light;
+        border-color: $text-light;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex: 1;
       justify-content: center;
     }
   }
 
-  &__meta-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9375rem;
-    color: $text-medium;
-    font-weight: 500;
-
-    svg {
-      font-size: 1.125rem;
-      color: $accent;
-    }
-  }
-
-  // Actions
-  &__actions {
-    display: flex;
-    gap: 1rem;
-    flex-shrink: 0;
+  // Stats
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    animation: slideUp 0.5s ease 0.1s backwards;
 
     @media (max-width: 900px) {
-      width: 100%;
-      flex-direction: column;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
     }
   }
 
-  &__btn {
+  &__stat {
+    background: $background;
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $accent;
+      box-shadow: 0 2px 8px $shadow-sm;
+      transform: translateY(-2px);
+    }
+  }
+
+  &__stat-icon {
+    width: 48px;
+    height: 48px;
+    background: $background-light;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.9375rem;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    text-decoration: none;
-    border: none;
-    white-space: nowrap;
-
-    svg {
-      font-size: 1.125rem;
-      transition: transform 0.3s ease;
-    }
-
-    &:hover svg {
-      transform: scale(1.1);
-    }
-
-    &--primary {
-      background: linear-gradient(135deg, $accent 0%, $accent-light 100%);
-      color: white;
-      box-shadow: 0 4px 16px rgba($accent, 0.3);
-
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba($accent, 0.4);
-      }
-    }
-
-    &--secondary {
-      background: white;
-      color: $danger;
-      border: 2px solid rgba($danger, 0.2);
-      box-shadow: 0 2px 8px $shadow-soft;
-
-      &:hover {
-        background: rgba($danger, 0.05);
-        border-color: rgba($danger, 0.4);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba($danger, 0.15);
-      }
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
+    color: $accent;
+    font-size: 24px;
+    flex-shrink: 0;
   }
 
-  // Container
-  &__container {
-    max-width: 1400px;
-    margin: -5rem auto 0;
-    padding: 0 2.5rem 3rem;
+  &__stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: $primary;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    font-size: 13px;
+    color: $text-medium;
+    font-weight: 500;
+  }
+
+  // Content Layout
+  &__content {
     display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 2rem;
-    position: relative;
-    z-index: 2;
+    grid-template-columns: 1fr 360px;
+    gap: 24px;
+    animation: slideUp 0.5s ease 0.2s backwards;
 
     @media (max-width: 1024px) {
       grid-template-columns: 1fr;
-      margin-top: -4rem;
-    }
-
-    @media (max-width: 768px) {
-      padding: 0 1.5rem 2rem;
     }
   }
 
@@ -322,166 +257,17 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
   &__main {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    min-width: 0;
-  }
-
-  // Stats Cards
-  &__stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
-    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s backwards;
-
-    @media (max-width: 768px) {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-  }
-
-  &__stat-card {
-    position: relative;
-    padding: 1.75rem;
-    background: white;
-    border-radius: 16px;
-    border: 1px solid $border;
-    box-shadow: 
-      0 1px 3px $shadow-soft,
-      0 4px 12px $shadow-medium;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 
-        0 4px 16px $shadow-medium,
-        0 12px 40px $shadow-heavy;
-      border-color: transparent;
-    }
-
-    &--primary::before {
-      background: linear-gradient(90deg, $accent 0%, $accent-light 100%);
-    }
-
-    &--success::before {
-      background: linear-gradient(90deg, $success 0%, $success-light 100%);
-    }
-
-    &--info::before {
-      background: linear-gradient(90deg, $info 0%, $info-light 100%);
-    }
-
-    &--warning::before {
-      background: linear-gradient(90deg, $warning 0%, $warning-light 100%);
-    }
-  }
-
-  &__stat-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    font-size: 1.5rem;
-    margin-bottom: 1.25rem;
-    transition: transform 0.3s ease;
-
-    .profilePage__stat-card:hover & {
-      transform: scale(1.1) rotate(5deg);
-    }
-
-    .profilePage__stat-card--primary & {
-      background: linear-gradient(135deg, rgba($accent, 0.12) 0%, rgba($accent-light, 0.08) 100%);
-      color: $accent;
-    }
-
-    .profilePage__stat-card--success & {
-      background: linear-gradient(135deg, rgba($success, 0.12) 0%, rgba($success-light, 0.08) 100%);
-      color: $success;
-    }
-
-    .profilePage__stat-card--info & {
-      background: linear-gradient(135deg, rgba($info, 0.12) 0%, rgba($info-light, 0.08) 100%);
-      color: $info;
-    }
-
-    .profilePage__stat-card--warning & {
-      background: linear-gradient(135deg, rgba($warning, 0.12) 0%, rgba($warning-light, 0.08) 100%);
-      color: $warning;
-    }
-  }
-
-  &__stat-content {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 1rem;
-  }
-
-  &__stat-value {
-    font-size: 2rem;
-    font-weight: 800;
-    color: $primary;
-    letter-spacing: -0.5px;
-    line-height: 1;
-  }
-
-  &__stat-label {
-    font-size: 0.875rem;
-    color: $text-medium;
-    font-weight: 600;
-  }
-
-  &__stat-trend {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: $background-light;
-    border-radius: 8px;
-    font-size: 0.8125rem;
-    color: $text-medium;
-    font-weight: 600;
-    width: fit-content;
-
-    svg {
-      font-size: 1rem;
-    }
-
-    &--up {
-      background: rgba($success, 0.1);
-      color: $success;
-    }
+    gap: 24px;
   }
 
   // Tabs
   &__tabs {
     display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background: white;
-    border-radius: 16px;
+    gap: 8px;
+    padding: 6px;
+    background: $background;
     border: 1px solid $border;
-    box-shadow: 
-      0 1px 3px $shadow-soft,
-      0 4px 12px $shadow-medium;
-    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s backwards;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+    border-radius: 10px;
   }
 
   &__tab {
@@ -489,59 +275,42 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px 24px;
+    gap: 8px;
+    padding: 10px 16px;
     background: transparent;
-    border: 2px solid transparent;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.9375rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     color: $text-medium;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
+    transition: all 0.2s ease;
 
     svg {
-      font-size: 1.25rem;
-      transition: transform 0.3s ease;
+      font-size: 18px;
     }
 
     &:hover {
       background: $background-light;
-      color: $accent;
-
-      svg {
-        transform: scale(1.1);
-      }
+      color: $primary;
     }
 
     &--active {
-      background: linear-gradient(135deg, rgba($accent, 0.12) 0%, rgba($accent-light, 0.08) 100%);
-      border-color: rgba($accent, 0.3);
-      color: $accent;
+      background: $primary;
+      color: $background;
 
-      svg {
-        transform: scale(1.05);
+      &:hover {
+        background: $primary-light;
       }
     }
-  }
 
-  &__tab-badge {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    padding: 0 8px;
-    background: $accent;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: 700;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba($accent, 0.3);
+    @media (max-width: 480px) {
+      font-size: 0;
+      padding: 10px;
 
-    .profilePage__tab:not(.profilePage__tab--active) & {
-      background: $text-light;
+      svg {
+        font-size: 20px;
+      }
     }
   }
 
@@ -549,196 +318,105 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
   &__section {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s backwards;
+    gap: 20px;
   }
 
   &__section-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 2rem;
-    flex-wrap: wrap;
-  }
+    gap: 20px;
 
-  &__section-title {
     h2 {
-      font-size: 1.75rem;
-      font-weight: 800;
+      font-size: 20px;
+      font-weight: 600;
       color: $primary;
-      margin: 0 0 8px 0;
-      letter-spacing: -0.5px;
-
-      @media (max-width: 768px) {
-        font-size: 1.5rem;
-      }
+      margin: 0 0 4px 0;
+      letter-spacing: -0.3px;
     }
 
     p {
-      font-size: 0.9375rem;
+      font-size: 14px;
       color: $text-medium;
       margin: 0;
-      font-weight: 500;
-    }
-  }
-
-  &__add-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 28px;
-    /* changed: use solid navy color for a professional look */
-    background-color: $navy;
-    color: white;
-    border-radius: 12px;
-    font-weight: 700;
-    font-size: 0.9375rem;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 16px rgba(18, 59, 102, 0.12);
-    position: relative;
-    overflow: hidden;
-
-    svg {
-      font-size: 1.125rem;
-      transition: transform 0.3s ease;
-    }
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(18, 59, 102, 0.18);
-      background-color: $navy-dark;
-
-      svg {
-        transform: rotate(90deg) scale(1.1);
-      }
-
-      .profilePage__btn-shine {
-        transform: translateX(100%) translateY(100%);
-      }
-    }
-
-    &:active {
-      transform: translateY(0);
     }
 
     @media (max-width: 768px) {
-      width: 100%;
-      justify-content: center;
+      flex-direction: column;
+
+      .profilePage__btn {
+        width: 100%;
+      }
     }
   }
 
-  &__btn-shine {
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-      45deg,
-      transparent 30%,
-      rgba(255, 255, 255, 0.3) 50%,
-      transparent 70%
-    );
-    transform: translateX(-100%) translateY(-100%) rotate(45deg);
-    transition: transform 0.6s ease;
-  }
-
-  // Loading & Error States
+  // Loading State
   &__loading {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    padding: 4rem 2rem;
-    background: white;
-    border-radius: 16px;
-    border: 2px dashed $border;
-    text-align: center;
-
-    &-spinner {
-      width: 56px;
-      height: 56px;
-      border: 4px solid $border;
-      border-top-color: $accent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    gap: 16px;
+    padding: 60px 20px;
+    background: $background;
+    border: 1px solid $border;
+    border-radius: 12px;
 
     p {
-      font-size: 1rem;
+      font-size: 14px;
       color: $text-medium;
-      font-weight: 600;
       margin: 0;
     }
 
     &--compact {
-      padding: 2rem 1.5rem;
-
-      .profilePage__loading-spinner {
-        width: 40px;
-        height: 40px;
-      }
-
-      p {
-        font-size: 0.875rem;
-      }
+      padding: 40px 20px;
     }
   }
 
+  &__spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid $border;
+    border-top-color: $accent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  // Error State
   &__error {
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba($danger, 0.08) 0%, rgba($danger, 0.04) 100%);
-    border: 2px solid rgba($danger, 0.2);
-    border-radius: 16px;
+    padding: 20px;
+    background: rgba($danger, 0.05);
+    border: 1px solid rgba($danger, 0.2);
+    border-radius: 12px;
     text-align: center;
-    color: $danger;
-    font-weight: 600;
 
     p {
+      color: $danger;
+      font-size: 14px;
+      font-weight: 500;
       margin: 0;
     }
 
     &--compact {
-      padding: 1.5rem;
-      font-size: 0.875rem;
+      padding: 16px;
     }
   }
 
   // Sidebar
   &__sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s backwards;
-
     @media (max-width: 1024px) {
       grid-column: 1;
     }
   }
 
-  &__chat-card {
-    background: white;
-    border-radius: 16px;
+  &__chat {
+    background: $background;
     border: 1px solid $border;
-    box-shadow: 
-      0 1px 3px $shadow-soft,
-      0 4px 12px $shadow-medium;
+    border-radius: 12px;
     overflow: hidden;
+    max-height: 600px;
     display: flex;
     flex-direction: column;
-    max-height: 600px;
-    transition: all 0.3s ease;
-
-    &:hover {
-      box-shadow: 
-        0 4px 16px $shadow-medium,
-        0 12px 40px $shadow-heavy;
-      border-color: rgba($accent, 0.2);
-    }
 
     @media (max-width: 1024px) {
       max-height: 500px;
@@ -749,61 +427,37 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 1.75rem;
-    background: linear-gradient(135deg, $background 0%, $background-light 100%);
+    padding: 20px;
     border-bottom: 1px solid $border;
-  }
-
-  &__chat-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-
-    svg {
-      font-size: 1.5rem;
-      color: $accent;
-    }
 
     h3 {
-      font-size: 1.25rem;
-      font-weight: 800;
+      font-size: 16px;
+      font-weight: 600;
       color: $primary;
       margin: 0;
-      letter-spacing: -0.3px;
     }
   }
 
-  &__chat-badge {
+  &__chat-count {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 28px;
-    height: 28px;
-    padding: 0 10px;
-    background: linear-gradient(135deg, $danger 0%, color.adjust($danger, $lightness: -10%) 100%);
-    color: white;
-    font-size: 0.8125rem;
-    font-weight: 800;
-    border-radius: 14px;
-    box-shadow: 0 2px 8px rgba($danger, 0.3);
-    animation: pulse 2s ease-in-out infinite;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 8px;
+    background: $accent;
+    color: $background;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 12px;
   }
 }
 
 // Animations
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -812,9 +466,6 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
   to {
     transform: rotate(360deg);
   }
@@ -822,269 +473,76 @@ $shadow-xl: rgba(15, 23, 42, 0.25);
 
 @keyframes pulse {
   0%, 100% {
-    transform: scale(1);
     opacity: 1;
   }
   50% {
-    transform: scale(1.05);
-    opacity: 0.9;
+    opacity: 0.7;
   }
 }
 
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes patternMove {
-  0%, 100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(30px, 30px);
-  }
-}
-
-// Responsive Design
-@media (max-width: 1024px) {
-  .profilePage {
-    &__hero {
-      padding: 2.5rem 0 6rem;
-    }
-
-    &__container {
-      gap: 2rem;
-    }
-
-    &__stats {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-}
-
+// Responsive adjustments
 @media (max-width: 768px) {
   .profilePage {
-    padding-top: 72px;
-
-    &__hero {
-      padding: 2rem 0 5rem;
-    }
-
-    &__user-card {
-      padding: 2rem 1.5rem;
-    }
-
-    &__avatar-wrapper {
-      width: 110px;
-      height: 110px;
-    }
-
-    &__username {
-      font-size: 1.5rem;
-    }
-
-    &__verified-badge {
-      padding: 6px 12px;
-      font-size: 0.75rem;
-
-      svg {
-        font-size: 1rem;
-      }
-    }
-
-    &__actions {
-      gap: 0.75rem;
-    }
-
-    &__btn {
-      padding: 12px 24px;
-      font-size: 0.875rem;
-
-      svg {
-        font-size: 1rem;
-      }
-    }
+    padding: 80px 0 40px;
 
     &__container {
-      margin-top: -4rem;
-      padding: 0 1.5rem 2rem;
-      gap: 1.5rem;
+      padding: 0 16px;
+      gap: 16px;
+    }
+
+    &__header {
+      padding: 20px;
+    }
+
+    &__user-info h1 {
+      font-size: 20px;
+    }
+
+    &__detail {
+      font-size: 13px;
     }
 
     &__stats {
-      grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: 12px;
     }
 
-    &__stat-card {
-      padding: 1.5rem;
+    &__stat {
+      padding: 16px;
     }
 
     &__stat-icon {
-      width: 48px;
-      height: 48px;
-      font-size: 1.25rem;
-      margin-bottom: 1rem;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
     }
 
     &__stat-value {
-      font-size: 1.75rem;
+      font-size: 20px;
     }
 
-    &__section-title h2 {
-      font-size: 1.375rem;
+    &__stat-label {
+      font-size: 12px;
     }
 
-    &__tabs {
-      padding: 0.75rem;
+    &__content {
+      gap: 16px;
     }
 
-    &__tab {
-      padding: 12px 20px;
-      font-size: 0.875rem;
-
-      svg {
-        font-size: 1.125rem;
-      }
-    }
-
-    &__chat-card {
-      max-height: 450px;
+    &__section-header h2 {
+      font-size: 18px;
     }
   }
 }
 
 @media (max-width: 480px) {
   .profilePage {
-    &__hero {
-      padding: 1.5rem 0 4rem;
+    &__avatar {
+      width: 64px;
+      height: 64px;
     }
 
-    &__user-card {
-      padding: 1.5rem 1.25rem;
-      gap: 1.5rem;
-    }
-
-    &__avatar-wrapper {
-      width: 100px;
-      height: 100px;
-    }
-
-    &__status-indicator {
-      width: 30px;
-      height: 30px;
-      font-size: 1rem;
-    }
-
-    &__username {
-      font-size: 1.375rem;
-    }
-
-    &__email {
-      font-size: 0.875rem;
-    }
-
-    &__user-meta {
-      flex-direction: column;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    &__meta-item {
-      font-size: 0.875rem;
-    }
-
-    &__btn {
-      padding: 11px 20px;
-    }
-
-    &__container {
-      margin-top: -3rem;
-      padding: 0 1rem 1.5rem;
-    }
-
-    &__stat-card {
-      padding: 1.25rem;
-    }
-
-    &__stat-value {
-      font-size: 1.5rem;
-    }
-
-    &__stat-label {
-      font-size: 0.8125rem;
-    }
-
-    &__section-header {
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    &__section-title h2 {
-      font-size: 1.25rem;
-    }
-
-    &__section-title p {
-      font-size: 0.875rem;
-    }
-
-    &__tab {
-      padding: 11px 18px;
-
-      span {
-        display: none;
-      }
-
-      svg {
-        font-size: 1.375rem;
-      }
-    }
-
-    &__tab-badge {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
-      font-size: 0.6875rem;
-    }
-
-    &__loading {
-      padding: 3rem 1.5rem;
-
-      &-spinner {
-        width: 48px;
-        height: 48px;
-      }
-
-      p {
-        font-size: 0.875rem;
-      }
-    }
-
-    &__chat-card {
-      max-height: 400px;
-    }
-
-    &__chat-header {
-      padding: 1.25rem 1.5rem;
-    }
-
-    &__chat-title {
-      gap: 10px;
-
-      svg {
-        font-size: 1.25rem;
-      }
-
-      h3 {
-        font-size: 1.125rem;
-      }
+    &__user-info h1 {
+      font-size: 18px;
     }
   }
 }
