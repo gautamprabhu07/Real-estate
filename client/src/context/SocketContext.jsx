@@ -9,8 +9,9 @@ export const SocketContextProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    setSocket(io("http://localhost:4000"));
+    setSocket(io("https://urbanluxe-socket.onrender.com"));
   }, []);
+  //http://localhost:4000
 
   useEffect(() => {
   currentUser && socket?.emit("newUser", currentUser.id);
