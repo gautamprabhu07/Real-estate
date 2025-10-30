@@ -360,9 +360,12 @@ useEffect(() => {
                 <div className="placeInfo">
                   <span className="placeName">School</span>
                   <span className="placeDistance">
-                    {post.postDetail.school > 999
-                      ? (post.postDetail.school / 1000).toFixed(1) + " km"
-                      : post.postDetail.school + " m"}
+                    {post.postDetail.school == null
+  ? "-"
+  : post.postDetail.school > 999
+  ? (post.postDetail.school / 1000).toFixed(1) + " km"
+  : post.postDetail.school + " m"
+}
                   </span>
                 </div>
               </div>
@@ -379,7 +382,12 @@ useEffect(() => {
                 </div>
                 <div className="placeInfo">
                   <span className="placeName">Bus Stop</span>
-                  <span className="placeDistance">{post.postDetail.bus} m</span>
+                  <span className="placeDistance">{post.postDetail.bus == null
+  ? "-"
+  : post.postDetail.bus > 999
+  ? (post.postDetail.bus / 1000).toFixed(1) + " km"
+  : post.postDetail.bus + " m"
+}</span>
                 </div>
               </div>
               <div className="placeItem">
@@ -392,7 +400,12 @@ useEffect(() => {
                 </div>
                 <div className="placeInfo">
                   <span className="placeName">Restaurant</span>
-                  <span className="placeDistance">{post.postDetail.restaurant} m</span>
+                  <span className="placeDistance">{post.postDetail.restaurant == null
+  ? "-"
+  : post.postDetail.restaurant > 999
+  ? (post.postDetail.restaurant / 1000).toFixed(1) + " km"
+  : post.postDetail.restaurant + " m"
+}</span>
                 </div>
               </div>
             </div>
