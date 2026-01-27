@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 
 const io = new Server({
   cors: {
-    origin: "https://urbanluxe.onrender.com",
+    origin: "https://urbanluxe-indol.vercel.app",
   },
 });
 
