@@ -1,8 +1,10 @@
 import { Server } from "socket.io";
+import dotenv from "dotenv";
+dotenv.config();
 
 const io = new Server({
   cors: {
-    origin: "https://urbanluxe-indol.vercel.app",
+    origin: process.env.CLIENT_URL,
   },
 });
 
@@ -43,4 +45,4 @@ io.on("connection", (socket) => {
   });
 });
 
-io.listen("4000");
+io.listen(process.env.PORT || 4000);
