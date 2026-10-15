@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const apiRequest = axios.create({
-  baseURL: "http://localhost:8800/api",
-  //https://real-estate-2eqg.onrender.com/api
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8800/api",
   withCredentials: true,
 });
 

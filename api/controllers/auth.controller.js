@@ -38,11 +38,12 @@ export const login = async (req, res) => {
 
     const { password: userPassword, ...userInfo } = user;
 
+    const isProd = process.env.NODE_ENV === "production";
     res
       .cookie("token", token, {
         httpOnly: true,
-        secure: true,              // CRUCIAL for cross-site cookies
-        sameSite: "None",          // CRUCIAL for cross-site cookies
+        secure: isProd,              // Secure cookies require HTTPS, which localhost doesn't have
+        sameSite: isProd ? "None" : "Lax", // cross-site in prod, same-site is fine for local dev
         maxAge: age,
       })
       .status(200)
@@ -54,11 +55,12 @@ export const login = async (req, res) => {
 };
 
 export const logout = (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
   res
     .clearCookie("token", {
       httpOnly: true,
-      secure: true,
-      sameSite: "None"
+      secure: isProd,
+      sameSite: isProd ? "None" : "Lax"
     })
     .status(200)
     .json({ message: "Logout Successful" });

@@ -1,0 +1,62 @@
+// Shared design tokens, exposed as CSS custom properties so any component
+// stylesheet can use them without needing a Sass @use/@import of its own.
+:root {
+  // Accent colors (blue - primary actions, links)
+  --color-accent: #2563eb;
+  --color-accent-light: #3b82f6;
+  --color-accent-dark: #1e40af;
+  --color-accent-darker: #1d4ed8;
+
+  // Accent colors (orange - highlights, focus rings, loading states)
+  --color-highlight: #f59e0b;
+  --color-highlight-light: #f6ad55;
+  --color-highlight-soft: #fbbf24;
+
+  // Status colors
+  --color-danger: #ef4444;
+  --color-danger-dark: #dc2626;
+  --color-success: #10b981;
+  --color-success-dark: #059669;
+
+  // Navy surface (used by navbar/card dark accents)
+  --color-navy: #0f172a;
+  --color-slate: #64748b;
+  --color-surface-soft: #f1f5f9;
+
+  // Dark theme surfaces
+  --color-bg-base: #1a1a1a;
+  --color-bg-mid: #2d3748;
+  --color-bg-elevated: #1f2937;
+  --color-bg-elevated-2: #111827;
+  --color-border-dark: #374151;
+  --color-border-darker: #475569;
+  --color-border-mid: #4a5568;
+
+  // Text
+  --color-text-primary: #f7fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-text-body: #cbd5e0;
+  --color-text-muted: #9ca3af;
+  --color-text-muted-2: #6b7280;
+
+  // Light surfaces (used in a few light-background components)
+  --color-surface-light: #f8fafc;
+  --color-surface-light-2: #f3f4f6;
+  --color-border-light: #e5e7eb;
+
+  // Spacing scale
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+
+  // Radii
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  // Shadow
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+}

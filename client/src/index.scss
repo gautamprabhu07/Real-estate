@@ -1,5 +1,6 @@
 // Urban Luxe Real Estate - Base Styles
 // Modern CSS Reset & Global Styles
+@use "./variables";
 
 * {
   padding: 0;
@@ -35,7 +36,7 @@ button {
   transition: all 0.3s ease;
   
   &:focus {
-    outline: 2px solid #f6ad55;
+    outline: 2px solid var(--color-highlight-light);
     outline-offset: 2px;
   }
 }
@@ -44,9 +45,9 @@ input, textarea, select {
   font-family: inherit;
   border: none;
   outline: none;
-  
+
   &:focus {
-    box-shadow: 0 0 0 2px #f6ad55;
+    box-shadow: 0 0 0 2px var(--color-highlight-light);
   }
 }
 
@@ -59,8 +60,8 @@ body {
   font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  color: #e2e8f0;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+  color: var(--color-text-secondary);
+  background: linear-gradient(135deg, var(--color-bg-base) 0%, var(--color-bg-mid) 100%);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -79,7 +80,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 0.5rem;
-  color: #f7fafc;
+  color: var(--color-text-primary);
 }
 
 h1 { font-size: clamp(2rem, 5vw, 3.5rem); }
@@ -91,7 +92,7 @@ h6 { font-size: clamp(0.875rem, 1.5vw, 1rem); }
 
 p {
   margin-bottom: 1rem;
-  color: #cbd5e0;
+  color: var(--color-text-body);
 }
 
 // Image optimization
@@ -103,19 +104,19 @@ img {
 
 // Focus management for accessibility
 :focus-visible {
-  outline: 2px solid #f6ad55;
+  outline: 2px solid var(--color-highlight-light);
   outline-offset: 2px;
 }
 
 // Selection styling
 ::selection {
-  background-color: #f6ad55;
-  color: #1a1a1a;
+  background-color: var(--color-highlight-light);
+  color: var(--color-bg-base);
 }
 
 ::-moz-selection {
-  background-color: #f6ad55;
-  color: #1a1a1a;
+  background-color: var(--color-highlight-light);
+  color: var(--color-bg-base);
 }
 
 // Custom scrollbar for webkit browsers
@@ -124,15 +125,15 @@ img {
 }
 
 ::-webkit-scrollbar-track {
-  background: #2d3748;
+  background: var(--color-bg-mid);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4a5568;
-  border-radius: 4px;
-  
+  background: var(--color-border-mid);
+  border-radius: var(--radius-sm);
+
   &:hover {
-    background: #f6ad55;
+    background: var(--color-highlight-light);
   }
 }
 
@@ -162,7 +163,7 @@ img {
   height: 20px;
   border: 3px solid rgba(246, 173, 85, 0.3);
   border-radius: 50%;
-  border-top-color: #f6ad55;
+  border-top-color: var(--color-highlight-light);
   animation: spin 1s ease-in-out infinite;
 }
 
