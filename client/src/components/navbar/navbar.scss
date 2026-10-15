@@ -1,7 +1,8 @@
 @use "sass:color";
 
 // Premium Real Estate Color Palette
-$background: #ffffff;
+$background: #ffffff; // kept literal: fed into rgba() below for the scroll-blur effect
+$surface: var(--color-bg-elevated);
 $background-scrolled: rgba(255, 255, 255, 0.95);
 $primary: #0f172a;
 $primary-light: #1e293b;
@@ -12,11 +13,11 @@ $accent-gradient-start: #2563eb;
 $accent-gradient-end: #1d4ed8;
 $gold: #f59e0b;
 $gold-light: #fbbf24;
-$text-dark: #0f172a;
-$text-medium: #475569;
-$text-light: #64748b;
-$border: #e2e8f0;
-$border-light: #f1f5f9;
+$text-dark: var(--color-text-primary);
+$text-medium: var(--color-text-muted);
+$text-light: var(--color-text-muted-2);
+$border: var(--color-border-light);
+$border-light: var(--color-bg-mid);
 $shadow-soft: rgba(15, 23, 42, 0.04);
 $shadow-medium: rgba(15, 23, 42, 0.08);
 $shadow-heavy: rgba(15, 23, 42, 0.15);
@@ -28,7 +29,7 @@ $overlay: rgba(15, 23, 42, 0.02);
   left: 0;
   right: 0;
   height: 85px;
-  background-color: $background;
+  background-color: $surface;
   border-bottom: 1px solid transparent;
   z-index: 1000;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -415,6 +416,25 @@ $overlay: rgba(15, 23, 42, 0.02);
     gap: 1rem;
     flex-shrink: 0;
 
+    .navbar__theme-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: 2px solid $border;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      color: $text-medium;
+
+      &:hover {
+        background-color: rgba($accent, 0.06);
+        border-color: rgba($accent, 0.3);
+        color: $accent;
+      }
+    }
+
     .navbar__auth {
       display: flex;
       align-items: center;
@@ -525,7 +545,7 @@ $overlay: rgba(15, 23, 42, 0.02);
           text-align: center;
           box-shadow: 0 2px 8px rgba(239, 68, 68, 0.5);
           animation: pulse 2s ease-in-out infinite;
-          border: 2px solid $background;
+          border: 2px solid $surface;
         }
 
         &:hover {

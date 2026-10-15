@@ -8,9 +8,9 @@ $secondary-color: #764ba2;
 $accent-color: #f093fb;
 $error-color: #ef4444;
 $success-color: #10b981;
-$text-dark: #1a202c;
-$text-light: #718096;
-$bg-light: #f7fafc;
+$text-dark: var(--color-text-primary);
+$text-light: var(--color-text-muted);
+$bg-light: var(--color-bg-mid);
 $white: #ffffff;
 
 // Animations
@@ -190,7 +190,7 @@ $white: #ffffff;
           border: 2px solid #e2e8f0;
           border-radius: 12px;
           font-size: 1rem;
-          background: $white;
+          background: var(--color-bg-elevated);
           transition: all 0.3s ease;
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 

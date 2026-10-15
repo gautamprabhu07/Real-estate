@@ -10,13 +10,13 @@ $accent-light: #3b82f6;
 $success: #10b981;
 $warning: #f59e0b;
 $warning-light: #fbbf24;
-$text-dark: #0f172a;
-$text-medium: #475569;
-$text-light: #64748b;
-$background: #ffffff;
-$background-light: #f8fafc;
-$background-hover: #f1f5f9;
-$border: #e2e8f0;
+$text-dark: var(--color-text-primary);
+$text-medium: var(--color-text-muted);
+$text-light: #64748b; // kept literal: fed into rgba() below
+$background: var(--color-bg-elevated);
+$background-light: var(--color-bg-mid);
+$background-hover: var(--color-bg-mid);
+$border: #e2e8f0; // kept literal: fed into rgba() below
 $shadow-soft: rgba(15, 23, 42, 0.04);
 $shadow-medium: rgba(15, 23, 42, 0.08);
 $shadow-heavy: rgba(15, 23, 42, 0.15);

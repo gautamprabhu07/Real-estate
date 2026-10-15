@@ -81,7 +81,12 @@ function ProfilePage() {
         </div>
 
         {/* Stats Section wrapped inside Await to access counts */}
-        <Suspense fallback={<div>Loading stats...</div>}>
+        <Suspense fallback={
+          <div className="profilePage__loading">
+            <div className="profilePage__spinner"></div>
+            <p>Loading...</p>
+          </div>
+        }>
           <Await resolve={data.postResponse}>
             {(postResponse) => {
               const userPostsCount = (postResponse.userPosts || []).length;

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./newpost.scss";
 import { Editor } from "@tinymce/tinymce-react";
+import toast from "react-hot-toast";
 import apiRequest from "../../lib/apiRequest";
 import UploadWidget from "../../components/uploadWidget/UploadWidget";
 import { useNavigate } from "react-router-dom";
@@ -68,10 +69,13 @@ function NewPostPage() {
           restaurant: parseInt(inputs.restaurant),
         },
       });
+      toast.success("Property listed successfully!");
       navigate("/" + res.data.id);
     } catch (err) {
       console.log(err);
-      setError(err?.response?.data?.message || "Submission error");
+      const message = err?.response?.data?.message || "Submission error";
+      setError(message);
+      toast.error(message);
       setIsSubmitting(false);
     }
   };

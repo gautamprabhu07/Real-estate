@@ -10,9 +10,11 @@ import {
   HiBell,
   HiChevronDown
 } from "react-icons/hi";
+import { Sun, Moon } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { useNotificationStore } from "../../lib/notificationStore";
+import { useThemeStore } from "../../lib/themeStore";
 import apiRequest from "../../lib/apiRequest";
 
 // DiceBear avatar generator
@@ -31,6 +33,8 @@ function Navbar() {
   const { currentUser, updateUser } = useContext(AuthContext);
   const fetchNotifications = useNotificationStore((state) => state.fetch);
   const notificationNumber = useNotificationStore((state) => state.number);
+  const theme = useThemeStore((state) => state.theme);
+  const toggleTheme = useThemeStore((state) => state.toggleTheme);
 
   // Fetch user if not available
   useEffect(() => {
@@ -41,7 +45,7 @@ function Navbar() {
           updateUser(res.data);
         }
       } catch {
-        console.log("User not authenticated");
+        // not logged in - ignore
       }
     };
     fetchUser();
@@ -166,6 +170,14 @@ function Navbar() {
 
             {/* Auth or User Info (Desktop) */}
             <div className="navbar__actions">
+              <button
+                className="navbar__theme-toggle"
+                onClick={toggleTheme}
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+                title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
               {currentUser ? (
                 <div className="navbar__user">
                   <button className="navbar__notification-btn">

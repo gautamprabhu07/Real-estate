@@ -3,6 +3,7 @@ import Slider from "../../components/slider/Slider";
 import Map from "../../components/map/Map";
 import { useNavigate, useLoaderData, useSearchParams } from "react-router-dom";
 import DOMPurify from "dompurify";
+import toast from "react-hot-toast";
 import { useContext, useState, useEffect, useMemo, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { SocketContext } from "../../context/SocketContext";
@@ -21,7 +22,6 @@ import { HiOutlineEmojiHappy } from "react-icons/hi";
 import { format } from "timeago.js";
 
 function SinglePage() {
-  console.log("SinglePage component rendered");
   const [agentPostCount, setAgentPostCount] = useState("—");
   
   const post = useLoaderData();
@@ -83,9 +83,11 @@ function SinglePage() {
     setSaved(!prev);
     try {
       await savePost(post.id);
+      toast.success(prev ? "Removed from saved" : "Saved!");
     } catch (err) {
       console.error('Failed to toggle save', err);
       setSaved(prev);
+      toast.error("Failed to update saved listing");
     }
   };
 
@@ -95,7 +97,7 @@ function SinglePage() {
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    alert("Link copied to clipboard!");
+    toast.success("Link copied to clipboard!");
     setShowShareMenu(false);
   };
 
@@ -192,6 +194,7 @@ const handleSendMessage = async () => {
     e.target.text.style.height = "auto";
   } catch (err) {
     console.error("Sending message failed:", err);
+    toast.error("Failed to send message");
   }
 };
 
@@ -233,15 +236,12 @@ const handleSendMessage = async () => {
   };
 
   useEffect(() => {
-    console.log("Fetching agent post count...");
-    console.log("Post data:", post);
     if (!post?.user) {
       setAgentPostCount("—");
       return;
     }
 
     const userId = post.userId || post.user._id;
-    console.log("Determined userId:", userId);
 
     if (!userId) {
       setAgentPostCount("—");
@@ -250,13 +250,10 @@ const handleSendMessage = async () => {
 
     let isMounted = true;
 
-    console.log("Fetching posts for userId:", userId);
-
     apiRequest
       .get(`/users/${userId}/posts`)
       .then((res) => {
         if (isMounted && Array.isArray(res.data)) {
-          console.log("Posts fetched:", res.data.length);
           setAgentPostCount(res.data.length);
         } else {
           setAgentPostCount("—");

@@ -6,11 +6,12 @@ $primary-dark: #1e40af;
 $primary-light: #3b82f6;
 $accent: #f59e0b;
 $accent-light: #fbbf24;
-$text-dark: #0f172a;
-$text-medium: #475569;
-$text-light: #64748b;
-$background-gradient-start: #f8fafc;
-$background-gradient-end: #e0e7ff;
+$text-dark: var(--color-text-primary);
+$text-medium: var(--color-text-muted);
+$text-light: var(--color-text-muted-2);
+$background-gradient-start: var(--color-bg-elevated);
+$background-gradient-end: var(--color-bg-elevated-2);
+$surface: var(--color-bg-elevated);
 $card-shadow: rgba(37, 99, 235, 0.15);
 $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 130, 246, 0.9) 100%);
 
@@ -146,7 +147,7 @@ $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: white;
+    background: $surface;
     padding: 0.75rem 1.5rem;
     border-radius: 50px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -380,7 +381,7 @@ $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 
   }
 
   &__image-badge {
-    background: white;
+    background: $surface;
     padding: 0.75rem 1.25rem;
     border-radius: 50px;
     display: flex;
@@ -408,7 +409,7 @@ $overlay-gradient: linear-gradient(135deg, rgba(37, 99, 235, 0.95) 0%, rgba(59, 
     position: absolute;
     top: 20px;
     right: 20px;
-    background: white;
+    background: $surface;
     padding: 1.25rem 1.5rem;
     border-radius: 16px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);

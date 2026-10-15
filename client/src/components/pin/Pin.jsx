@@ -13,6 +13,7 @@ import { useState } from "react";
 import "./pin.scss";
 import { Link } from "react-router-dom";
 import L from "leaflet";
+import { optimizeImageUrl } from "../../lib/image";
 
 function Pin({ item }) {
   const [isSaved, setIsSaved] = useState(false);
@@ -49,10 +50,11 @@ function Pin({ item }) {
           {/* Image Section */}
           <div className="pin-popup__image-wrapper">
             <Link to={`/${item.id}`} className="pin-popup__image-link">
-              <img 
-                src={imageError ? "/noimage.jpg" : (item.images?.[0] || "/noimage.jpg")} 
+              <img
+                src={imageError ? "/noimage.jpg" : optimizeImageUrl(item.images?.[0], { width: 320 }) || "/noimage.jpg"}
                 alt={item.title}
                 className="pin-popup__image"
+                loading="lazy"
                 onError={() => setImageError(true)}
               />
               <div className="pin-popup__image-overlay"></div>

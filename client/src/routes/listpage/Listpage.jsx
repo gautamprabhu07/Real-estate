@@ -2,12 +2,19 @@ import "./listpage.scss";
 import Filter from "../../components/filter/Filter";
 import Card from "../../components/card/Card";
 import Map from "../../components/map/Map";
+import apiRequest from "../../lib/apiRequest";
 import { Await, useLoaderData, useLocation } from "react-router-dom";
 import { Suspense, useState, useEffect, useRef } from "react";
+
+const PAGE_SIZE = 12;
 
 function ListPage() {
   const data = useLoaderData();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [extraPosts, setExtraPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   // default sort should be newest first per user request
   const [sortBy, setSortBy] = useState('newest');
@@ -47,6 +54,32 @@ function ListPage() {
     const timer = setTimeout(() => setIsLoaded(true), 100);
     return () => clearTimeout(timer);
   }, []);
+
+  // reset pagination whenever the filters/query change (new loader data)
+  useEffect(() => {
+    setExtraPosts([]);
+    setPage(1);
+    setHasMore(true);
+  }, [location.search]);
+
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    try {
+      const nextPage = page + 1;
+      const query = location.search ? location.search.slice(1) : "";
+      const params = new URLSearchParams(query);
+      params.set("page", nextPage);
+      params.set("limit", PAGE_SIZE);
+      const res = await apiRequest(`/posts?${params.toString()}`);
+      setExtraPosts((prev) => [...prev, ...res.data]);
+      setPage(nextPage);
+      setHasMore(res.data.length === PAGE_SIZE);
+    } catch (err) {
+      console.error("Failed to load more listings", err);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   // initialize sort from query param (e.g. ?sort=featured)
   useEffect(() => {
@@ -238,7 +271,7 @@ function ListPage() {
                     <>
                       {(() => {
                         // prepare and sort/filter posts based on sortBy
-                        let sortedPosts = [...postResponse.data];
+                        let sortedPosts = [...postResponse.data, ...extraPosts];
                         const savedSet = new Set(savedIds || []);
 
                         switch (sortBy) {
@@ -302,6 +335,18 @@ function ListPage() {
                 </Await>
               </Suspense>
             </div>
+
+            {hasMore && (
+              <div className="loadMoreContainer">
+                <button
+                  className="loadMoreBtn"
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                >
+                  {loadingMore ? "Loading..." : "Load More"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
 

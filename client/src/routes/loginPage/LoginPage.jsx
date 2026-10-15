@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -25,9 +26,12 @@ function LoginPage() {
     try {
       const res = await apiRequest.post("/auth/login", formData);
       updateUser(res.data);
+      toast.success(`Welcome back, ${res.data.username}!`);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      const message = err.response?.data?.message || "Login failed";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

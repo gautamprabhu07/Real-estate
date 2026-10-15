@@ -6,12 +6,12 @@ $gradient-end: #764ba2;
 $primary-color: #667eea;
 $secondary-color: #764ba2;
 $accent-color: #f093fb;
-$bg-light: #f8f9ff;
-$bg-white: #ffffff;
-$text-dark: #1a202c;
-$text-gray: #4a5568;
-$text-light: #718096;
-$border-color: #e2e8f0;
+$bg-light: var(--color-bg-mid);
+$bg-white: var(--color-bg-elevated);
+$text-dark: var(--color-text-primary);
+$text-gray: var(--color-text-muted);
+$text-light: var(--color-text-muted-2);
+$border-color: #e2e8f0; // kept literal: fed into color.adjust() below
 $success-color: #48bb78;
 $error-color: #f56565;
 $shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);

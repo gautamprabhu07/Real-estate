@@ -14,16 +14,16 @@ import {
   IoResizeOutline,
   IoShareSocialOutline
 } from "react-icons/io5";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { savePost } from '../../lib/loaders';
+import { optimizeImageUrl } from '../../lib/image';
 import "./card.scss";
 
 
 function Card({ item, viewMode, isSavedInitial = false }) {
   const [isSaved, setIsSaved] = useState(Boolean(isSavedInitial));
   const [imageError, setImageError] = useState(false);
-  const [showCopied, setShowCopied] = useState(false);
-  const timerRef = useRef(null);
   const navigate = useNavigate();
 
 
@@ -31,14 +31,6 @@ function Card({ item, viewMode, isSavedInitial = false }) {
   useEffect(() => {
     setIsSaved(Boolean(isSavedInitial));
   }, [isSavedInitial]);
-
-
-  // cleanup any pending timers on unmount
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
 
 
   const handleSave = (e) => {
@@ -50,10 +42,12 @@ function Card({ item, viewMode, isSavedInitial = false }) {
     (async () => {
       try {
         await savePost(item.id);
+        toast.success(prev ? "Removed from saved" : "Saved!");
       } catch (err) {
         // revert on error
         console.error('Failed to save post', err);
         setIsSaved(prev);
+        toast.error("Failed to update saved listing");
       }
     })();
   };
@@ -62,7 +56,6 @@ function Card({ item, viewMode, isSavedInitial = false }) {
   const handleChat = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Navigating to chat for item ID:", item.id);
     navigate(`/${item.id}?openChat=true`);
   };
 
@@ -100,12 +93,11 @@ function Card({ item, viewMode, isSavedInitial = false }) {
 
     copyText(shareUrl)
       .then(() => {
-        setShowCopied(true);
-        if (timerRef.current) clearTimeout(timerRef.current);
-        timerRef.current = setTimeout(() => setShowCopied(false), 2000);
+        toast.success("Link copied!");
       })
       .catch((err) => {
         console.error('Copy failed', err);
+        toast.error("Couldn't copy link");
       });
   };
 
@@ -165,9 +157,10 @@ function Card({ item, viewMode, isSavedInitial = false }) {
 
         {/* Property Image */}
         <div className="card__image">
-          <img 
-            src={imageError ? "/noimage.jpg" : (item.images?.[0] || "/noimage.jpg")} 
+          <img
+            src={imageError ? "/noimage.jpg" : optimizeImageUrl(item.images?.[0]) || "/noimage.jpg"}
             alt={item.title}
+            loading="lazy"
             onError={() => setImageError(true)}
           />
           <div className="card__image-overlay"></div>
@@ -190,26 +183,6 @@ function Card({ item, viewMode, isSavedInitial = false }) {
           >
             <IoShareSocialOutline />
           </button>
-          {showCopied && (
-            <div
-              className="card__share-toast"
-              role="status"
-              aria-live="polite"
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                background: 'rgba(0,0,0,0.85)',
-                color: '#fff',
-                padding: '6px 8px',
-                borderRadius: 6,
-                fontSize: 12,
-                zIndex: 60,
-              }}
-            >
-              Link copied
-            </div>
-          )}
         </div>
       </Link>
 

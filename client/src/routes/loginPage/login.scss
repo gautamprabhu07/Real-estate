@@ -5,14 +5,14 @@ $primary-color: #2563eb;
 $primary-dark: #1e40af;
 $primary-light: #3b82f6;
 $secondary-color: #0ea5e9;
-$background-light: #ffffff;
-$background-gray: #f8fafc;
-$text-dark: #0f172a;
-$text-medium: #475569;
-$text-light: #94a3b8;
+$background-light: var(--color-bg-elevated);
+$background-gray: var(--color-bg-mid);
+$text-dark: var(--color-text-primary);
+$text-medium: var(--color-text-muted);
+$text-light: #94a3b8; // kept literal: fed into color.adjust() below
 $error-color: #ef4444;
 $success-color: #10b981;
-$border-color: #e2e8f0;
+$border-color: var(--color-border-light);
 $shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 $shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
@@ -676,7 +676,3 @@ $shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   }
 }
 
-// Dark mode support (optional - can be enabled if needed)
-@media (prefers-color-scheme: dark) {
-  // Add dark mode styles here if needed
-}

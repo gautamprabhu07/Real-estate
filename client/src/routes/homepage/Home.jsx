@@ -25,8 +25,7 @@ function HomePage() {
   }, []);
 
   const handleCardClick = () => {
-    console.log("Card clicked, navigating to: /68ff7a0dd9136a34a7b7c41f");
-    navigate("/68ff7a0dd9136a34a7b7c41f");
+    navigate("/list");
   };
 
   return (

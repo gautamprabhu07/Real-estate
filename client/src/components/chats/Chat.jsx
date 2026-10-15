@@ -1,4 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import "./chat.scss";
 import { AuthContext } from "../../context/AuthContext";
 import apiRequest from "../../lib/apiRequest";
@@ -62,6 +63,7 @@ function Chat({ chats }) {
       });
     } catch (err) {
       console.log(err);
+      toast.error("Failed to send message");
     }
   };
 

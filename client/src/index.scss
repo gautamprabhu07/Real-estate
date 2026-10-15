@@ -111,12 +111,12 @@ img {
 // Selection styling
 ::selection {
   background-color: var(--color-highlight-light);
-  color: var(--color-bg-base);
+  color: #1a1a1a;
 }
 
 ::-moz-selection {
   background-color: var(--color-highlight-light);
-  color: var(--color-bg-base);
+  color: #1a1a1a;
 }
 
 // Custom scrollbar for webkit browsers

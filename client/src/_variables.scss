@@ -1,5 +1,9 @@
 // Shared design tokens, exposed as CSS custom properties so any component
 // stylesheet can use them without needing a Sass @use/@import of its own.
+//
+// :root holds the LIGHT theme (the app's original, always-on default look —
+// every page was authored against light backgrounds). [data-theme="dark"]
+// overrides the surface/text tokens for the opt-in dark mode toggle.
 :root {
   // Accent colors (blue - primary actions, links)
   --color-accent: #2563eb;
@@ -23,21 +27,21 @@
   --color-slate: #64748b;
   --color-surface-soft: #f1f5f9;
 
-  // Dark theme surfaces
-  --color-bg-base: #1a1a1a;
-  --color-bg-mid: #2d3748;
-  --color-bg-elevated: #1f2937;
-  --color-bg-elevated-2: #111827;
-  --color-border-dark: #374151;
-  --color-border-darker: #475569;
-  --color-border-mid: #4a5568;
+  // Surfaces (light theme = default)
+  --color-bg-base: #f8fafc;
+  --color-bg-mid: #e2e8f0;
+  --color-bg-elevated: #ffffff;
+  --color-bg-elevated-2: #f1f5f9;
+  --color-border-dark: #cbd5e1;
+  --color-border-darker: #94a3b8;
+  --color-border-mid: #cbd5e1;
 
-  // Text
-  --color-text-primary: #f7fafc;
-  --color-text-secondary: #e2e8f0;
-  --color-text-body: #cbd5e0;
-  --color-text-muted: #9ca3af;
-  --color-text-muted-2: #6b7280;
+  // Text (light theme = default)
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #1e293b;
+  --color-text-body: #334155;
+  --color-text-muted: #64748b;
+  --color-text-muted-2: #475569;
 
   // Light surfaces (used in a few light-background components)
   --color-surface-light: #f8fafc;
@@ -57,6 +61,26 @@
   --radius-lg: 12px;
 
   // Shadow
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+// Dark theme overrides, applied when the user toggles dark mode.
+:root[data-theme="dark"] {
+  --color-bg-base: #1a1a1a;
+  --color-bg-mid: #2d3748;
+  --color-bg-elevated: #1f2937;
+  --color-bg-elevated-2: #111827;
+  --color-border-dark: #374151;
+  --color-border-darker: #475569;
+  --color-border-mid: #4a5568;
+
+  --color-text-primary: #f7fafc;
+  --color-text-secondary: #e2e8f0;
+  --color-text-body: #cbd5e0;
+  --color-text-muted: #9ca3af;
+  --color-text-muted-2: #6b7280;
+
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
 }

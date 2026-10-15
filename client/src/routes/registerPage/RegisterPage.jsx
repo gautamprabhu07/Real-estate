@@ -1,6 +1,7 @@
 import "./registerpage.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import apiRequest from "../../lib/apiRequest";
 
 function Register() {
@@ -26,9 +27,12 @@ function Register() {
 
     try {
       await apiRequest.post("/auth/register", formData);
+      toast.success("Account created! Please log in.");
       navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || "Registration error");
+      const message = err.response?.data?.message || "Registration error";
+      setError(message);
+      toast.error(message);
     } finally {
       setIsLoading(false);
     }

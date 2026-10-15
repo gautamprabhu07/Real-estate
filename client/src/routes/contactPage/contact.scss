@@ -2,12 +2,12 @@
 $primary-color: #2563eb;
 $primary-dark: #1e40af;
 $primary-light: #3b82f6;
-$background-light: #ffffff;
-$background-gray: #f8fafc;
-$border-color: #e2e8f0;
-$text-dark: #0f172a;
-$text-medium: #475569;
-$text-light: #94a3b8;
+$background-light: var(--color-bg-elevated);
+$background-gray: var(--color-bg-mid);
+$border-color: var(--color-border-light);
+$text-dark: var(--color-text-primary);
+$text-medium: var(--color-text-muted);
+$text-light: var(--color-text-muted-2);
 $radius: 1rem;
 $shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
 

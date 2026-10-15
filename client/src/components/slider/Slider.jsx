@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { optimizeImageUrl } from "../../lib/image";
 import "./slider.scss";
 
 function Slider({ images }) {
@@ -10,7 +11,7 @@ function Slider({ images }) {
     // Preload first image
     if (images && images.length > 0) {
       const img = new Image();
-      img.src = images[0];
+      img.src = optimizeImageUrl(images[0], { width: 1200 });
       img.onload = () => {
         setLoadedImages(prev => ({ ...prev, 0: true }));
         setIsLoading(false);
@@ -84,8 +85,8 @@ function Slider({ images }) {
 
             {/* Image Container */}
             <div className="imgContainer">
-              <img 
-                src={images[imageIndex]} 
+              <img
+                src={optimizeImageUrl(images[imageIndex], { width: 1600 })}
                 alt={`Property view ${imageIndex + 1}`}
                 loading="lazy"
               />
@@ -161,9 +162,9 @@ function Slider({ images }) {
               <div className="skeletonShimmer"></div>
             </div>
           )}
-          <img 
-            src={images[0]} 
-            alt="Main property view" 
+          <img
+            src={optimizeImageUrl(images[0], { width: 1200 })}
+            alt="Main property view"
             onClick={() => setImageIndex(0)}
             onLoad={() => handleImageLoad(0)}
           />
@@ -204,7 +205,7 @@ function Slider({ images }) {
               </div>
             )}
             <img
-              src={image}
+              src={optimizeImageUrl(image, { width: 300 })}
               alt={`Property view ${index + 2}`}
               onLoad={() => handleImageLoad(index + 1)}
               loading="lazy"

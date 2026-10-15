@@ -3,9 +3,7 @@ import apiRequest from "./apiRequest";
 
 export const singlePageLoader = async ({ request, params }) => {
   try {
-    console.log("Loading post with ID:", params.id); // Debug log
     const res = await apiRequest("/posts/" + params.id);
-    console.log("Post data received:", res.data); // Debug log
     return res.data;
   } catch (error) {
     console.error("Error loading post:", error);
