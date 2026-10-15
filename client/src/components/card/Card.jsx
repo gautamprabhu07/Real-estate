@@ -1,9 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { 
   HiLocationMarker, 
   HiBadgeCheck, 
   HiHeart,
-  HiChat,
   HiCamera,
   HiTrendingUp,
   HiClock
@@ -24,7 +23,6 @@ import "./card.scss";
 function Card({ item, viewMode, isSavedInitial = false }) {
   const [isSaved, setIsSaved] = useState(Boolean(isSavedInitial));
   const [imageError, setImageError] = useState(false);
-  const navigate = useNavigate();
 
 
   // keep local saved state in sync if parent provides updates
@@ -50,13 +48,6 @@ function Card({ item, viewMode, isSavedInitial = false }) {
         toast.error("Failed to update saved listing");
       }
     })();
-  };
-
-
-  const handleChat = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    navigate(`/${item.id}?openChat=true`);
   };
 
 

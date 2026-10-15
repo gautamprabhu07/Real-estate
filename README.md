@@ -1,5 +1,7 @@
 # UrbanLuxe — Full‑Stack Real Estate Marketplace (React + Express + Prisma + Socket.IO)
 
+[![CI](https://github.com/gautamprabhu07/Real-estate/actions/workflows/ci.yml/badge.svg)](https://github.com/gautamprabhu07/Real-estate/actions/workflows/ci.yml)
+
 A full‑stack real estate marketplace for renters/buyers and agents—featuring map-based discovery, saved listings, and real-time chat, backed by secure, cookie-based JWT auth and a Prisma + MongoDB data model.
 
 <!-- Replace the image below with a clean hero screenshot (homepage, property grid + map, or your main user flow). Recommended size: ~1400×800. -->
@@ -98,58 +100,51 @@ A full‑stack real estate marketplace for renters/buyers and agents—featuring
 
 ## Local Setup (Short)
 
+Each service has an `.env.example` documenting its required variables — copy it to `.env` and fill in real values; nothing needs editing in source files.
+
 ### 1) API
 
 ```bash
 cd api
 npm install
-```
-
-Create `api/.env`:
-
-```env
-# MongoDB connection string (Prisma)
-DATABASE_URL="REPLACE_WITH_YOUR_MONGODB_URI"
-
-# JWT secret used by auth middleware
-JWK="REPLACE_WITH_A_STRONG_SECRET"
-
-# Frontend URL allowed by CORS (Vite dev server)
-CLIENT_URL="http://localhost:5173"
-```
-
-Run:
-
-```bash
+cp .env.example .env   # fill in DATABASE_URL and JWK
+npx prisma db push     # create collections/indexes in your MongoDB database
+npm run seed           # optional: populate demo users, listings, a chat
 node app.js
 # or (if you prefer autoreload)
 # npx nodemon app.js
 ```
 
-> Note: Some endpoints reference `JWT_SECRET_KEY` in a couple places. For consistency, keep auth secret usage aligned (this repo primarily uses `JWK`).
+API runs on `http://localhost:8800`. `CLIENT_URL` in `api/.env` controls the CORS allow-origin — set it to wherever the client is actually running (`http://localhost:5173` for local dev).
 
 ### 2) Socket Server
 
 ```bash
 cd socket
 npm install
+cp .env.example .env   # CLIENT_URL + PORT, both already default to local values
 node app.js
 ```
 
-<!-- Replace the socket CORS origin and client connection URL with your own domains (or localhost) when developing. -->
+Socket server runs on `http://localhost:4000` by default (`PORT` in `.env`).
 
 ### 3) Client
 
 ```bash
 cd client
 npm install
+cp .env.example .env   # VITE_API_URL + VITE_SOCKET_URL default to the local API/socket above
 npm run dev
 ```
 
-If running locally, update:
+No source edits needed for local vs. production — `apiRequest.js` and `SocketContext.jsx` both read their target URLs from these env vars (falling back to `http://localhost:8800/api` / `http://localhost:4000` if unset).
 
-- `client/src/lib/apiRequest.js` to point at `http://localhost:8800/api`
-- `client/src/context/SocketContext.jsx` to point at `http://localhost:4000`
+### Production Deployment Notes (Render/Vercel-style)
+
+- Each service (`api/`, `socket/`, `client/`) deploys independently — set its env vars in the hosting dashboard rather than committing a `.env`.
+- **API service:** set `DATABASE_URL`, `JWK`, `CLIENT_URL` (your deployed frontend's URL), and **`NODE_ENV=production`** — the last one is required for the auth cookie to be sent as `Secure; SameSite=None`, which cross-site cookies need in production (and which must be *off* for local HTTP dev, which is why it isn't hardcoded).
+- **Socket service:** set `CLIENT_URL` to the same deployed frontend URL; `PORT` is usually injected automatically by the host.
+- **Client:** set `VITE_API_URL` and `VITE_SOCKET_URL` to the deployed API/socket URLs at build time (Vite env vars are baked in at build, not read at runtime).
 
 ## API (High-Level)
 

@@ -33,7 +33,7 @@ function NewPostPage() {
 
   const navigate = useNavigate();
 
-  const handleEditorChange = (content, editor) => {
+  const handleEditorChange = (content) => {
     setContent(content);
   };
 

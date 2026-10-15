@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 
+// eslint-disable-next-line react-refresh/only-export-components -- context object must live alongside its provider
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
