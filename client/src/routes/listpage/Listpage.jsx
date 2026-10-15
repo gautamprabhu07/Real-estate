@@ -3,7 +3,7 @@ import Filter from "../../components/filter/Filter";
 import Card from "../../components/card/Card";
 import Map from "../../components/map/Map";
 import apiRequest from "../../lib/apiRequest";
-import { Await, useLoaderData, useLocation } from "react-router-dom";
+import { Await, useLoaderData, useLocation, useSearchParams } from "react-router-dom";
 import { Suspense, useState, useEffect, useRef } from "react";
 
 const PAGE_SIZE = 12;
@@ -21,6 +21,7 @@ function ListPage() {
   const [sortOpen, setSortOpen] = useState(false);
   const sortRef = useRef(null);
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const sortOptions = [
     { value: 'newest', label: 'Newest First' },
@@ -29,9 +30,22 @@ function ListPage() {
     { value: 'featured', label: 'Featured' }
   ];
 
+  const SERVER_SORT_VALUES = ['newest', 'price-low', 'price-high'];
+
   const handleSelect = (value) => {
     setSortBy(value);
     setSortOpen(false);
+
+    // Only server-sortable options are pushed as a `sort` query param, so the
+    // loader (and Load More, which reuses the same query string) fetch pages
+    // in the right order. 'featured' is a client-side filter, not a sort.
+    const next = new URLSearchParams(searchParams);
+    if (SERVER_SORT_VALUES.includes(value)) {
+      next.set('sort', value);
+    } else {
+      next.delete('sort');
+    }
+    setSearchParams(next);
   };
 
   // close dropdown on outside click or Escape

@@ -258,19 +258,21 @@ function NewPostPage() {
                 <div className="inputGrid">
                   <div className="item">
                     <label htmlFor="latitude">Latitude</label>
-                    <input 
-                      id="latitude" 
-                      name="latitude" 
-                      type="text" 
-                      placeholder="37.7749" 
+                    <input
+                      id="latitude"
+                      name="latitude"
+                      type="text"
+                      placeholder="37.7749"
+                      required
                     />
                   </div>
                   <div className="item">
                     <label htmlFor="longitude">Longitude</label>
-                    <input 
-                      id="longitude" 
-                      name="longitude" 
-                      type="text" 
+                    <input
+                      id="longitude"
+                      name="longitude"
+                      type="text"
+                      required
                       placeholder="-122.4194" 
                     />
                   </div>

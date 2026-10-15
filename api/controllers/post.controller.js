@@ -1,10 +1,19 @@
 import prisma from "../lib/prisma.js";
 import jwt from "jsonwebtoken";
 
+// Allow-list of sortable fields so `sort` can never be used to inject an
+// arbitrary Prisma orderBy field from the query string.
+const SORT_OPTIONS = {
+  newest: { createdAt: "desc" },
+  "price-low": { price: "asc" },
+  "price-high": { price: "desc" },
+};
+
 export const getPosts = async (req, res) => {
   const query = req.query;
   const page = Math.max(parseInt(query.page) || 1, 1);
   const limit = Math.min(Math.max(parseInt(query.limit) || 12, 1), 48);
+  const orderBy = SORT_OPTIONS[query.sort] || SORT_OPTIONS.newest;
 
   try {
     const posts = await prisma.post.findMany({
@@ -20,7 +29,7 @@ export const getPosts = async (req, res) => {
       },
       take: limit,
       skip: (page - 1) * limit,
-      orderBy: { createdAt: "desc" },
+      orderBy,
     });
 
     res.status(200).json(posts);
